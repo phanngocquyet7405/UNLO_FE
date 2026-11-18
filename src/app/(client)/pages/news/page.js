@@ -83,7 +83,7 @@ const POSTS = [
   {
     slug: "bao-bi-xanh",
     category: "Bền vững",
-    title: "Vì sao TotMart chuyển sang bao bì 100% tái chế",
+    title: "Vì sao UNLO chuyển sang bao bì 100% tái chế",
     excerpt:
       "Hành trình 18 tháng tìm kiếm giải pháp bao bì thay thế: từ những thất bại đầu tiên đến khi ra mắt dòng hộp carton tái chế độc quyền từ rừng trồng có chứng nhận.",
     author: "Thu Hà",
@@ -196,17 +196,17 @@ export default function NewsPage() {
 
   return (
     <Layout>
-      <title>Blog – TotMart</title>
+      <title>Tin tức & Nhật ký xưởng – UNLO</title>
       <meta
         name="description"
-        content="Câu chuyện nghề, hướng dẫn chọn quà và góc nhìn về lối sống tối giản từ đội ngũ TotMart."
+        content="Câu chuyện nghề may, kiến thức vật liệu và góc nhìn về lối sống tối giản từ đội ngũ UNLO M2C."
       />
 
       {/* Hero */}
       <section className="bg-card/60 border-b border-border py-16 sm:py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <span className="inline-block text-xs font-semibold tracking-wider uppercase text-primary bg-primary/10 border border-primary/20 px-4 py-1.5 rounded-full mb-6">
-            TotMart Blog
+            UNLO Journal
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl text-foreground mb-5 leading-tight tracking-tight">
             Những câu chuyện

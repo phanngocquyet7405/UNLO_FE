@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, ShieldCheck, HeartHandshake, Eye, Award, Factory } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  HeartHandshake,
+  Eye,
+  Award,
+  Factory,
+} from "lucide-react";
 import NullHeader from "@/components/null/NullHeader";
 import NullFooter from "@/components/null/NullFooter";
 import AboutPriceComparisonChart from "@/components/null/AboutPriceComparisonChart";
@@ -21,11 +29,6 @@ export default function AboutPage() {
           <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-[#EB6D48]/10 blur-3xl pointer-events-none" />
 
           <div className="relative max-w-5xl mx-auto px-5 sm:px-8 text-center space-y-6 sm:space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-[0.2em] text-[#FCFDF1]">
-              <Sparkles className="w-3.5 h-3.5 text-[#EB6D48]" />
-              <span>BIG IDEA · VỀ UNLO</span>
-            </div>
-
             <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-white">
               Giá Trị Không Cần <br />
               <span className="italic font-normal text-[#E2E6FF]">Gọi Tên</span>
@@ -36,8 +39,9 @@ export default function AboutPage() {
                 KEY MESSAGE
               </p>
               <blockquote className="font-serif italic text-xl sm:text-2xl lg:text-3xl font-medium leading-relaxed text-[#FCFDF1]">
-                &ldquo;Với UNLO, giá trị không nằm ở cái tên mà hiện diện trong từng thớ vải,
-                từng đường kim mũi chỉ và trong mỗi lựa chọn xứng đáng mỗi ngày.&rdquo;
+                &ldquo;Với UNLO, giá trị không nằm ở cái tên mà hiện diện trong
+                từng thớ vải, từng đường kim mũi chỉ và trong mỗi lựa chọn xứng
+                đáng mỗi ngày.&rdquo;
               </blockquote>
             </div>
           </div>
@@ -53,15 +57,17 @@ export default function AboutPage() {
             </span>
 
             <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#15095D] leading-snug sm:leading-tight">
-              Có những giá trị chẳng cần gọi tên vẫn luôn được trân trọng: đôi tay mẹ khâu lại chiếc cúc áo,
-              tấm lưng áo bạc màu của bố, hay những đường kim mũi chỉ của người thợ vô danh.
+              Có những giá trị chẳng cần gọi tên vẫn luôn được trân trọng: đôi
+              tay mẹ khâu lại chiếc cúc áo, tấm lưng áo bạc màu của bố, hay
+              những đường kim mũi chỉ của người thợ vô danh.
             </p>
 
             <p className="text-sm sm:text-base text-[#4E567A] leading-relaxed sm:leading-8 pt-2 border-t border-[#DCE0E7]/60">
-              UNLO ra đời với niềm tin rằng giá trị thật không nằm ở nhãn mác, mà ở chất lượng bên trong.
-              Chúng tôi gỡ bỏ logo để tập trung vào form dáng chuẩn, đường may chỉn chu và mức giá minh bạch.
-              Bởi một chiếc áo không cần tên tuổi lớn để xứng đáng được lựa chọn, cũng như giá trị mỗi người không
-              nằm ở cái tên họ mang trên mình.
+              UNLO ra đời với niềm tin rằng giá trị thật không nằm ở nhãn mác,
+              mà ở chất lượng bên trong. Chúng tôi gỡ bỏ logo để tập trung vào
+              form dáng chuẩn, đường may chỉn chu và mức giá minh bạch. Bởi một
+              chiếc áo không cần tên tuổi lớn để xứng đáng được lựa chọn, cũng
+              như giá trị mỗi người không nằm ở cái tên họ mang trên mình.
             </p>
           </div>
         </section>
@@ -78,7 +84,8 @@ export default function AboutPage() {
               Giá Trị Cốt Lõi
             </h2>
             <p className="text-xs sm:text-sm text-[#4E567A]">
-              Ba trụ cột định hình từng mũi may, từng đối tác và mọi quyết định của UNLO.
+              Ba trụ cột định hình từng mũi may, từng đối tác và mọi quyết định
+              của UNLO.
             </p>
           </div>
 
@@ -97,8 +104,9 @@ export default function AboutPage() {
                 CHẤT LƯỢNG – QUALITY
               </h3>
               <p className="text-xs sm:text-sm text-[#4E567A] leading-relaxed">
-                Chất lượng không nên là đặc quyền của những thương hiệu đắt tiền. UNLO tập trung vào
-                chất liệu, form dáng và từng đường may chỉn chu để tạo nên những sản phẩm cơ bản đáng tin cậy.
+                Chất lượng không nên là đặc quyền của những thương hiệu đắt
+                tiền. UNLO tập trung vào chất liệu, form dáng và từng đường may
+                chỉn chu để tạo nên những sản phẩm cơ bản đáng tin cậy.
               </p>
             </div>
 
@@ -116,8 +124,10 @@ export default function AboutPage() {
                 MINH BẠCH – TRANSPARENCY
               </h3>
               <p className="text-xs sm:text-sm text-[#4E567A] leading-relaxed">
-                Giá trị cần được nhìn thấy, không chỉ được quảng cáo. UNLO minh bạch thông tin sản phẩm,
-                nguồn gốc xưởng sản xuất và các yếu tố cấu thành giá bán, giúp khách hàng hiểu rõ mình đang lựa chọn điều gì.
+                Giá trị cần được nhìn thấy, không chỉ được quảng cáo. UNLO minh
+                bạch thông tin sản phẩm, nguồn gốc xưởng sản xuất và các yếu tố
+                cấu thành giá bán, giúp khách hàng hiểu rõ mình đang lựa chọn
+                điều gì.
               </p>
             </div>
 
@@ -135,8 +145,10 @@ export default function AboutPage() {
                 GIÁ CẢ XỨNG ĐÁNG – AFFORDABILITY
               </h3>
               <p className="text-xs sm:text-sm text-[#4E567A] leading-relaxed">
-                Ai cũng xứng đáng được tiếp cận sản phẩm chất lượng với mức giá hợp lý. Thông qua mô hình
-                kết nối trực tiếp với nhà sản xuất, UNLO hướng đến tinh giản khâu trung gian và tối ưu chi phí cho người tiêu dùng.
+                Ai cũng xứng đáng được tiếp cận sản phẩm chất lượng với mức giá
+                hợp lý. Thông qua mô hình kết nối trực tiếp với nhà sản xuất,
+                UNLO hướng đến tinh giản khâu trung gian và tối ưu chi phí cho
+                người tiêu dùng.
               </p>
             </div>
           </div>
@@ -166,10 +178,12 @@ export default function AboutPage() {
                   1. Kiến Tạo Giá Trị Từ Sự Tử Tế
                 </h3>
                 <p className="text-sm sm:text-base text-[#4E567A] leading-relaxed sm:leading-8">
-                  UNLO tin rằng một sản phẩm chất lượng với mức giá hợp lý không nên được tạo nên từ sự đánh đổi
-                  quyền lợi của người lao động. Đằng sau mỗi chiếc áo là công sức của những người thợ xứng đáng được
-                  trân trọng. Vì vậy, chúng tôi hướng đến việc hợp tác với các xưởng sản xuất có trách nhiệm, đề cao
-                  điều kiện làm việc an toàn và sự công bằng trong lao động.
+                  UNLO tin rằng một sản phẩm chất lượng với mức giá hợp lý không
+                  nên được tạo nên từ sự đánh đổi quyền lợi của người lao động.
+                  Đằng sau mỗi chiếc áo là công sức của những người thợ xứng
+                  đáng được trân trọng. Vì vậy, chúng tôi hướng đến việc hợp tác
+                  với các xưởng sản xuất có trách nhiệm, đề cao điều kiện làm
+                  việc an toàn và sự công bằng trong lao động.
                 </p>
               </div>
 
@@ -200,10 +214,12 @@ export default function AboutPage() {
                   2. Minh Bạch Trong Từng Giá Trị
                 </h3>
                 <p className="text-sm sm:text-base text-[#4E567A] leading-relaxed sm:leading-8">
-                  Với UNLO, khách hàng có quyền biết rõ giá trị thực sự đằng sau chiếc áo mình lựa chọn.
-                  Từ chất liệu, form dáng, đường may đến quy trình sản xuất và giá bán, mọi thông tin đều cần được
-                  thể hiện rõ ràng. Chúng tôi không muốn khách hàng trả tiền cho một cái tên, mà muốn họ hiểu và tin tưởng
-                  vào những giá trị thực chất mình nhận được.
+                  Với UNLO, khách hàng có quyền biết rõ giá trị thực sự đằng sau
+                  chiếc áo mình lựa chọn. Từ chất liệu, form dáng, đường may đến
+                  quy trình sản xuất và giá bán, mọi thông tin đều cần được thể
+                  hiện rõ ràng. Chúng tôi không muốn khách hàng trả tiền cho một
+                  cái tên, mà muốn họ hiểu và tin tưởng vào những giá trị thực
+                  chất mình nhận được.
                 </p>
               </div>
             </div>
@@ -213,7 +229,10 @@ export default function AboutPage() {
         {/* ================================================================
             TRANG TIẾP THEO: CÁCH UNLO GIỮ MỨC GIÁ THẤP & BIỂU ĐỒ SO SÁNH GIÁ (DẠNG CHART)
             ================================================================ */}
-        <section id="price-chart" className="max-w-6xl mx-auto px-5 sm:px-8 space-y-10 scroll-mt-24">
+        <section
+          id="price-chart"
+          className="max-w-6xl mx-auto px-5 sm:px-8 space-y-10 scroll-mt-24"
+        >
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#625FBC]">
               HOW WE KEEP PRICES LOW
@@ -222,8 +241,10 @@ export default function AboutPage() {
               Cách UNLO Giữ Mức Giá Thực Tại Xưởng
             </h2>
             <p className="text-xs sm:text-base text-[#4E567A] leading-relaxed">
-              Chúng tôi loại bỏ các chi phí trung gian không cần thiết: đại lý, mặt bằng đắt đỏ và ngân sách marketing thổi phồng.
-              Dưới đây là biểu đồ đối chiếu thực tế mức giá mục tiêu tại xưởng của UNLO so với hàng trôi nổi và các thương hiệu bán lẻ.
+              Chúng tôi loại bỏ các chi phí trung gian không cần thiết: đại lý,
+              mặt bằng đắt đỏ và ngân sách marketing thổi phồng. Dưới đây là
+              biểu đồ đối chiếu thực tế mức giá mục tiêu tại xưởng của UNLO so
+              với hàng trôi nổi và các thương hiệu bán lẻ.
             </p>
           </div>
 
@@ -240,8 +261,9 @@ export default function AboutPage() {
               THÔNG ĐIỆP TỔNG KẾT
             </span>
             <blockquote className="font-serif text-2xl sm:text-4xl lg:text-4xl font-semibold text-[#15095D] leading-snug sm:leading-tight">
-              &ldquo;UNLO tin rằng giá trị của một chiếc áo không nằm ở cái tên trên nhãn mác,
-              mà được tạo nên từ chất lượng thực chất, sự minh bạch và mức giá xứng đáng.&rdquo;
+              &ldquo;UNLO tin rằng giá trị của một chiếc áo không nằm ở cái tên
+              trên nhãn mác, mà được tạo nên từ chất lượng thực chất, sự minh
+              bạch và mức giá xứng đáng.&rdquo;
             </blockquote>
           </div>
         </section>
@@ -255,7 +277,8 @@ export default function AboutPage() {
               Sẵn Sàng Trải Nghiệm Hàng Thiết Yếu Trực Tiếp Từ Xưởng?
             </h2>
             <p className="text-sm sm:text-base text-[#D0D4EE] max-w-xl mx-auto leading-relaxed">
-              Khám phá toàn bộ 25 sản phẩm cơ bản chuẩn xuất khẩu hoặc tìm hiểu hồ sơ 4 nhà máy đối tác đã thẩm định của UNLO.
+              Khám phá toàn bộ 25 sản phẩm cơ bản chuẩn xuất khẩu hoặc tìm hiểu
+              hồ sơ 4 nhà máy đối tác đã thẩm định của UNLO.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">

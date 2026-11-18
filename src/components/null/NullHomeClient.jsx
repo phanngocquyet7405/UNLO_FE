@@ -13,6 +13,8 @@ import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
 import LiveStatCounterBanner from "./LiveStatCounterBanner";
 import AudienceGateways from "./AudienceGateways";
 import BrandManifestoSection from "./BrandManifestoSection";
+import HomeCoreValues from "./HomeCoreValues";
+import HomeMissionSection from "./HomeMissionSection";
 import MagazineEditorialPosters from "./MagazineEditorialPosters";
 import BlackFridayCountdown from "./BlackFridayCountdown";
 import SupportChatbotDrawer from "./SupportChatbotDrawer";
@@ -99,6 +101,16 @@ export default function NullHomeClient() {
             1.3. BRAND MANIFESTO & GIỚI THIỆU CHUNG ("GIÁ TRỊ KHÔNG CẦN GỌI TÊN")
             ================================================================ */}
         <BrandManifestoSection />
+
+        {/* ================================================================
+            1.4. GIÁ TRỊ CỐT LÕI (CORE VALUES) — TỪ TRANG ABOUT SANG TRANG CHỦ
+            ================================================================ */}
+        <HomeCoreValues />
+
+        {/* ================================================================
+            1.5. SỨ MỆNH (MISSION) — TỪ TRANG ABOUT SANG TRANG CHỦ
+            ================================================================ */}
+        <HomeMissionSection />
 
         {/* ================================================================
             2. CIRCULAR CATEGORY ROW — Including "Thêu Tên" & "Combo"

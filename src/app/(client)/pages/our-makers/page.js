@@ -37,10 +37,10 @@ const VALUES = [
 export default function OurMakersPage() {
   return (
     <Layout>
-      <title>Nhà sản xuất & Đối tác – TotMart</title>
+      <title>Nhà sản xuất & Đối tác – UNLO M2C</title>
       <meta
         name="description"
-        content="Câu chuyện của TotMart – nơi những hộp quà tinh tuyển gặp gỡ những tâm hồn yêu nghề thủ công Việt Nam."
+        content="Câu chuyện của UNLO – nơi kết nối trực tiếp với 4 xưởng may OEM và những nghệ nhân thủ công Việt Nam."
       />
 
       {/* Hero */}
@@ -50,29 +50,27 @@ export default function OurMakersPage() {
             Câu chuyện của chúng tôi
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground leading-tight tracking-tight mb-6">
-            Hộp quà không chỉ là
+            Giá trị thực từ
             <br />
-            <em className="text-primary not-italic font-serif">một món quà</em>
+            <em className="text-primary not-italic font-serif">đôi tay người thợ</em>
           </h1>
           <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-            TotMart ra đời từ niềm tin rằng mỗi sản phẩm thủ công đều mang trong
-            mình một câu chuyện — về bàn tay người thợ, về mảnh đất quê hương,
-            về tình yêu truyền thống.
+            UNLO ra đời từ niềm tin rằng giá trị của một chiếc áo không nằm ở cái tên trên nhãn mác, mà được tạo nên từ chất lượng thực chất, sự tận tâm của người thợ may và sự minh bạch tại xưởng.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
             <Link
-              href="/"
+              href="/products"
               className="min-h-11 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground hover:bg-primary-hover px-7 py-3 rounded-xl font-semibold text-sm transition-colors shadow-xs"
             >
-              <span>Khám phá hộp quà</span>
+              <span>Khám phá sản phẩm M2C</span>
               <ArrowRight size={15} />
             </Link>
             <Link
-              href="/brands"
+              href="/factories"
               className="min-h-11 inline-flex items-center justify-center gap-2 text-foreground border border-border bg-card px-7 py-3 rounded-xl font-semibold text-sm hover:border-primary hover:text-primary transition-colors shadow-xs"
             >
-              <span>Thương hiệu</span>
+              <span>Hồ sơ 4 nhà máy</span>
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -126,25 +124,24 @@ export default function OurMakersPage() {
             ))}
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl mb-4 leading-tight">
-            Sẵn sàng mở hộp bất ngờ?
+            Trải nghiệm hàng thiết yếu trực tiếp từ xưởng?
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-md mx-auto text-sm sm:text-base leading-relaxed">
-            Khám phá bộ sưu tập hộp quà tinh tuyển, hoặc đăng ký gói hàng
-            tháng để nhận những điều thú vị.
+            Khám phá toàn bộ danh mục sản phẩm cơ bản chuẩn xuất khẩu không gắn mác với mức giá minh bạch tại xưởng.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              href="/"
+              href="/products"
               className="min-h-11 inline-flex items-center justify-center gap-2 bg-foreground text-background hover:bg-foreground/90 px-8 py-3 rounded-xl font-semibold text-sm transition-colors"
             >
-              <span>Khám phá ngay</span>
+              <span>Khám phá sản phẩm</span>
               <ArrowRight size={14} />
             </Link>
             <Link
-              href="/pages/our-makers"
+              href="/factories"
               className="min-h-11 inline-flex items-center justify-center gap-2 border border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-3 rounded-xl font-semibold text-sm transition-colors"
             >
-              Gặp nhà sản xuất
+              Hồ sơ 4 nhà máy đối tác
             </Link>
           </div>
         </div>

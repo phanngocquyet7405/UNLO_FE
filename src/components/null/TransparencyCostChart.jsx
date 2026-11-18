@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
+import PriceBreakdownDonutChart from "./PriceBreakdownDonutChart";
+import { PieChart, BarChart2 } from "lucide-react";
 
 export default function TransparencyCostChart({ product }) {
+  const [chartMode, setChartMode] = useState("donut"); // "donut" | "bar"
   const cost = product?.costBreakdown || {};
   const m2cPrice = cost.nullPrice || product?.price || 245000;
   const retailPrice =
@@ -120,54 +124,93 @@ export default function TransparencyCostChart({ product }) {
         </div>
       </div>
 
-      {/* 1. Thanh ngang 4 phân đoạn chi phí M2C */}
-      <div className="rounded-2xl bg-white border border-[#DCE0E7] p-5 sm:p-7 space-y-5">
-        <div className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.12em] text-[#15095D]">
-          <span>1. Cấu thành giá M2C tại UNLO</span>
-          <span className="tabular-nums text-[#32259B]">{formatVnd(m2cPrice)} (100%)</span>
-        </div>
-
-        <div
-          className="w-full h-9 rounded-full overflow-hidden flex bg-[#EFF2F9]"
-          role="img"
-          aria-label="Thanh phân bổ 4 phân đoạn chi phí sản xuất"
-        >
-          {segments.map((seg) => (
-            <div
-              key={seg.key}
-              style={{ width: `${seg.pct}%`, backgroundColor: seg.color }}
-              title={`${seg.label}: ${seg.pct}% (${formatVnd(seg.amount)})`}
-              className="h-full flex items-center justify-center text-[11px] font-bold text-white tabular-nums transition-[width] duration-300"
-            >
-              {seg.pct >= 12 ? `${seg.pct}%` : ""}
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
-          {segments.map((seg) => (
-            <div
-              key={seg.key}
-              className="rounded-2xl bg-[#EFF2F9]/65 border border-[#DCE0E7] p-4 space-y-1.5"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-2 text-xs font-bold text-[#15095D]">
-                  <span
-                    className="w-3 h-3 rounded-full shrink-0"
-                    style={{ backgroundColor: seg.color }}
-                  />
-                  {seg.pct}%
-                </span>
-                <span className="text-sm font-bold text-[#32259B] tabular-nums">
-                  {formatVnd(seg.amount)}
-                </span>
-              </div>
-              <p className="text-xs font-semibold text-[#15095D]">{seg.label}</p>
-              <p className="text-[11px] text-[#4E567A] leading-relaxed">{seg.desc}</p>
-            </div>
-          ))}
+      {/* Chuyển đổi hiển thị Biểu đồ tròn có chỉ dẫn hoặc Thanh tuyến tính */}
+      <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
+        <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#15095D]">
+          Chế độ xem phân bổ chi phí:
+        </span>
+        <div className="inline-flex items-center p-1 rounded-full bg-white border border-[#DCE0E7] shadow-xs">
+          <button
+            type="button"
+            onClick={() => setChartMode("donut")}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              chartMode === "donut"
+                ? "bg-[#15095D] text-white shadow-xs"
+                : "text-[#4E567A] hover:text-[#15095D]"
+            }`}
+          >
+            <PieChart className="w-3.5 h-3.5" />
+            <span>Biểu đồ tròn có chỉ dẫn</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setChartMode("bar")}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              chartMode === "bar"
+                ? "bg-[#15095D] text-white shadow-xs"
+                : "text-[#4E567A] hover:text-[#15095D]"
+            }`}
+          >
+            <BarChart2 className="w-3.5 h-3.5" />
+            <span>Thanh phân bổ tuyến tính</span>
+          </button>
         </div>
       </div>
+
+      {chartMode === "donut" ? (
+        <PriceBreakdownDonutChart product={product} />
+      ) : (
+        /* 1. Thanh ngang 4 phân đoạn chi phí M2C */
+        <div className="rounded-2xl bg-white border border-[#DCE0E7] p-5 sm:p-7 space-y-5">
+          <div className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.12em] text-[#15095D]">
+            <span>1. Cấu thành giá M2C tại UNLO</span>
+            <span className="tabular-nums text-[#32259B]">
+              {formatVnd(m2cPrice)} (100%)
+            </span>
+          </div>
+
+          <div
+            className="w-full h-9 rounded-full overflow-hidden flex bg-[#EFF2F9]"
+            role="img"
+            aria-label="Thanh phân bổ 4 phân đoạn chi phí sản xuất"
+          >
+            {segments.map((seg) => (
+              <div
+                key={seg.key}
+                style={{ width: `${seg.pct}%`, backgroundColor: seg.color }}
+                title={`${seg.label}: ${seg.pct}% (${formatVnd(seg.amount)})`}
+                className="h-full flex items-center justify-center text-[11px] font-bold text-white tabular-nums transition-[width] duration-300"
+              >
+                {seg.pct >= 12 ? `${seg.pct}%` : ""}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
+            {segments.map((seg) => (
+              <div
+                key={seg.key}
+                className="rounded-2xl bg-[#EFF2F9]/65 border border-[#DCE0E7] p-4 space-y-1.5"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-2 text-xs font-bold text-[#15095D]">
+                    <span
+                      className="w-3 h-3 rounded-full shrink-0"
+                      style={{ backgroundColor: seg.color }}
+                    />
+                    {seg.pct}%
+                  </span>
+                  <span className="text-sm font-bold text-[#32259B] tabular-nums">
+                    {formatVnd(seg.amount)}
+                  </span>
+                </div>
+                <p className="text-xs font-semibold text-[#15095D]">{seg.label}</p>
+                <p className="text-[11px] text-[#4E567A] leading-relaxed">{seg.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 2. Thanh đối chiếu cấu trúc giá bán lẻ truyền thống */}
       <div className="rounded-2xl bg-[#FCFDF1] border border-[#DCE0E7] p-5 sm:p-7 space-y-4">

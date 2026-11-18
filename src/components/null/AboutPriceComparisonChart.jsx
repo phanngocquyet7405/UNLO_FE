@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, AlertTriangle, ShieldCheck, HelpCircle } from "lucide-react";
+import { CheckCircle2, AlertTriangle, ShieldCheck, HelpCircle, PieChart, BarChart3, Table } from "lucide-react";
+import PriceBreakdownDonutChart from "./PriceBreakdownDonutChart";
 
 export const COMPARISON_DATA = [
   {
@@ -145,30 +146,65 @@ export default function AboutPriceComparisonChart() {
           <button
             type="button"
             onClick={() => setViewMode("chart")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
               viewMode === "chart"
                 ? "bg-white text-[#15095D] shadow-xs"
                 : "text-[#5E607E] hover:text-[#15095D]"
             }`}
           >
-            Dạng Biểu Đồ
+            <BarChart3 className="w-3.5 h-3.5" />
+            <span>Dạng Cột</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode("donut")}
+            className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+              viewMode === "donut"
+                ? "bg-white text-[#15095D] shadow-xs"
+                : "text-[#5E607E] hover:text-[#15095D]"
+            }`}
+          >
+            <PieChart className="w-3.5 h-3.5" />
+            <span>Biểu Đồ Tròn</span>
           </button>
           <button
             type="button"
             onClick={() => setViewMode("table")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
               viewMode === "table"
                 ? "bg-white text-[#15095D] shadow-xs"
                 : "text-[#5E607E] hover:text-[#15095D]"
             }`}
           >
-            Bảng Chi Tiết
+            <Table className="w-3.5 h-3.5" />
+            <span>Bảng Chi Tiết</span>
           </button>
         </div>
       </div>
 
+      {/* DONUT CHART VIEW */}
+      {viewMode === "donut" && (
+        <div className="space-y-4">
+          <PriceBreakdownDonutChart
+            product={{
+              name: activeItem.name,
+              price: activeItem.unloAvg,
+              costBreakdown: {
+                nullPrice: activeItem.unloAvg,
+                traditionalRetailPrice: activeItem.retailAvg,
+                materialCost: Math.round(activeItem.unloAvg * 0.45),
+                manufacturingCost: Math.round(activeItem.unloAvg * 0.22),
+                packagingShippingCost: Math.round(activeItem.unloAvg * 0.15),
+                platformQcCost: Math.round(activeItem.unloAvg * 0.18),
+                materialDesc: activeItem.unloSpec,
+              },
+            }}
+          />
+        </div>
+      )}
+
       {/* CHART VIEW */}
-      {viewMode === "chart" ? (
+      {viewMode === "chart" && (
         <div className="rounded-3xl bg-white border border-[#DCE0E7] p-6 sm:p-10 shadow-[0_12px_40px_rgba(21,9,93,0.06)] space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#EFF2F9] pb-6">
             <div>
@@ -303,8 +339,10 @@ export default function AboutPriceComparisonChart() {
             </div>
           </div>
         </div>
-      ) : (
-        /* TABLE VIEW */
+      )}
+
+      {/* TABLE VIEW */}
+      {viewMode === "table" && (
         <div className="rounded-3xl bg-white border border-[#DCE0E7] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">

@@ -20,7 +20,7 @@ const POLICIES = [
     content: [
       {
         heading: "Phạm vi giao hàng",
-        body: "TotMart giao hàng toàn quốc 63 tỉnh thành. Hiện chưa hỗ trợ giao quốc tế.",
+        body: "UNLO giao hàng toàn quốc 63 tỉnh thành trực tiếp từ hệ thống kho xưởng đối tác. Hiện chưa hỗ trợ giao quốc tế.",
       },
       {
         heading: "Thời gian giao hàng",
@@ -28,7 +28,7 @@ const POLICIES = [
       },
       {
         heading: "Phí vận chuyển",
-        body: "Khách trả phí vận chuyển trực tiếp cho bên giao hàng, ngoài tiền COD/chuyển khoản của đơn TotMart. Mức phí cần được thông báo và thống nhất trước khi giao; gói tháng áp dụng riêng cho mỗi lần giao.",
+        body: "Khách trả phí vận chuyển trực tiếp cho bên giao hàng, ngoài tiền COD/chuyển khoản của đơn UNLO. Mức phí cần được thông báo và thống nhất trước khi giao; các kiện hàng combo hoặc gói tháng áp dụng riêng cho mỗi lần giao.",
       },
       {
         heading: "Theo dõi đơn hàng",
@@ -56,7 +56,7 @@ const POLICIES = [
       },
       {
         heading: "Chi phí đổi trả",
-        body: "TotMart chịu toàn bộ phí vận chuyển đổi trả nếu lỗi thuộc về chúng tôi. Trường hợp khách hàng muốn đổi vì lý do cá nhân, phí vận chuyển do khách hàng thanh toán.",
+        body: "UNLO chịu toàn bộ phí vận chuyển đổi trả nếu lỗi thuộc về chúng tôi (sai kích thước, đường may lỗi, sai màu). Trường hợp khách hàng muốn đổi vì lý do cá nhân, phí vận chuyển do khách hàng thanh toán.",
       },
     ],
   },
@@ -80,7 +80,7 @@ const POLICIES = [
       },
       {
         heading: "Quyền của bạn",
-        body: "Bạn có quyền truy cập, chỉnh sửa, hoặc xóa dữ liệu cá nhân bất kỳ lúc nào. Liên hệ privacy@totmart.vn để thực hiện yêu cầu.",
+        body: "Bạn có quyền truy cập, chỉnh sửa, hoặc xóa dữ liệu cá nhân bất kỳ lúc nào. Liên hệ privacy@unlo.vn để thực hiện yêu cầu.",
       },
     ],
   },
@@ -92,7 +92,7 @@ const POLICIES = [
     content: [
       {
         heading: "Điều kiện sử dụng dịch vụ",
-        body: "Bằng cách truy cập và sử dụng TotMart, bạn đồng ý tuân thủ các điều khoản này. Nếu không đồng ý, vui lòng ngừng sử dụng dịch vụ.",
+        body: "Bằng cách truy cập và sử dụng UNLO, bạn đồng ý tuân thủ các điều khoản này. Nếu không đồng ý, vui lòng ngừng sử dụng dịch vụ.",
       },
       {
         heading: "Tài khoản người dùng",
@@ -104,7 +104,7 @@ const POLICIES = [
       },
       {
         heading: "Giới hạn trách nhiệm",
-        body: "TotMart không chịu trách nhiệm về thiệt hại gián tiếp phát sinh từ việc sử dụng dịch vụ. Trách nhiệm tối đa của chúng tôi giới hạn ở giá trị đơn hàng liên quan.",
+        body: "UNLO không chịu trách nhiệm về thiệt hại gián tiếp phát sinh từ việc sử dụng dịch vụ. Trách nhiệm tối đa của chúng tôi giới hạn ở giá trị đơn hàng liên quan.",
       },
     ],
   },
@@ -115,16 +115,16 @@ const POLICIES = [
     badge: "100% xác thực",
     content: [
       {
-        heading: "Cam kết hàng chính hãng",
-        body: "100% sản phẩm trên TotMart được kiểm duyệt trực tiếp từ nhà sản xuất hoặc thương hiệu chính thức. Chúng tôi không kinh doanh hàng giả, hàng nhái.",
+        heading: "Cam kết chuẩn xuất xưởng",
+        body: "100% sản phẩm trên UNLO được kiểm duyệt trực tiếp từ nhà máy sản xuất đối tác OEM hoặc cơ sở thủ công chính thức. Chúng tôi không kinh doanh hàng giả, hàng nhái.",
       },
       {
         heading: "Quy trình kiểm định",
-        body: "Mỗi đối tác nhà sản xuất phải trải qua quy trình kiểm định nghiêm ngặt: xác minh pháp lý, kiểm tra chất lượng sản phẩm mẫu, và đánh giá tiêu chuẩn bền vững.",
+        body: "Mỗi đối tác nhà máy phải trải qua quy trình kiểm định nghiêm ngặt: xác minh năng lực tại chỗ, kiểm tra chất lượng 12 bước AQL 2.5, và đánh giá tiêu chuẩn an toàn lao động.",
       },
       {
         heading: "Chứng nhận",
-        body: "TotMart là đối tác được chứng nhận bởi các tổ chức: Fair Trade Vietnam, Organic Vietnam, và Craft Villages Association.",
+        body: "UNLO hợp tác với các đối tác đạt chuẩn quốc tế: OEKO-TEX Standard 100, LWG (Leather Working Group), và các hiệp hội làng nghề truyền thống.",
       },
     ],
   },
@@ -205,10 +205,10 @@ export default function InformationPage() {
 
   return (
     <Layout>
-      <title>Thông tin & Chính sách – TotMart</title>
+      <title>Thông tin & Chính sách – UNLO M2C</title>
       <meta
         name="description"
-        content="Tìm hiểu về chính sách vận chuyển, đổi trả, bảo mật và điều khoản sử dụng của TotMart."
+        content="Tìm hiểu về chính sách vận chuyển, đổi trả, bảo mật và điều khoản sử dụng của UNLO M2C."
       />
 
       {/* Hero */}

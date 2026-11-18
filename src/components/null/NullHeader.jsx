@@ -61,9 +61,26 @@ export const NAV_GROUPS = [
         desc: "Mức giá gốc trực tiếp từ chuyền may",
       },
       {
-        label: "Ưu đãi mùa",
-        href: "/#black-friday",
-        desc: "Các kiện hàng thiết yếu ưu đãi cuối năm",
+        label: "Tự tạo Combo -20%",
+        href: "/bundles",
+        desc: "Tự phối 3–5 món để nhận chiết khấu bậc thang",
+        badge: "-20%",
+      },
+      {
+        label: "Mua chung xưởng",
+        href: "/group-buy",
+        desc: "Gom đơn chung cắt giảm chi phí sản xuất",
+        badge: "M2C",
+      },
+      {
+        label: "Gói hội viên định kỳ",
+        href: "/subscription",
+        desc: "Đăng ký nhận hộp quà thiết yếu theo mùa",
+      },
+      {
+        label: "Ưu đãi & Voucher",
+        href: "/pages/offers-discounts-coupons",
+        desc: "Các mã giảm giá & ưu đãi xưởng đang kích hoạt",
         badge: "Hot",
       },
     ],
@@ -167,11 +184,32 @@ export const NAV_GROUPS = [
         label: "Hồ sơ 4 nhà máy đối tác",
         href: "/factories",
         desc: "Khám phá các xưởng OEM Tier-1 tại Hưng Yên, Bắc Ninh, Bình Dương",
+        badge: "4 Xưởng",
+      },
+      {
+        label: "Nghệ nhân & Thợ may xưởng",
+        href: "/pages/our-makers",
+        desc: "Tôn vinh đôi bàn tay lành nghề và làng nghề truyền thống",
+      },
+      {
+        label: "Tin tức & Nhật ký xưởng",
+        href: "/pages/news",
+        desc: "Cập nhật tiến độ chuyền may và kiến thức chọn vải cơ bản",
       },
       {
         label: "Câu hỏi thường gặp (FAQ)",
         href: "/pages/faq",
         desc: "Giải đáp về quy trình đặt hàng, kiểm định và tự đổi trả 30 ngày",
+      },
+      {
+        label: "Chính sách vận chuyển & Giao nhận",
+        href: "/pages/information",
+        desc: "Phạm vi giao hàng 63 tỉnh thành, phí ship và bảo mật thông tin",
+      },
+      {
+        label: "Cổng tự đổi trả trong 30 ngày",
+        href: "/returns",
+        desc: "Chính sách bảo hành và đổi trả miễn phí tận nơi",
       },
       {
         label: "Liên hệ & Hỗ trợ xưởng",
@@ -602,10 +640,20 @@ export default function NullHeader() {
                   {/* Dropdown Menu Popover */}
                   {isGroupOpen && (
                     <div
-                      className="absolute left-0 mt-2 min-w-[280px] sm:min-w-[320px] bg-white border border-[#DCE0E7] rounded-2xl shadow-[0_16px_40px_rgba(21,9,93,0.12)] p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150"
+                      className={`absolute mt-2 bg-white border border-[#DCE0E7] rounded-2xl shadow-[0_16px_40px_rgba(21,9,93,0.12)] p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150 ${
+                        group.id === "pages"
+                          ? "right-0 min-w-[300px] sm:min-w-[560px]"
+                          : "left-0 min-w-[280px] sm:min-w-[320px]"
+                      }`}
                       onMouseEnter={() => handleNavMouseEnter(group.id)}
                     >
-                      <div className="space-y-1">
+                      <div
+                        className={
+                          group.children.length > 6
+                            ? "grid grid-cols-1 sm:grid-cols-2 gap-1"
+                            : "space-y-1"
+                        }
+                      >
                         {group.children.map((child) => (
                           <Link
                             key={child.label}

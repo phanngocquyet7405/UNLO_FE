@@ -7,6 +7,7 @@ import {
   Sun,
   Leaf,
   Snowflake,
+  Sparkles,
   ChevronLeft,
   ChevronRight,
   ArrowRight,
@@ -76,6 +77,22 @@ export const SEASONS = [
     ctaLink: "/products?season=dong",
     b2bLink: "/b2b",
     picks: ["p-hoodie", "p-sweat", "p-sweat-hong", "p-kaki"],
+  },
+  {
+    key: "about",
+    name: "Triết lý",
+    icon: Sparkles,
+    accent: "#EB6D48",
+    badge: "BIG IDEA · VỀ UNLO",
+    headlinePart1: "Đôi tay",
+    headlinePart2: "người thợ Việt",
+    lead: "Có những giá trị chẳng cần gọi tên vẫn luôn được trân trọng: đôi tay mẹ khâu lại chiếc cúc áo, hay những đường kim mũi chỉ của người thợ vô danh tại xưởng.",
+    video: "/assets/video/hero-dong.mp4",
+    poster: "/assets/img/about-image1.png",
+    ctaLink: "/pages/about",
+    ctaText: "Khám phá câu chuyện",
+    b2bLink: "/b2b",
+    picks: ["p-tee-250", "p-oxford", "p-kaki", "p-hoodie"],
   },
 ];
 
@@ -232,10 +249,10 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
                 {/* CTAs */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
                   <Link
-                    href="#cua-hang"
+                    href={s.ctaLink || "#cua-hang"}
                     className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#15095D] text-xs sm:text-sm font-bold tracking-wide shadow-md hover:bg-[#FCFDF1] transition-transform hover:scale-105 active:scale-95"
                   >
-                    <span>Mua bộ sưu tập</span>
+                    <span>{s.ctaText || "Mua bộ sưu tập"}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
@@ -255,7 +272,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
       {/* Navigation Controls & Season Counter (Bottom Right) */}
       <div className="absolute z-20 bottom-8 sm:bottom-12 right-5 sm:right-8 lg:right-12 flex items-center gap-2">
         <span className="font-serif text-sm sm:text-base font-bold text-white/90 mr-2 tracking-widest tabular-nums select-none">
-          0{currentIdx + 1} / 04
+          0{currentIdx + 1} / 0{SEASONS.length}
         </span>
 
         <button
