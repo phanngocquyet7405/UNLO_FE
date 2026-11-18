@@ -118,7 +118,7 @@ export default function NullCatalogClient({
             className="rounded-2xl border border-[#C43D4B]/30 bg-[#FDF2F3] px-5 py-4 text-sm text-[#A52735] space-y-1"
           >
             <p className="font-semibold">
-              {initialError.message || "Lỗi hệ thống. Vui lòng thử lại."}
+              Lỗi hệ thống: {initialError.message || "Vui lòng thử lại sau."}
             </p>
             {initialError.requestId && (
               <p className="text-xs font-mono">
