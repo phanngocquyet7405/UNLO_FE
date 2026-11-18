@@ -51,10 +51,10 @@ export default function AudienceGateways() {
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 space-y-8">
         {/* Section Header */}
         <div className="text-center max-w-xl mx-auto space-y-2">
-          <p className="unlo-display-en text-xs sm:text-[13px] tracking-[0.2em] uppercase text-[#625FBC] font-semibold">
-            BẠN LÀ AI?
+          <p className="text-xs sm:text-[13px] tracking-[0.2em] text-[#625FBC]">
+            Bạn là ai
           </p>
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#15095D] tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium text-[#15095D] tracking-tight">
             Chọn đúng ô, UNLO dẫn đường
           </h2>
           <p className="text-xs sm:text-sm text-[#4E567A]">
@@ -78,7 +78,7 @@ export default function AudienceGateways() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#15095D] group-hover:text-[#32259B] transition-colors">
+                    <h3 className="font-serif text-xl sm:text-2xl font-medium text-[#15095D] group-hover:text-[#32259B] transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#4E567A] leading-relaxed">

@@ -8,6 +8,7 @@ export function setupAxiosMiddleware(instance) {
     if (config._requestUserId && config._requestUserId !== userId) throw new Error('Tài khoản đã thay đổi. Đăng nhập lại đúng tài khoản của yêu cầu cũ.');
     config._requestUserId ||= userId;
     config.withCredentials = true;
+    config.headers['X-TotMart-Request'] = '1';
     config.headers['X-Null-Request'] = '1';
     const token = getAccessToken();
     if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -22,7 +23,7 @@ export function setupAxiosMiddleware(instance) {
     if (error.response?.status === 401 && config && !config._retried && !/\/home\/(login|refresh|forgot-password|reset-password)/.test(config.url || '')) {
       config._retried = true;
       try {
-        if (!refreshing) refreshing = axios.post(`${instance.defaults.baseURL.replace(/\/$/, '')}/home/refresh`, {}, { timeout: 10000, withCredentials: true, headers: { 'X-Null-Request': '1' } })
+        if (!refreshing) refreshing = axios.post(`${instance.defaults.baseURL.replace(/\/$/, '')}/home/refresh`, {}, { timeout: 10000, withCredentials: true, headers: { 'X-TotMart-Request': '1', 'X-Null-Request': '1' } })
           .then(response => {
             const token = response.data.token;
             const subject = jwtDecode(token).userId;

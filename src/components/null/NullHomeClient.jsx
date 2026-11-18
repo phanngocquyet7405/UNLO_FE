@@ -187,7 +187,7 @@ export default function NullHomeClient() {
                   <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#443EB1]">
                     {card.enTag}
                   </p>
-                  <h2 className="font-serif text-2xl sm:text-[26px] font-semibold leading-tight text-[#15095D]">
+                  <h2 className="font-serif text-2xl sm:text-[26px] font-medium leading-tight text-[#15095D]">
                     {card.title}
                   </h2>
                   <p className="text-xs sm:text-[13px] text-[#4E567A] leading-relaxed">
@@ -212,7 +212,7 @@ export default function NullHomeClient() {
               <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC]">
                 FACTORY DIRECT BEST SELLERS
               </p>
-              <h2 className="font-serif text-3xl sm:text-4xl font-semibold tracking-tight text-[#15095D]">
+              <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#15095D]">
                 Sản Phẩm Tiêu Biểu Từ Các Xưởng
               </h2>
             </div>
@@ -335,7 +335,7 @@ export default function NullHomeClient() {
               <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC]">
                 VERIFIED FACTORIES
               </p>
-              <h2 className="font-serif text-3xl font-semibold text-[#15095D]">
+              <h2 className="font-serif text-3xl font-medium text-[#15095D]">
                 Mua Sắm Theo Từng Nhà Máy Đối Tác
               </h2>
             </div>
@@ -362,7 +362,7 @@ export default function NullHomeClient() {
                     QC {fac.qcPassRate}%
                   </span>
                 </div>
-                <h3 className="font-serif text-lg font-semibold text-[#15095D] group-hover:text-[#32259B] leading-snug">
+                <h3 className="font-serif text-lg font-medium text-[#15095D] group-hover:text-[#32259B] leading-snug">
                   {fac.specialty}
                 </h3>
                 <p className="text-xs text-[#4E567A] line-clamp-2">{fac.location}</p>
@@ -400,7 +400,7 @@ export default function NullHomeClient() {
               <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#BBC2DD]">
                 NO LOGO MARKUP
               </p>
-              <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#FCFDF1] leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl font-medium text-[#FCFDF1] leading-tight">
                 Tự Phối Combo 3–5 Món Thiết Yếu — Giảm Tới 20%
               </h2>
               <p className="text-sm text-[#DCE0E7]/90 leading-relaxed">
