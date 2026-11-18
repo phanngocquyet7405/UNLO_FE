@@ -1,11 +1,11 @@
 "use client";
 
-import { Navigation } from "@/components_box/nav_box";
+import NullHeader from "@/components/null/NullHeader";
 
 /**
- * MainHeader (Chuẩn hoá theo TotMart Craft & Gift)
- * Re-export Navigation chuẩn để toàn bộ client pages sử dụng chung một header thống nhất.
+ * MainHeader — UNLO Official Navigation Header
+ * Sử dụng NullHeader đồng bộ giao diện toàn bộ các trang client.
  */
 export default function MainHeader() {
-  return <Navigation />;
+  return <NullHeader />;
 }
