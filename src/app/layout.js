@@ -42,19 +42,24 @@ export const metadata = {
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
+        url: "/assets/logo/favicon-48.png",
+        sizes: "48x48",
+        type: "image/png",
       },
       {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/assets/logo/unlo-icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
       },
     ],
-    apple: "/apple-icon.png",
+    shortcut: "/assets/logo/favicon-48.png",
+    apple: [
+      {
+        url: "/assets/logo/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
   },
 };
 
