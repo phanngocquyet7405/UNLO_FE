@@ -53,16 +53,17 @@ export default function NullProductCard({
   const [hoverImageIdx, setHoverImageIdx] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
-  if (!product) return null;
-
-  const isDark = variant === "dark";
-  const slugUrl = `/products/${product.slug || "san-pham"}-${product._id}`;
-  
+  // useMemo PHẢI được gọi trước mọi early return (React Hooks rules)
   const imageList = useMemo(() => {
     const raw = product?.images || [];
     const urls = raw.map((img) => (typeof img === "string" ? img : img?.url)).filter(Boolean);
     return urls.length ? urls : ["/assets/placeholder.png"];
   }, [product]);
+
+  if (!product) return null;
+
+  const isDark = variant === "dark";
+  const slugUrl = `/products/${product.slug || "san-pham"}-${product._id}`;
 
   const activeImgUrl = imageList[isHovering ? hoverImageIdx % imageList.length : 0] || imageList[0];
   const activeColor = colors[selectedColorIdx] || colors[0] || null;

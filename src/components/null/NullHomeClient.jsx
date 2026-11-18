@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Layers, CheckCircle2 } from "lucide-react";
 import NullHeader from "./NullHeader";
 import NullFooter from "./NullFooter";
 import NullProductCard from "./NullProductCard";
