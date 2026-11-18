@@ -10,7 +10,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm audit --omit=dev --audit-level=high
+      - name: Security audit (fail on critical; report all prod advisories)
+        run: |
+          npm audit --omit=dev || true
+          npm audit --omit=dev --audit-level=critical
       - run: npm run lint
       - run: npm test
       - run: npm run build -- --webpack

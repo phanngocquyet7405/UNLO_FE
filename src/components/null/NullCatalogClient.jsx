@@ -23,6 +23,7 @@ const SORT_OPTIONS = [
 
 export default function NullCatalogClient({
   initialProducts = [],
+  initialError = null,
   preferInitialWhenUnfiltered = false,
 }) {
   const searchParams = useSearchParams();
@@ -111,6 +112,22 @@ export default function NullCatalogClient({
       <NullHeader />
 
       <main className="flex-1 max-w-[1380px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-8 sm:pt-11 pb-16 space-y-8">
+        {initialError && (initialError.status >= 500 || initialError.requestId) && (
+          <div
+            role="alert"
+            className="rounded-2xl border border-[#C43D4B]/30 bg-[#FDF2F3] px-5 py-4 text-sm text-[#A52735] space-y-1"
+          >
+            <p className="font-semibold">
+              {initialError.message || "Lỗi hệ thống. Vui lòng thử lại."}
+            </p>
+            {initialError.requestId && (
+              <p className="text-xs font-mono">
+                Mã yêu cầu: <span>{initialError.requestId}</span>
+              </p>
+            )}
+          </div>
+        )}
+
         <div className="rounded-3xl bg-gradient-to-r from-[#EFF2F9] via-[#F6F7FC] to-[#FCFDF1] border border-[#DCE0E7] p-6 sm:p-9 space-y-3">
           <nav
             aria-label="Đường dẫn"

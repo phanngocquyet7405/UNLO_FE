@@ -58,6 +58,7 @@ export default async function ProductsPage({ searchParams: searchParamsPromise }
   const personalizable = searchParams?.personalizable === "true";
 
   let serverProducts = [];
+  let serverError = null;
   try {
     const catalog = await getServerProductsCatalog({
       page,
@@ -67,6 +68,9 @@ export default async function ProductsPage({ searchParams: searchParamsPromise }
       brandSlug: brandSlug || undefined,
     });
     serverProducts = catalog?.products || catalog?.data || [];
+    if (catalog?.error) {
+      serverError = catalog.error;
+    }
   } catch {
     serverProducts = [];
   }
@@ -85,6 +89,7 @@ export default async function ProductsPage({ searchParams: searchParamsPromise }
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
       <NullCatalogClient
         initialProducts={initialProducts}
+        initialError={serverError}
         preferInitialWhenUnfiltered={serverProducts.length > 0}
       />
     </Suspense>
