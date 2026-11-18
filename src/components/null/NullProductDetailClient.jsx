@@ -542,6 +542,7 @@ export default function NullProductDetailClient({ initialProduct }) {
             value={customization}
             onChange={handleCustomizationChange}
             garmentColorHex={activeVariant?.colorHex || "#15095D"}
+            isEmbeddedInProductPage={true}
           />
 
           {/* Quantity + Primary Buy Actions */}

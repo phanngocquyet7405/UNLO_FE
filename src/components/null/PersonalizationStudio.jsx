@@ -113,6 +113,7 @@ export default function PersonalizationStudio({
   value = {},
   onChange,
   garmentColorHex = "#FCFDF1",
+  isEmbeddedInProductPage = false,
 }) {
   const [zoomCloseUp, setZoomCloseUp] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -243,92 +244,108 @@ export default function PersonalizationStudio({
       </div>
 
       {value.enabled && (
-        <div className="pt-4 border-t border-[#DCE0E7] space-y-6 animate-fade-in">
-          {/* Main 2-Column: Live Shirt Preview on Left, Controls on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* ============================================================
-                LEFT: Interactive T-Shirt Preview Canvas
-                ============================================================ */}
-            <div className="lg:col-span-5 space-y-2">
-              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-[#BBC2DD] bg-[#F6F7FC] shadow-inner select-none">
-                {/* T-Shirt Base Photo with Zoom Focus */}
-                <div
-                  className="w-full h-full relative transition-transform duration-500 ease-out"
-                  style={
-                    zoomCloseUp
-                      ? {
-                          transform: "scale(2.2)",
-                          transformOrigin: `${currentPlacement.coords.left} ${currentPlacement.coords.top}`,
-                        }
-                      : { transform: "scale(1)" }
-                  }
-                >
-                  <img
-                    src="/assets/tshirt-model.jpg"
-                    alt="Xem trước hình thêu trên áo thun cơ bản"
-                    className="w-full h-full object-cover object-top"
-                  />
-
-                  {/* Garment Color Tint (if not default ivory) */}
-                  {!isLightGarment && (
-                    <div
-                      className="absolute inset-0 mix-blend-multiply opacity-75 pointer-events-none"
-                      style={{ backgroundColor: garmentColorHex }}
-                    />
-                  )}
-
-                  {/* Realistic Embroidery / Logo Overlay with Interactive Direct-on-Shirt Touchpoints */}
-                  <RealisticEmbroideryOverlay
-                    customization={value}
-                    garmentColorHex={garmentColorHex}
-                    interactiveHotspots={true}
-                    onSelectPlacement={(placement) => patch({ placement })}
-                  />
-                </div>
-
-                {/* Viewport Zoom Controls & Badge Overlay */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-auto">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7]">
-                    <Shirt className="w-3 h-3 text-[#32259B]" />
-                    {currentPlacement.label}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => setZoomCloseUp(!zoomCloseUp)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7] cursor-pointer transition-colors"
-                  >
-                    {zoomCloseUp ? (
-                      <>
-                        <ZoomOut className="w-3 h-3" /> Toàn cảnh
-                      </>
-                    ) : (
-                      <>
-                        <ZoomIn className="w-3 h-3" /> Cận cảnh thớ chỉ
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <div className="absolute bottom-3 inset-x-3 text-center pointer-events-none">
-                  <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/90 text-[#FCFDF1] text-[10px] backdrop-blur-xs shadow-sm">
-                    Chạm các điểm tròn trên áo để đổi vị trí · Phóng to xem sợi thêu
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] text-[#4E567A] px-1">
-                <span>Thời gian thêu: +{config.extraLeadDays ?? 1}–2 ngày</span>
-                <span className="font-semibold text-[#32259B]">
-                  Phụ phí: +{formatVnd(currentFee)}
+        <div className="pt-4 border-t border-[#DCE0E7] space-y-4 animate-fade-in">
+          {isEmbeddedInProductPage && (
+            <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-white border border-[#BBC2DD] text-xs">
+              <div className="flex items-center gap-2.5 text-[#15095D]">
+                <Shirt className="w-4 h-4 text-[#32259B] shrink-0" />
+                <span className="leading-snug">
+                  <strong>Xem trước trực tiếp:</strong> Hình thêu đang hiển thị trên ảnh áo lớn bên trái ↖. Bấm chọn 4 vị trí bên dưới hoặc chạm trực tiếp lên áo.
                 </span>
               </div>
+              <span className="shrink-0 font-bold text-[#32259B]">
+                +{formatVnd(currentFee)}
+              </span>
             </div>
+          )}
+
+          {/* Main Layout: Full width on PDP, or 2-column with embedded canvas on standalone */}
+          <div className={isEmbeddedInProductPage ? "space-y-4" : "grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"}>
+            {/* ============================================================
+                LEFT: Interactive T-Shirt Preview Canvas (Chỉ render khi Standalone)
+                ============================================================ */}
+            {!isEmbeddedInProductPage && (
+              <div className="lg:col-span-5 space-y-2">
+                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-[#BBC2DD] bg-[#F6F7FC] shadow-inner select-none">
+                  {/* T-Shirt Base Photo with Zoom Focus */}
+                  <div
+                    className="w-full h-full relative transition-transform duration-500 ease-out"
+                    style={
+                      zoomCloseUp
+                        ? {
+                            transform: "scale(2.2)",
+                            transformOrigin: `${currentPlacement.coords.left} ${currentPlacement.coords.top}`,
+                          }
+                        : { transform: "scale(1)" }
+                    }
+                  >
+                    <img
+                      src="/assets/tshirt-model.jpg"
+                      alt="Xem trước hình thêu trên áo thun cơ bản"
+                      className="w-full h-full object-cover object-top"
+                    />
+
+                    {/* Garment Color Tint (if not default ivory) */}
+                    {!isLightGarment && (
+                      <div
+                        className="absolute inset-0 mix-blend-multiply opacity-75 pointer-events-none"
+                        style={{ backgroundColor: garmentColorHex }}
+                      />
+                    )}
+
+                    {/* Realistic Embroidery / Logo Overlay with Interactive Direct-on-Shirt Touchpoints */}
+                    <RealisticEmbroideryOverlay
+                      customization={value}
+                      garmentColorHex={garmentColorHex}
+                      interactiveHotspots={true}
+                      onSelectPlacement={(placement) => patch({ placement })}
+                    />
+                  </div>
+
+                  {/* Viewport Zoom Controls & Badge Overlay */}
+                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-auto">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7]">
+                      <Shirt className="w-3 h-3 text-[#32259B]" />
+                      {currentPlacement.label}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => setZoomCloseUp(!zoomCloseUp)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7] cursor-pointer transition-colors"
+                    >
+                      {zoomCloseUp ? (
+                        <>
+                          <ZoomOut className="w-3 h-3" /> Toàn cảnh
+                        </>
+                      ) : (
+                        <>
+                          <ZoomIn className="w-3 h-3" /> Cận cảnh thớ chỉ
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="absolute bottom-3 inset-x-3 text-center pointer-events-none">
+                    <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/90 text-[#FCFDF1] text-[10px] backdrop-blur-xs shadow-sm">
+                      Chạm các điểm tròn trên áo để đổi vị trí · Phóng to xem sợi thêu
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-[#4E567A] px-1">
+                  <span>Thời gian thêu: +{config.extraLeadDays ?? 1}–2 ngày</span>
+                  <span className="font-semibold text-[#32259B]">
+                    Phụ phí: +{formatVnd(currentFee)}
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* ============================================================
-                RIGHT: Tab Switcher (Monogram / Logo) & Configurations
+                RIGHT / FULL: Tab Switcher (Monogram / Logo) & Configurations
                 ============================================================ */}
-            <div className="lg:col-span-7 space-y-4">
+            <div className={isEmbeddedInProductPage ? "space-y-4" : "lg:col-span-7 space-y-4"}>
               {/* Mode Switcher Tabs */}
               <div className="grid grid-cols-2 p-1 bg-white rounded-2xl border border-[#BBC2DD]">
                 <button
@@ -597,24 +614,38 @@ export default function PersonalizationStudio({
 
                 {/* Placements */}
                 <div>
-                  <label
-                    htmlFor="pdp-placement"
-                    className="block text-xs font-bold text-[#15095D] mb-1.5"
-                  >
+                  <span className="block text-xs font-bold text-[#15095D] mb-2">
                     Vị trí thêu trên áo
-                  </label>
-                  <select
-                    id="pdp-placement"
-                    value={value.placement || "chest_pocket"}
-                    onChange={(e) => patch({ placement: e.target.value })}
-                    className="w-full h-10 px-3 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-xs font-bold text-[#15095D] outline-none focus:border-[#32259B]"
-                  >
-                    {EMBROIDERY_PLACEMENTS.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.label} — {p.sublabel}
-                      </option>
-                    ))}
-                  </select>
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {EMBROIDERY_PLACEMENTS.map((p) => {
+                      const active = (value.placement || "chest_pocket") === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => patch({ placement: p.id })}
+                          className={`px-2.5 py-1.5 rounded-xl text-left border transition-all cursor-pointer ${
+                            active
+                              ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                              : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7] hover:border-[#32259B] hover:text-[#15095D]"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] font-bold">{p.label}</span>
+                            {active && <span className="w-1.5 h-1.5 rounded-full bg-[#BBC2DD]" />}
+                          </div>
+                          <span
+                            className={`block text-[9px] truncate ${
+                              active ? "text-[#BBC2DD]" : "text-[#8D8DC7]"
+                            }`}
+                          >
+                            {p.sublabel}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 

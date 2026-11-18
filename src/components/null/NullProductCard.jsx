@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Heart, Star, Sparkles } from "lucide-react";
+import { Heart, Star, Sparkles, Layers } from "lucide-react";
 import { toast } from "sonner";
 import { useWishlist } from "@/app/context/WishlistContext";
 import { useCart } from "@/app/context/CartContext";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
+import QuickAddModal from "./QuickAddModal";
 
 function extractColors(variants = []) {
   const seen = new Map();
@@ -48,12 +49,22 @@ export default function NullProductCard({
   const { addToCart, setIsCartOpen } = useCart() || {};
   const colors = extractColors(product?.variants);
   const [selectedColorIdx, setSelectedColorIdx] = useState(0);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [hoverImageIdx, setHoverImageIdx] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
 
   if (!product) return null;
 
   const isDark = variant === "dark";
   const slugUrl = `/products/${product.slug || "san-pham"}-${product._id}`;
-  const imgUrl = product.images?.[0]?.url || "/assets/placeholder.png";
+  
+  const imageList = useMemo(() => {
+    const raw = product?.images || [];
+    const urls = raw.map((img) => (typeof img === "string" ? img : img?.url)).filter(Boolean);
+    return urls.length ? urls : ["/assets/placeholder.png"];
+  }, [product]);
+
+  const activeImgUrl = imageList[isHovering ? hoverImageIdx % imageList.length : 0] || imageList[0];
   const activeColor = colors[selectedColorIdx] || colors[0] || null;
   const activeVariant = activeColor?.variant || product.variants?.[0] || null;
 
@@ -84,49 +95,55 @@ export default function NullProductCard({
           : "bg-[#FCFDF1]/95 text-[#15095D] border border-[#DCE0E7]";
 
   const handleQuickAdd = () => {
-    if (!addToCart) return;
-    const item = {
-      ...product,
-      _id: product._id,
-      id: product._id,
-      productId: product._id,
-      itemType: "product",
-      price: displayPrice,
-      image: imgUrl,
-      ...(activeVariant
-        ? {
-            variantId: activeVariant._id,
-            variantSummary: {
-              size: activeVariant.size,
-              colorName: activeVariant.colorName,
-              colorHex: activeVariant.colorHex,
-            },
-          }
-        : {}),
-    };
-    addToCart(item, 1);
-    toast.success(`Đã thêm "${product.name}" vào giỏ hàng`);
-    setIsCartOpen?.(true);
+    setQuickAddOpen(true);
   };
 
   return (
     <article className="group flex flex-col h-full">
       {/* Clean Rounded Portrait Frame on Meteor Canvas (#EFF2F9) */}
       <div
-        className={`relative aspect-[4/5] rounded-2xl overflow-hidden border ${
+        className={`relative aspect-[4/5] rounded-2xl overflow-hidden border transition-all duration-300 ${
           isDark
             ? "bg-[#121D45] border-white/10"
             : "bg-[#EFF2F9] border-[#DCE0E7]/70"
         }`}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => {
+          setIsHovering(false);
+          setHoverImageIdx(0);
+        }}
       >
         <Link href={slugUrl} className="block w-full h-full">
           <img
-            src={imgUrl}
+            src={activeImgUrl}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover null-card-img"
+            className="w-full h-full object-cover null-card-img transition-transform duration-500 group-hover:scale-105"
           />
         </Link>
+
+        {/* Multi-angle indicator dots if product has multiple images */}
+        {imageList.length > 1 && isHovering && (
+          <div className="absolute bottom-2.5 inset-x-0 flex items-center justify-center gap-1.5 z-10 pointer-events-auto">
+            {imageList.map((_, dotIdx) => (
+              <button
+                key={dotIdx}
+                type="button"
+                aria-label={`Xem góc ảnh ${dotIdx + 1}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setHoverImageIdx(dotIdx);
+                }}
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                  (isHovering ? hoverImageIdx % imageList.length : 0) === dotIdx
+                    ? "w-4 bg-white"
+                    : "w-1.5 bg-white/50 hover:bg-white/80"
+                }`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Top-Left Pill Badge */}
         {activeBadge && (
@@ -257,12 +274,19 @@ export default function NullProductCard({
           <button
             type="button"
             onClick={handleQuickAdd}
-            className="w-full h-9 rounded-full unlo-pill-outline text-[11px] font-bold uppercase tracking-[0.12em] cursor-pointer mt-1"
+            className="w-full h-9 rounded-full unlo-pill-outline text-[11px] font-bold uppercase tracking-[0.12em] cursor-pointer mt-1 hover:bg-[#15095D] hover:text-white transition-colors"
           >
-            Thêm vào giỏ
+            Chọn cỡ &amp; thêm vào giỏ
           </button>
         )}
       </div>
+
+      {/* Quick Add Modal */}
+      <QuickAddModal
+        product={product}
+        isOpen={quickAddOpen}
+        onClose={() => setQuickAddOpen(false)}
+      />
     </article>
   );
 }

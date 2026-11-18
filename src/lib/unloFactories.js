@@ -22,8 +22,7 @@ export const UNLO_FACTORIES = [
       { country: "Bắc Âu", share: 35 },
       { country: "Mỹ", share: 15 },
     ],
-    coverImage:
-      "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1400&q=85",
+    coverImage: "/assets/img/x-cua-hang.jpg",
     ndaTrackRecord:
       "Từ năm 2011, xưởng là đối tác gia công cấp 1 (Tier-1 OEM) chuyên dệt và may áo thun Cotton sợi dài, áo Polo Tencel cho 4 thương hiệu thời trang tối giản hàng đầu tại Tokyo và Stockholm.",
     certifications: [
@@ -48,36 +47,31 @@ export const UNLO_FACTORIES = [
         step: "01",
         title: "Tuyển chọn sợi Cotton dài & xử lý Enzyme",
         desc: "Kiểm tra độ dài xơ bông Supima (≥ 35mm), dệt kim mật độ cao 260 GSM và giặt enzyme chống co rút dưới 2% sau 50 lần giặt.",
-        image:
-          "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80",
+        image: "/assets/img/x-tho-may.jpg",
       },
       {
         step: "02",
         title: "Cắt rập tự động bằng Laser chính xác",
         desc: "Trải vải xả căng 24 giờ trước khi cắt bằng máy tự động giúp thân áo giữ đúng trục canh sợi, không bị vặn sườn sau khi giặt máy.",
-        image:
-          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",
+        image: "/assets/img/x-gia-treo.jpg",
       },
       {
         step: "03",
         title: "May đường viền chuẩn xuất Nhật",
         desc: "Bo cổ dệt rib đôi dày 2.2cm chống bai dão, mật độ mũi kim 14 mũi/inch bằng chỉ Coats và máy kansai Juki chuyên dụng.",
-        image:
-          "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=800&q=80",
+        image: "/assets/img/x-xep-ao.jpg",
       },
       {
         step: "04",
         title: "Phòng kiểm định QC Lab 12 bước (AQL 2.5)",
         desc: "Soi lỗi bề mặt dưới đèn quang phổ, đo lại 8 thông số kích thước trên bàn đo chuẩn và kiểm định độ bền màu trước khi niêm phong.",
-        image:
-          "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
+        image: "/assets/img/x-ke-len.jpg",
       },
     ],
     maker: {
       name: "Chị Phạm Thị Minh H.",
       role: "Quản đốc Kỹ thuật Dệt May (17 năm kinh nghiệm)",
-      avatar:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+      avatar: "/assets/img/x-tho-may.jpg",
       quote:
         "Cùng một cuộn vải Supima 260 GSM và dây chuyền máy Juki xuất sang Tokyo với giá bán lẻ gần 700.000đ. Khi hợp tác trực tiếp qua UNLO M2C, người dùng Việt chỉ phải trả đúng chi phí sợi, công may và kiểm định thực chất.",
     },

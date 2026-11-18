@@ -21,33 +21,34 @@ export const REALISTIC_PLACEMENTS = {
     id: "left_cuff",
     label: "Bo tay áo",
     sublabel: "Đường viền bo gấu tay áo bên trái",
-    // Đo đạc chính xác: mép gấu tay áo chạy từ x=675 (y=41.4%) đến x=750 (y=38.8%), góc nghiêng -17 độ
-    coords: { left: "79%", top: "37%" },
-    transform: "translate(-50%, -50%) rotate(-17deg)",
+    // Đo đạc chuẩn xác theo ảnh mẫu: mép bo gấu tay áo bên trái người mặc tại y=49.5%, nghiêng -15 độ
+    coords: { left: "81%", top: "49.5%" },
+    transform: "translate(-50%, -50%) rotate(-15deg)",
     textSize: "text-[11px] sm:text-[13px] md:text-[14px]",
-    logoMaxHeight: "max-h-[30px] sm:max-h-[36px]",
-    logoMaxWidth: "max-w-[42px] sm:max-w-[50px]",
+    logoMaxHeight: "max-h-[28px] sm:max-h-[34px]",
+    logoMaxWidth: "max-w-[40px] sm:max-w-[48px]",
   },
   hem: {
     id: "hem",
     label: "Góc tà áo",
-    sublabel: "Phía trên đường vắt sổ gấu áo",
-    // Ngay trên đường may viền gấu áo (y=84%), góc rũ tự nhiên của vạt áo -2.5 độ
-    coords: { left: "62%", top: "84%" },
-    transform: "translate(-50%, -50%) rotate(-2.5deg)",
+    sublabel: "Phía trên đường may gấu áo",
+    // Mép gấu tà áo dưới cùng tại y=86%
+    coords: { left: "63%", top: "86%" },
+    transform: "translate(-50%, -50%) rotate(-1.5deg)",
     textSize: "text-[12px] sm:text-[14px] md:text-[15px]",
-    logoMaxHeight: "max-h-[34px] sm:max-h-[40px]",
-    logoMaxWidth: "max-w-[48px] sm:max-w-[58px]",
+    logoMaxHeight: "max-h-[32px] sm:max-h-[38px]",
+    logoMaxWidth: "max-w-[46px] sm:max-w-[56px]",
   },
   inner_neck: {
     id: "inner_neck",
     label: "Gáy cổ áo",
     sublabel: "Đường dệt rib bo viền cổ áo",
-    coords: { left: "50%", top: "14%" },
+    // Bo viền cổ sau tại y=18.5%
+    coords: { left: "50%", top: "18.5%" },
     transform: "translate(-50%, -50%) rotate(0deg)",
     textSize: "text-[10px] sm:text-[12px] md:text-[13px]",
-    logoMaxHeight: "max-h-[26px] sm:max-h-[30px]",
-    logoMaxWidth: "max-w-[36px] sm:max-w-[44px]",
+    logoMaxHeight: "max-h-[24px] sm:max-h-[28px]",
+    logoMaxWidth: "max-w-[34px] sm:max-w-[42px]",
   },
 };
 

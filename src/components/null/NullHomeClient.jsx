@@ -36,6 +36,12 @@ import { useCart } from "@/app/context/CartContext";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
+import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
+import LiveStatCounterBanner from "./LiveStatCounterBanner";
+import AudienceGateways from "./AudienceGateways";
+import MagazineEditorialPosters from "./MagazineEditorialPosters";
+import BlackFridayCountdown from "./BlackFridayCountdown";
+import SupportChatbotDrawer from "./SupportChatbotDrawer";
 
 const HERO_IMAGE =
   "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=85";
@@ -271,80 +277,19 @@ export default function NullHomeClient() {
 
       <main className="flex-1">
         {/* ================================================================
-            1. HERO BANNER — Moodboard Split Layout × Brandless M2C Value
+            1. SEASONAL HERO VIDEO CAROUSEL (4 MÙA: XUÂN, HẠ, THU, ĐÔNG)
             ================================================================ */}
-        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-5 sm:pt-7">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0E2447] via-[#2B467C] to-[#5775B8] text-white">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-20 left-1/3 w-96 h-96 rounded-full bg-[#8D8DC7]/30 blur-3xl"
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-[#15095D]/50 blur-3xl"
-            />
+        <SeasonalHeroVideoCarousel />
 
-            <div className="relative grid grid-cols-1 lg:grid-cols-12 items-center min-h-[430px] sm:min-h-[490px]">
-              <div className="lg:col-span-6 px-6 py-10 sm:px-10 lg:px-14 lg:py-14 space-y-5 z-10 null-hero-reveal">
-                <p className="unlo-display-en text-[11px] sm:text-xs tracking-[0.14em] text-[#D4E4F7]">
-                  BRANDLESS M2C · DIRECT FACTORY
-                </p>
+        {/* ================================================================
+            1.1. LIVE STAT COUNTER BANNER (1.280+ PRE-ORDERS, 864 QC ORDERS)
+            ================================================================ */}
+        <LiveStatCounterBanner />
 
-                <h1 className="font-serif text-4xl sm:text-5xl xl:text-[54px] font-semibold leading-[1.08] tracking-tight text-[#FCFDF1]">
-                  Chuẩn Xuất Khẩu, Minh Bạch Giá Thực Tại Xưởng
-                </h1>
-
-                <p className="text-sm sm:text-[15px] text-[#EFF2F9]/90 leading-relaxed max-w-md">
-                  Kết nối thẳng tới 4 nhà máy Tier-1 OEM tại Hưng Yên, Bình Dương, Bắc Ninh &amp; Bát Tràng. Bóc tách 100% cấu thành giá — cắt bỏ chi phí mặt bằng và logo phô trương.
-                </p>
-
-                <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <Link
-                    href="/products"
-                    className="inline-flex items-center gap-2 h-11 sm:h-12 px-7 rounded-full unlo-pill-lilac text-xs sm:text-[13px] font-bold uppercase tracking-[0.1em]"
-                  >
-                    <span>Khám Phá Ngay</span>
-                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                  </Link>
-
-                  <a
-                    href="#studio-theu-ten"
-                    className="inline-flex items-center gap-2 h-11 sm:h-12 px-6 rounded-full border border-[#BBC2DD]/55 bg-white/10 backdrop-blur-xs text-xs sm:text-[13px] font-semibold text-[#FCFDF1] hover:bg-white/20 transition-colors null-pressable"
-                  >
-                    <Sparkles className="w-4 h-4 text-[#BBC2DD]" aria-hidden="true" />
-                    <span>Thử Thêu Tên Lên Áo</span>
-                  </a>
-                </div>
-              </div>
-
-              <div className="lg:col-span-6 relative h-[300px] sm:h-[380px] lg:h-full min-h-[300px]">
-                <img
-                  src={HERO_IMAGE}
-                  alt="Sản phẩm thiết yếu chuẩn xuất khẩu sản xuất trực tiếp tại xưởng UNLO"
-                  className="w-full h-full object-cover object-center lg:rounded-l-[40px]"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#0E2447]/65 via-transparent to-[#15095D]/15 lg:bg-gradient-to-r lg:from-[#2B467C]/40 lg:via-transparent lg:to-transparent"
-                />
-
-                {/* Grounded Factory Passport Specimen Card */}
-                <div className="absolute bottom-5 right-5 sm:bottom-7 sm:right-7 bg-[#FCFDF1]/96 backdrop-blur-md text-[#15095D] rounded-2xl px-5 py-4 shadow-[0_18px_40px_-14px_rgba(11,32,86,0.45)] border border-[#DCE0E7] max-w-[255px] null-hero-reveal-delay">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#625FBC]">
-                    Xưởng Số 04 · OEKO-TEX 100
-                  </p>
-                  <p className="font-serif text-lg font-bold leading-tight mt-1 text-[#15095D]">
-                    Supima Cotton 260 GSM
-                  </p>
-                  <p className="text-xs text-[#4E567A] mt-1 tabular-nums">
-                    Giá xưởng <strong className="text-[#32259B]">245.000đ</strong>{" "}
-                    <span className="line-through text-[#8D8DC7]">690.000đ</span> (-64%)
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* ================================================================
+            1.2. AUDIENCE GATEWAYS ("BẠN LÀ AI? CHỌN ĐÚNG Ô, UNLO DẪN ĐƯỜNG")
+            ================================================================ */}
+        <AudienceGateways />
 
         {/* ================================================================
             2. CIRCULAR CATEGORY ROW — Including "Thêu Tên" & "Combo"
@@ -508,6 +453,11 @@ export default function NullHomeClient() {
             </Link>
           </div>
         </section>
+
+        {/* ================================================================
+            4.1. MAGAZINE EDITORIAL POSTERS (THE DREAM, Daily EDIT, MONOGRAM U)
+            ================================================================ */}
+        <MagazineEditorialPosters />
 
         {/* ================================================================
             5. DEDICATED SECTION: "THÊU TÊN CỦA BẠN LÊN ĐỒ CƠ BẢN" (ATELIER)
@@ -970,6 +920,11 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
+            5.1. BLACK FRIDAY FLASH SALE & COUNTDOWN TIMER (-50% DEALS)
+            ================================================================ */}
+        <BlackFridayCountdown />
+
+        {/* ================================================================
             6. INTERACTIVE TRUST-TECH TRANSPARENT PRICING EXPLORER
             ================================================================ */}
         <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6 space-y-5">
@@ -1134,6 +1089,8 @@ export default function NullHomeClient() {
           </div>
         </section>
       </main>
+
+      <SupportChatbotDrawer />
 
       <NullFooter />
     </div>

@@ -12,8 +12,7 @@ export const UNLO_CATEGORIES = [
     enTag: "KNITWEAR",
     description: "Áo thun Supima Cotton 260 GSM & Polo Tencel sản xuất trực tiếp tại Xưởng Dệt Kim Số 04 Hưng Yên.",
     href: "/products?category=cotton-basics",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=700&q=80",
+    image: "/assets/img/cat-ao-thun.jpg",
   },
   {
     id: "leather-goods",
@@ -22,8 +21,7 @@ export const UNLO_CATEGORIES = [
     enTag: "LEATHER",
     description: "Ví da, thắt lưng & túi công sở da bò Full-grain Ý từ Xưởng Đồ Da Số 02 Bình Dương.",
     href: "/products?category=leather-goods",
-    image:
-      "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=700&q=80",
+    image: "/assets/img/p-tote.jpg",
   },
   {
     id: "linen-tailoring",
@@ -32,8 +30,7 @@ export const UNLO_CATEGORIES = [
     enTag: "LINEN",
     description: "100% sợi lanh châu Âu 185 GSM may cuốn sườn French Seam tại Xưởng Số 07 Bắc Ninh.",
     href: "/products?category=linen-tailoring",
-    image:
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=700&q=80",
+    image: "/assets/img/cat-so-mi.jpg",
   },
   {
     id: "ceramics-home",
@@ -42,8 +39,7 @@ export const UNLO_CATEGORIES = [
     enTag: "HOME",
     description: "Cốc gốm và bộ bàn ăn men lì nung 1.280°C chuẩn an toàn thực phẩm LFGB từ Bát Tràng.",
     href: "/products?category=ceramics-home",
-    image:
-      "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=700&q=80",
+    image: "/assets/img/cat-dong-phuc.jpg",
   },
   {
     id: "canvas-accessories",
@@ -52,8 +48,7 @@ export const UNLO_CATEGORIES = [
     enTag: "CARRY",
     description: "Túi tote Canvas 16oz, bao da hộ chiếu và phụ kiện hằng ngày cắt bỏ mọi chi phí logo.",
     href: "/products?category=canvas-accessories",
-    image:
-      "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=700&q=80",
+    image: "/assets/img/cat-tui.jpg",
   },
 ];
 
@@ -89,10 +84,13 @@ export const UNLO_PRODUCTS = [
       "Áo thun dệt kim mật độ cao 260 GSM từ 100% sợi Cotton dài nhập khẩu, xử lý giặt enzyme chống co rút dưới 2% sau 50 lần giặt. Bo cổ dệt rib đôi dày 2.2cm giữ phom bền bỉ, không logo phô trương.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-tee-250.jpg",
       },
       {
-        url: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-tee-trang.jpg",
+      },
+      {
+        url: "/assets/img/p-tee-xam.jpg",
       },
     ],
     specs: {
@@ -227,10 +225,10 @@ export const UNLO_PRODUCTS = [
       "Chế tác từ da bò nguyên tấm Full-grain nhập khẩu Ý đạt chuẩn LWG Gold, độ dày 1.7mm. Khâu hoàn thiện trên máy Juki chuyên dụng Nhật Bản, sơn cạnh 4 lớp chống nứt và hỗ trợ dập chìm tên viết tắt kín đáo không logo.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-tote.jpg",
       },
       {
-        url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/cut-beige-tee.webp",
       },
     ],
     specs: {
@@ -339,10 +337,13 @@ export const UNLO_PRODUCTS = [
       "Dệt từ 100% sợi lanh châu Âu định lượng 185 GSM đã xử lý giặt mềm Stone-wash. Hoàn thiện bằng kỹ thuật may cuốn sườn giấu mép French Seam và nút vỏ trai tự nhiên, thoáng mát vượt trội trong khí hậu nhiệt đới.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-chambray.jpg",
       },
       {
-        url: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-oxford.jpg",
+      },
+      {
+        url: "/assets/img/p-so-mi-denim.jpg",
       },
     ],
     specs: {
@@ -443,10 +444,10 @@ export const UNLO_PRODUCTS = [
       "Bộ 4 cốc gốm cao lanh khử sắt nung ở 1.280°C giúp xương đất đanh chắc, men khoáng lì chống bám ố trà cà phê và đạt chuẩn an toàn thực phẩm LFGB châu Âu (không chì, không cadmium).",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-hoodie.jpg",
       },
       {
-        url: "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-sweat.jpg",
       },
     ],
     specs: {
@@ -541,10 +542,10 @@ export const UNLO_PRODUCTS = [
       "Túi công sở đựng vừa laptop 15.6 inch chế tác từ da bò nguyên tấm Ý dày 1.8mm kết hợp khóa kéo kim loại YKK Excella Nhật Bản (test đóng mở 10.000 lần). Ngăn chống sốc đệm nỉ lông cừu và dây đeo vai có thể tháo rời.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-tote.jpg",
       },
       {
-        url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-jogger.jpg",
       },
     ],
     specs: {
@@ -630,7 +631,10 @@ export const UNLO_PRODUCTS = [
       "Kết hợp 65% sợi gỗ sồi Tencel™ và 35% Cotton sợi dài tạo bề mặt mắt cá sấu (Piqué) mát lạnh khi chạm da, hạn chế nhăn nhàu và đứng cổ áo suốt 10 giờ làm việc.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-oxford.jpg",
+      },
+      {
+        url: "/assets/img/p-tee-den.jpg",
       },
     ],
     specs: {
@@ -719,7 +723,10 @@ export const UNLO_PRODUCTS = [
       "Thân túi dệt từ vải bố Cotton 16oz (450 GSM) tự đứng phom kết hợp quai cầm da bò Full-grain Ý tán đinh đồng chắc chắn. Có ngăn đựng laptop 14 inch và ngăn khóa kéo YKK bên trong.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-tote.jpg",
+      },
+      {
+        url: "/assets/img/p-kaki.jpg",
       },
     ],
     specs: {
@@ -791,7 +798,10 @@ export const UNLO_PRODUCTS = [
       "Quần ống suông từ 100% sợi lanh châu Âu 185 GSM, cạp bán chun ẩn tinh tế. Tận dụng lợi thế xưởng trực tiếp cho phép chọn sẵn độ dài ống (Tiêu chuẩn / Ngắn -4cm / Dài +4cm) không cần mang đi sửa.",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=900&q=85",
+        url: "/assets/img/p-kaki.jpg",
+      },
+      {
+        url: "/assets/img/p-jogger.jpg",
       },
     ],
     specs: {
