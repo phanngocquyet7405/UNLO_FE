@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -86,12 +86,40 @@ export default function NullProductDetailClient({ initialProduct }) {
     logoUrl: "",
     logoName: "",
     font: "serif_minimal",
-    threadColor: "",
-    placement: "chest_pocket",
+    threadColor: "#15095D",
+    placement: "left_cuff",
     innerLabelText: "",
     giftBoxType: "none",
     giftNote: "",
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+      const params = new URLSearchParams(window.location.search);
+      const isStudio =
+        hash === "#studio" ||
+        hash === "#studio-theu-ten" ||
+        params.get("studio") === "1" ||
+        params.get("pers") === "true";
+      if (isStudio) {
+        setCustomization((prev) => ({
+          ...prev,
+          enabled: true,
+          placement: params.get("pos") || prev.placement || "left_cuff",
+          monogramText: params.get("text") || prev.monogramText || "H.L",
+          font: params.get("font") || prev.font || "serif_minimal",
+          threadColor: params.get("thread") || prev.threadColor || "#15095D",
+        }));
+        setSelectedImageIdx(0);
+        setShowFactoryVideo(false);
+        const el = document.getElementById("studio");
+        if (el) {
+          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+        }
+      }
+    }
+  }, []);
 
   const handleCustomizationChange = (next) => {
     setCustomization(next);
@@ -125,6 +153,9 @@ export default function NullProductDetailClient({ initialProduct }) {
     const merged = [...vImgs, ...pImgs]
       .map((i) => (typeof i === "string" ? i : i.url))
       .filter(Boolean);
+    if (product?.personalizationConfig?.enabled && !merged.includes("/assets/tshirt-model.jpg")) {
+      merged.unshift("/assets/tshirt-model.jpg");
+    }
     return merged.length ? [...new Set(merged)] : ["/assets/placeholder.png"];
   }, [activeVariant, product]);
 
@@ -377,6 +408,35 @@ export default function NullProductDetailClient({ initialProduct }) {
             )}
           </div>
 
+          {/* Garment Color Swatches directly underneath model photo (chính xác mockup Image 2) */}
+          {colors.length > 0 && (
+            <div className="flex items-center justify-between py-2.5 px-1 bg-white/70 backdrop-blur-xs rounded-xl border border-[#DCE0E7]/60">
+              <span className="text-xs font-bold text-[#15095D]">
+                Màu áo: <span className="font-semibold text-[#4E567A]">{selectedColor || "Trắng sữa"}</span>
+              </span>
+              <div className="flex items-center gap-2">
+                {colors.map((c) => {
+                  const active = selectedColor === c.name;
+                  return (
+                    <button
+                      key={c.name}
+                      type="button"
+                      onClick={() => handleSelectColor(c.name)}
+                      className={`w-7 h-7 rounded-full border transition-all cursor-pointer ${
+                        active
+                          ? "ring-2 ring-[#15095D] ring-offset-2 scale-110"
+                          : "border-[#BBC2DD] hover:scale-105"
+                      }`}
+                      style={{ backgroundColor: c.hex }}
+                      title={c.name}
+                      aria-label={`Chọn màu ${c.name}`}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Thumbnails + Video 10s Trigger */}
           <div className="flex items-center gap-3 overflow-x-auto pb-1">
             {galleryImages.map((src, idx) => (
@@ -543,54 +603,63 @@ export default function NullProductDetailClient({ initialProduct }) {
             onChange={handleCustomizationChange}
             garmentColorHex={activeVariant?.colorHex || "#15095D"}
             isEmbeddedInProductPage={true}
+            product={product}
+            factory={factory}
+            totalUnitPrice={totalUnitPrice}
+            comparePrice={comparePrice}
+            savingsPct={savingsPct}
+            onAddToCart={handleAddToCart}
+            onOpenSizeChart={() => setSizeModalOpen(true)}
           />
 
-          {/* Quantity + Primary Buy Actions */}
-          <div className="space-y-3 pt-1">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center rounded-full border border-[#BBC2DD] bg-white h-12 px-1.5">
+          {/* Quantity + Primary Buy Actions (chỉ hiển thị khi KHÔNG bật cá nhân hóa) */}
+          {!customization.enabled && (
+            <div className="space-y-3 pt-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="inline-flex items-center rounded-full border border-[#BBC2DD] bg-white h-12 px-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    aria-label="Giảm số lượng"
+                    className="w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#EFF2F9] cursor-pointer"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="min-w-10 text-center text-sm font-bold text-[#15095D] tabular-nums">
+                    {quantity}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setQuantity((q) => Math.min(availableStock || 99, q + 1))}
+                    aria-label="Tăng số lượng"
+                    className="w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#EFF2F9] cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  aria-label="Giảm số lượng"
-                  className="w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#EFF2F9] cursor-pointer"
+                  onClick={handleAddToCart}
+                  className="flex-1 min-w-[210px] h-12 px-6 rounded-full unlo-pill-primary text-xs sm:text-sm font-bold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="min-w-10 text-center text-sm font-bold text-[#15095D] tabular-nums">
-                  {quantity}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setQuantity((q) => Math.min(availableStock || 99, q + 1))}
-                  aria-label="Tăng số lượng"
-                  className="w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#EFF2F9] cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" />
+                  <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+                  <span>Thêm vào giỏ · {formatVnd(totalUnitPrice * quantity)}</span>
                 </button>
               </div>
 
               <button
                 type="button"
-                onClick={handleAddToCart}
-                className="flex-1 min-w-[210px] h-12 px-6 rounded-full unlo-pill-primary text-xs sm:text-sm font-bold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-2 cursor-pointer"
+                onClick={() => {
+                  addToCart?.(buildCartItem(), quantity);
+                  router.push("/checkout");
+                }}
+                className="w-full h-12 rounded-full unlo-pill-outline text-xs sm:text-sm font-bold uppercase tracking-[0.08em] cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-                <span>Thêm vào giỏ · {formatVnd(totalUnitPrice * quantity)}</span>
+                Mua Ngay — Kiểm Hàng Trước Khi Thanh Toán
               </button>
             </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                addToCart?.(buildCartItem(), quantity);
-                router.push("/checkout");
-              }}
-              className="w-full h-12 rounded-full unlo-pill-outline text-xs sm:text-sm font-bold uppercase tracking-[0.08em] cursor-pointer"
-            >
-              Mua Ngay — Kiểm Hàng Trước Khi Thanh Toán
-            </button>
-          </div>
+          )}
         </div>
       </section>
 

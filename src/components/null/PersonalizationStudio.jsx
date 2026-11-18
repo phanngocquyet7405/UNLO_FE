@@ -3,18 +3,17 @@
 import { useState, useRef } from "react";
 import {
   Sparkles,
-  Package,
-  Palette,
   Upload,
   X,
-  ZoomIn,
-  ZoomOut,
   Shirt,
   Image as ImageIcon,
   Type,
+  ShoppingBag,
+  ArrowRight,
+  Check,
 } from "lucide-react";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
-import RealisticEmbroideryOverlay, {
+import {
   REALISTIC_PLACEMENTS,
 } from "./RealisticEmbroideryOverlay";
 import {
@@ -26,25 +25,25 @@ export const EMBROIDERY_PLACEMENTS = [
   {
     id: "chest_pocket",
     label: "Ngực trái",
-    sublabel: "Vị trí kinh điển, tinh tế",
+    sublabel: "Kinh điển, tinh tế",
     coords: REALISTIC_PLACEMENTS.chest_pocket.coords,
   },
   {
     id: "left_cuff",
     label: "Bo tay áo",
-    sublabel: "Đường viền bo gấu tay áo",
+    sublabel: "Kín đáo khi cử động",
     coords: REALISTIC_PLACEMENTS.left_cuff.coords,
   },
   {
     id: "hem",
     label: "Góc tà áo",
-    sublabel: "Mép gấu áo tối giản",
+    sublabel: "Tối giản vạt áo",
     coords: REALISTIC_PLACEMENTS.hem.coords,
   },
   {
     id: "inner_neck",
     label: "Gáy cổ áo",
-    sublabel: "Bo viền cổ trong",
+    sublabel: "Sau gáy cổ trong",
     coords: REALISTIC_PLACEMENTS.inner_neck.coords,
   },
 ];
@@ -53,30 +52,30 @@ export const EMBROIDERY_FONTS = [
   {
     id: "serif_minimal",
     label: "Cổ điển",
-    sublabel: "Libre Bodoni",
+    sublabel: "Bodoni",
     previewClass: "font-serif font-bold tracking-widest",
   },
   {
     id: "italic_atelier",
     label: "Viết tay",
-    sublabel: "Bodoni Italic",
+    sublabel: "Italic",
     previewClass: "font-serif italic font-semibold tracking-wider",
   },
   {
     id: "sans_architect",
     label: "Hiện đại",
-    sublabel: "Climate Sans",
+    sublabel: "Sans",
     previewClass: "font-sans font-bold uppercase tracking-widest text-[0.88em]",
   },
 ];
 
 export const DEFAULT_INKS = [
-  { name: "Chàm Midnight Indigo", hex: "#15095D" },
-  { name: "Trắng sữa Milky Ivory", hex: "#FCFDF1" },
-  { name: "Vàng đồng Amber Gold", hex: "#C59B27" },
-  { name: "Xanh khói Periwinkle", hex: "#8D8DC7" },
-  { name: "Đỏ rượu Burgundy", hex: "#8B1E2D" },
-  { name: "Đen tuyền Carbon", hex: "#1A1A1A" },
+  { name: "Chàm Indigo", hex: "#15095D" },
+  { name: "Trắng sữa", hex: "#FCFDF1" },
+  { name: "Vàng đồng", hex: "#C59B27" },
+  { name: "Xanh khói", hex: "#8D8DC7" },
+  { name: "Đỏ rượu", hex: "#8B1E2D" },
+  { name: "Đen tuyền", hex: "#1A1A1A" },
 ];
 
 export const GIFT_BOXES = [
@@ -85,18 +84,10 @@ export const GIFT_BOXES = [
   { id: "atelier_linen", label: "Hộp cứng Midnight Foil cao cấp", fee: 59000 },
 ];
 
-const SAMPLE_LOGOS = [
-  {
-    id: "sample_unlo",
-    label: "Seal Xưởng UNLO",
-    url: "/assets/logo.png",
-  },
-];
-
 export function computePersonalizationFee(value, config = {}) {
   if (!value?.enabled) return 0;
   let total = 0;
-  const isLogo = value?.customType === "logo" && Boolean(value?.logoUrl);
+  const isLogo = value?.customType === "logo" && Boolean(value?.logoUrl || value?.logoSvg);
   if (isLogo) {
     total += config?.logoFee ?? 45000;
   } else if (value.monogramText?.trim()) {
@@ -114,20 +105,24 @@ export default function PersonalizationStudio({
   onChange,
   garmentColorHex = "#FCFDF1",
   isEmbeddedInProductPage = false,
+  product = null,
+  factory = null,
+  totalUnitPrice = 0,
+  comparePrice = 0,
+  savingsPct = 0,
+  onAddToCart,
+  onOpenSizeChart,
 }) {
-  const [zoomCloseUp, setZoomCloseUp] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
 
   if (!config?.enabled && config?.enabled !== undefined) return null;
 
-  const inks =
-    Array.isArray(config.allowedThreadColors) && config.allowedThreadColors.length
-      ? config.allowedThreadColors
-      : DEFAULT_INKS;
-  const maxChars = Math.min(config.maxMonogramChars || 18, 24);
+  const inks = DEFAULT_INKS;
+  const maxChars = 5; // Image 2: "Tối đa 5 ký tự viết tắt"
   const currentPlacement =
     EMBROIDERY_PLACEMENTS.find((p) => p.id === value.placement) ||
+    EMBROIDERY_PLACEMENTS.find((p) => p.id === "left_cuff") ||
     EMBROIDERY_PLACEMENTS[0];
   const currentFee = computePersonalizationFee(value, config);
 
@@ -156,7 +151,6 @@ export default function PersonalizationStudio({
     const reader = new FileReader();
     reader.onload = async (e) => {
       const rawDataUrl = e.target?.result;
-      // Tách nền thông minh giúp logo thêu hòa quyện hoàn hảo vào thớ vải
       const cleanDataUrl = await autoRemoveBackground(rawDataUrl);
       patch({
         enabled: true,
@@ -165,20 +159,11 @@ export default function PersonalizationStudio({
         logoSvg: null,
         logoName: file.name,
         monogramText: "LOGO",
-        innerLabelText: `Logo: ${file.name.slice(0, 20)}`,
         threadColor: previewThreadColor,
-        placement: value.placement || "chest_pocket",
+        placement: value.placement || "left_cuff",
       });
     };
     reader.readAsDataURL(file);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragActive(false);
-    if (e.dataTransfer?.files?.[0]) {
-      handleFileUpload(e.dataTransfer.files[0]);
-    }
   };
 
   const clearLogo = () => {
@@ -187,8 +172,7 @@ export default function PersonalizationStudio({
       logoUrl: "",
       logoSvg: null,
       logoName: "",
-      monogramText: config.defaultHeadline || "H.L",
-      innerLabelText: "",
+      monogramText: "H.L",
     });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -196,10 +180,10 @@ export default function PersonalizationStudio({
   return (
     <div
       id="studio"
-      className="rounded-3xl bg-[#EFF2F9] border border-[#DCE0E7] p-5 sm:p-6 space-y-5 scroll-mt-24 shadow-sm"
+      className="rounded-3xl bg-white border border-[#DCE0E7] p-5 sm:p-7 space-y-6 scroll-mt-24 shadow-sm"
     >
       {/* Header Banner & Switch */}
-      <div className="flex items-start justify-between gap-4 pb-1">
+      <div className="flex items-start justify-between gap-4 pb-2 border-b border-[#EFF2F9]">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-[#15095D] text-white grid place-items-center shrink-0">
@@ -224,10 +208,11 @@ export default function PersonalizationStudio({
               customType: value.customType || "text",
               placement:
                 !value.placement || value.placement === "none"
-                  ? "chest_pocket"
+                  ? "left_cuff"
                   : value.placement,
               threadColor: previewThreadColor,
-              monogramText: value.monogramText || config.defaultHeadline || "H.L",
+              monogramText: value.monogramText || "H.L",
+              font: value.font || "serif_minimal",
             })
           }
           className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors cursor-pointer ${
@@ -244,478 +229,289 @@ export default function PersonalizationStudio({
       </div>
 
       {value.enabled && (
-        <div className="pt-4 border-t border-[#DCE0E7] space-y-4 animate-fade-in">
-          {isEmbeddedInProductPage && (
-            <div className="flex items-center justify-between gap-3 p-3.5 rounded-2xl bg-white border border-[#BBC2DD] text-xs">
-              <div className="flex items-center gap-2.5 text-[#15095D]">
-                <Shirt className="w-4 h-4 text-[#32259B] shrink-0" />
-                <span className="leading-snug">
-                  <strong>Xem trước trực tiếp:</strong> Hình thêu đang hiển thị trên ảnh áo lớn bên trái ↖. Bấm chọn 4 vị trí bên dưới hoặc chạm trực tiếp lên áo.
-                </span>
-              </div>
-              <span className="shrink-0 font-bold text-[#32259B]">
-                +{formatVnd(currentFee)}
+        <div className="space-y-6 animate-fade-in">
+          {/* Subtle Mode Switcher (Thêu tên vs Tải logo) */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => patch({ customType: "text" })}
+              className={`h-9 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 transition-all cursor-pointer border ${
+                !isLogoMode
+                  ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                  : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7] hover:text-[#15095D]"
+              }`}
+            >
+              <Type className="w-3.5 h-3.5" />
+              <span>1. Thêu Tên / Monogram</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => patch({ customType: "logo" })}
+              className={`h-9 px-4 rounded-xl text-xs font-bold inline-flex items-center gap-2 transition-all cursor-pointer border ${
+                isLogoMode
+                  ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                  : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7] hover:text-[#15095D]"
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>2. Thêu / Tải Logo</span>
+            </button>
+          </div>
+
+          {/* ============================================================
+              PHẦN 1: NỘI DUNG THÊU HOẶC TẢI LOGO (CHÍNH XÁC MOCKUP IMAGE 2)
+              ============================================================ */}
+          {!isLogoMode ? (
+            <div className="space-y-2">
+              <label
+                htmlFor="pdp-monogram-text"
+                className="block text-xs font-bold uppercase tracking-[0.14em] text-[#15095D]"
+              >
+                NỘI DUNG THÊU
+              </label>
+              <input
+                id="pdp-monogram-text"
+                type="text"
+                maxLength={maxChars}
+                value={value.monogramText ?? "H.L"}
+                onChange={(e) =>
+                  patch({ monogramText: e.target.value.slice(0, maxChars) })
+                }
+                placeholder="H.L"
+                className="w-full h-12 px-4 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-base font-bold text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] focus:bg-white tracking-widest uppercase transition-all"
+              />
+              <p className="text-xs text-[#5E607E]">
+                Hiển thị ngay trên áo bên trái. Tối đa 5 ký tự viết tắt.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3 bg-[#F6F7FC] p-4 rounded-2xl border border-[#DCE0E7]">
+              <span className="block text-xs font-bold uppercase tracking-[0.14em] text-[#15095D]">
+                TẢI FILE LOGO ĐỂ THÊU
               </span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files?.[0]) handleFileUpload(e.target.files[0]);
+                }}
+              />
+              {value.logoUrl ? (
+                <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-[#BBC2DD]">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={value.logoUrl}
+                      alt="Logo đã tải lên"
+                      className="w-10 h-10 object-contain rounded-lg border border-[#DCE0E7] bg-white p-1"
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-[#15095D] truncate max-w-[180px]">
+                        {value.logoName || "Logo thêu"}
+                      </p>
+                      <p className="text-[10px] text-[#1D7A5F] font-semibold">
+                        ✓ Đã tự động tách nền vải
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearLogo}
+                    className="p-1.5 rounded-lg text-[#8D8DC7] hover:text-[#15095D] hover:bg-[#F6F7FC] cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setDragActive(true);
+                  }}
+                  onDragLeave={() => setDragActive(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setDragActive(false);
+                    if (e.dataTransfer?.files?.[0]) handleFileUpload(e.dataTransfer.files[0]);
+                  }}
+                  className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-all ${
+                    dragActive
+                      ? "border-[#32259B] bg-[#EFF2F9]"
+                      : "border-[#BBC2DD] hover:border-[#625FBC] bg-white"
+                  }`}
+                >
+                  <Upload className="w-6 h-6 mx-auto text-[#625FBC] mb-1.5" />
+                  <p className="text-xs font-bold text-[#15095D]">
+                    Nhấn để tải file hoặc kéo thả logo vào đây
+                  </p>
+                  <p className="text-[10px] text-[#4E567A] mt-0.5">
+                    Hỗ trợ PNG trong suốt, JPG, SVG (Tối đa 5MB)
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Main Layout: Full width on PDP, or 2-column with embedded canvas on standalone */}
-          <div className={isEmbeddedInProductPage ? "space-y-4" : "grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"}>
-            {/* ============================================================
-                LEFT: Interactive T-Shirt Preview Canvas (Chỉ render khi Standalone)
-                ============================================================ */}
-            {!isEmbeddedInProductPage && (
-              <div className="lg:col-span-5 space-y-2">
-                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-[#BBC2DD] bg-[#F6F7FC] shadow-inner select-none">
-                  {/* T-Shirt Base Photo with Zoom Focus */}
-                  <div
-                    className="w-full h-full relative transition-transform duration-500 ease-out"
-                    style={
-                      zoomCloseUp
-                        ? {
-                            transform: "scale(2.2)",
-                            transformOrigin: `${currentPlacement.coords.left} ${currentPlacement.coords.top}`,
-                          }
-                        : { transform: "scale(1)" }
-                    }
-                  >
-                    <img
-                      src="/assets/tshirt-model.jpg"
-                      alt="Xem trước hình thêu trên áo thun cơ bản"
-                      className="w-full h-full object-cover object-top"
-                    />
-
-                    {/* Garment Color Tint (if not default ivory) */}
-                    {!isLightGarment && (
-                      <div
-                        className="absolute inset-0 mix-blend-multiply opacity-75 pointer-events-none"
-                        style={{ backgroundColor: garmentColorHex }}
-                      />
-                    )}
-
-                    {/* Realistic Embroidery / Logo Overlay with Interactive Direct-on-Shirt Touchpoints */}
-                    <RealisticEmbroideryOverlay
-                      customization={value}
-                      garmentColorHex={garmentColorHex}
-                      interactiveHotspots={true}
-                      onSelectPlacement={(placement) => patch({ placement })}
-                    />
-                  </div>
-
-                  {/* Viewport Zoom Controls & Badge Overlay */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-auto">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7]">
-                      <Shirt className="w-3 h-3 text-[#32259B]" />
-                      {currentPlacement.label}
-                    </span>
-
+          {/* ============================================================
+              PHẦN 2: KIỂU CHỮ (3 NÚT NGANG CHÍNH XÁC MOCKUP IMAGE 2)
+              ============================================================ */}
+          {!isLogoMode && (
+            <div className="space-y-2">
+              <span className="block text-xs font-bold uppercase tracking-[0.14em] text-[#15095D]">
+                KIỂU CHỮ
+              </span>
+              <div className="grid grid-cols-3 gap-2.5">
+                {EMBROIDERY_FONTS.map((f) => {
+                  const active = (value.font || "serif_minimal") === f.id;
+                  return (
                     <button
+                      key={f.id}
                       type="button"
-                      onClick={() => setZoomCloseUp(!zoomCloseUp)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7] cursor-pointer transition-colors"
+                      onClick={() => patch({ font: f.id })}
+                      className={`h-12 px-3 rounded-2xl border text-center flex flex-col items-center justify-center transition-all cursor-pointer ${
+                        active
+                          ? "bg-[#15095D] text-white border-[#15095D] shadow-sm"
+                          : "bg-white text-[#15095D] border-[#BBC2DD] hover:border-[#15095D]"
+                      }`}
                     >
-                      {zoomCloseUp ? (
-                        <>
-                          <ZoomOut className="w-3 h-3" /> Toàn cảnh
-                        </>
-                      ) : (
-                        <>
-                          <ZoomIn className="w-3 h-3" /> Cận cảnh thớ chỉ
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  <div className="absolute bottom-3 inset-x-3 text-center pointer-events-none">
-                    <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/90 text-[#FCFDF1] text-[10px] backdrop-blur-xs shadow-sm">
-                      Chạm các điểm tròn trên áo để đổi vị trí · Phóng to xem sợi thêu
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] text-[#4E567A] px-1">
-                  <span>Thời gian thêu: +{config.extraLeadDays ?? 1}–2 ngày</span>
-                  <span className="font-semibold text-[#32259B]">
-                    Phụ phí: +{formatVnd(currentFee)}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* ============================================================
-                RIGHT / FULL: Tab Switcher (Monogram / Logo) & Configurations
-                ============================================================ */}
-            <div className={isEmbeddedInProductPage ? "space-y-4" : "lg:col-span-7 space-y-4"}>
-              {/* Mode Switcher Tabs */}
-              <div className="grid grid-cols-2 p-1 bg-white rounded-2xl border border-[#BBC2DD]">
-                <button
-                  type="button"
-                  onClick={() => patch({ customType: "text" })}
-                  className={`h-10 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    !isLogoMode
-                      ? "bg-[#15095D] text-white shadow-xs"
-                      : "text-[#4E567A] hover:text-[#15095D]"
-                  }`}
-                >
-                  <Type className="w-4 h-4" />
-                  <span>1. Thêu Tên / Monogram</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => patch({ customType: "logo" })}
-                  className={`h-10 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    isLogoMode
-                      ? "bg-[#15095D] text-white shadow-xs"
-                      : "text-[#4E567A] hover:text-[#15095D]"
-                  }`}
-                >
-                  <ImageIcon className="w-4 h-4" />
-                  <span>2. Thêu / Tải Logo</span>
-                </button>
-              </div>
-
-              {/* MODE A: TEXT MONOGRAM */}
-              {!isLogoMode ? (
-                <div className="space-y-4 bg-white p-4 rounded-2xl border border-[#DCE0E7]">
-                  <div>
-                    <label
-                      htmlFor="pdp-monogram-text"
-                      className="block text-xs font-bold text-[#15095D] mb-1.5"
-                    >
-                      Nội dung thêu (Tên / Chữ cái viết tắt)
-                    </label>
-                    <input
-                      id="pdp-monogram-text"
-                      type="text"
-                      maxLength={maxChars}
-                      value={value.monogramText || ""}
-                      onChange={(e) =>
-                        patch({ monogramText: e.target.value.slice(0, maxChars) })
-                      }
-                      placeholder={config.defaultHeadline || "VD: H.L hoặc MINH"}
-                      className="w-full h-11 px-4 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-sm font-bold text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] focus:bg-white tracking-wider"
-                    />
-                    <p className="text-[10px] text-[#4E567A] mt-1">
-                      Tối đa {maxChars} ký tự. Gợi ý: Chữ cái đầu họ tên (VD: H.L, N.Q, NAM)
-                    </p>
-                  </div>
-
-                  <div>
-                    <span className="block text-xs font-bold text-[#15095D] mb-1.5">
-                      Kiểu font chữ thêu
-                    </span>
-                    <div className="grid grid-cols-3 gap-2">
-                      {EMBROIDERY_FONTS.map((f) => {
-                        const active = (value.font || "serif_minimal") === f.id;
-                        return (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => patch({ font: f.id })}
-                            className={`h-12 px-2 rounded-xl text-left border flex flex-col justify-center transition-all cursor-pointer ${
-                              active
-                                ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
-                                : "bg-[#F6F7FC] text-[#15095D] border-[#DCE0E7] hover:border-[#625FBC]"
-                            }`}
-                          >
-                            <span className="text-xs font-bold">{f.label}</span>
-                            <span
-                              className={`text-[10px] opacity-80 line-clamp-1 ${
-                                active ? "text-[#BBC2DD]" : "text-[#4E567A]"
-                              }`}
-                            >
-                              {f.sublabel}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                /* MODE B: LOGO UPLOAD */
-                <div className="space-y-3 bg-white p-4 rounded-2xl border border-[#DCE0E7]">
-                  <div>
-                    <span className="block text-xs font-bold text-[#15095D] mb-1.5">
-                      Tải file Logo để thêu (PNG trong suốt, JPG, SVG)
-                    </span>
-
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp"
-                      className="hidden"
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) handleFileUpload(e.target.files[0]);
-                      }}
-                    />
-
-                    {value.logoUrl ? (
-                      <div className="flex items-center justify-between p-3 rounded-xl border border-[#32259B] bg-[#EFF2F9]/70">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={value.logoUrl}
-                            alt="Logo preview"
-                            className="w-10 h-10 object-contain rounded-lg bg-white border border-[#BBC2DD] p-1 shadow-xs"
-                          />
-                          <div>
-                            <p className="text-xs font-bold text-[#15095D] line-clamp-1">
-                              {value.logoName || "Logo đã tải lên"}
-                            </p>
-                            <p className="text-[10px] text-[#1D7A5F] font-semibold">
-                              ✓ Đã gắn vào thớ vải áo phông xem trước
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => fileInputRef.current?.click()}
-                            className="text-xs font-semibold text-[#32259B] hover:underline cursor-pointer"
-                          >
-                            Đổi logo
-                          </button>
-                          <button
-                            type="button"
-                            onClick={clearLogo}
-                            className="w-7 h-7 rounded-full bg-white text-[#8D8DC7] hover:text-[#A52735] grid place-items-center border border-[#DCE0E7] cursor-pointer"
-                            title="Xóa logo"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          setDragActive(true);
-                        }}
-                        onDragLeave={() => setDragActive(false)}
-                        onDrop={handleDrop}
-                        onClick={() => fileInputRef.current?.click()}
-                        className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-colors ${
-                          dragActive
-                            ? "border-[#32259B] bg-[#EFF2F9]"
-                            : "border-[#BBC2DD] hover:border-[#32259B] bg-[#F6F7FC]"
+                      <span className="text-xs font-bold leading-tight">{f.label}</span>
+                      <span
+                        className={`text-[10px] ${
+                          active ? "text-[#BBC2DD]" : "text-[#4E567A]"
                         }`}
                       >
-                        <Upload className="w-6 h-6 text-[#32259B] mx-auto mb-1.5" />
-                        <p className="text-xs font-bold text-[#15095D]">
-                          Kéo thả hoặc click để chọn ảnh Logo
-                        </p>
-                        <p className="text-[10px] text-[#4E567A] mt-0.5">
-                          Khuyên dùng ảnh PNG nền trong suốt để thêu sắc nét nhất (Max 5MB)
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Preset Sample Logos */}
-                  <div className="pt-1 space-y-1.5">
-                    <span className="text-[10px] font-bold text-[#4E567A] uppercase tracking-wider">
-                      Hoặc chọn nhanh logo mẫu xưởng dệt:
-                    </span>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {EMBROIDERY_SAMPLE_LOGOS.map((sample) => {
-                        const active = value.logoSvg === sample.svg;
-                        return (
-                          <button
-                            key={sample.id}
-                            type="button"
-                            onClick={() =>
-                              patch({
-                                customType: "logo",
-                                logoUrl: null,
-                                logoSvg: sample.svg,
-                                logoName: sample.label,
-                                monogramText: "LOGO",
-                                innerLabelText: `Logo: ${sample.label}`,
-                              })
-                            }
-                            className={`px-3 py-1.5 rounded-full border text-xs font-bold transition-all cursor-pointer ${
-                              active
-                                ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
-                                : "bg-[#EFF2F9] text-[#32259B] border-[#BBC2DD] hover:bg-[#15095D] hover:text-white hover:border-[#15095D]"
-                            }`}
-                          >
-                            + {sample.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Logo Thread Tone Switcher */}
-                  {(value.logoUrl || value.logoSvg) && (
-                    <div className="pt-2 flex items-center justify-between border-t border-[#DCE0E7] text-xs">
-                      <span className="font-bold text-[#15095D]">
-                        Kiểu màu thêu Logo:
+                        {f.sublabel}
                       </span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => patch({ logoMonochrome: false })}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
-                            !value.logoMonochrome
-                              ? "bg-[#15095D] text-white border-[#15095D]"
-                              : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7]"
-                          }`}
-                        >
-                          Màu gốc của ảnh
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => patch({ logoMonochrome: true })}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
-                            value.logoMonochrome
-                              ? "bg-[#15095D] text-white border-[#15095D]"
-                              : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7]"
-                          }`}
-                        >
-                          Đồng màu chỉ thêu
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Thread Color & Placement (Common Controls) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-4 rounded-2xl border border-[#DCE0E7]">
-                {/* Thread Colors */}
-                <div>
-                  <span className="block text-xs font-bold text-[#15095D] mb-2">
-                    Màu chỉ thêu
-                  </span>
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    {inks.map((ink) => {
-                      const active = (value.threadColor || previewThreadColor) === ink.hex;
-                      return (
-                        <button
-                          key={ink.name}
-                          type="button"
-                          title={ink.name}
-                          aria-label={`Màu chỉ ${ink.name}`}
-                          onClick={() => patch({ threadColor: ink.hex })}
-                          className={`w-7 h-7 rounded-full border transition-transform cursor-pointer ${
-                            active
-                              ? "ring-2 ring-[#15095D] ring-offset-2 scale-110 border-[#15095D]"
-                              : "border-[#15095D]/20 hover:scale-105"
-                          }`}
-                          style={{ backgroundColor: ink.hex }}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Placements */}
-                <div>
-                  <span className="block text-xs font-bold text-[#15095D] mb-2">
-                    Vị trí thêu trên áo
-                  </span>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {EMBROIDERY_PLACEMENTS.map((p) => {
-                      const active = (value.placement || "chest_pocket") === p.id;
-                      return (
-                        <button
-                          key={p.id}
-                          type="button"
-                          onClick={() => patch({ placement: p.id })}
-                          className={`px-2.5 py-1.5 rounded-xl text-left border transition-all cursor-pointer ${
-                            active
-                              ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
-                              : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7] hover:border-[#32259B] hover:text-[#15095D]"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-bold">{p.label}</span>
-                            {active && <span className="w-1.5 h-1.5 rounded-full bg-[#BBC2DD]" />}
-                          </div>
-                          <span
-                            className={`block text-[9px] truncate ${
-                              active ? "text-[#BBC2DD]" : "text-[#8D8DC7]"
-                            }`}
-                          >
-                            {p.sublabel}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Inner Collar Label & Gift Box Packaging */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label
-                    htmlFor="pdp-inner-label"
-                    className="block text-xs font-bold text-[#15095D] mb-1"
-                  >
-                    Thêu nhãn trong / Gáy áo (+20.000đ)
-                  </label>
-                  <input
-                    id="pdp-inner-label"
-                    type="text"
-                    maxLength={30}
-                    value={value.innerLabelText || ""}
-                    onChange={(e) =>
-                      patch({ innerLabelText: e.target.value.slice(0, 30) })
-                    }
-                    placeholder="VD: Minh & Lan · 2026"
-                    className="w-full h-10 px-3 rounded-xl border border-[#BBC2DD] bg-white text-xs text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B]"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="pdp-gift-box"
-                    className="block text-xs font-bold text-[#15095D] mb-1"
-                  >
-                    <span className="inline-flex items-center gap-1">
-                      <Package className="w-3.5 h-3.5 text-[#443EB1]" />
-                      Đóng gói hộp quà
-                    </span>
-                  </label>
-                  <select
-                    id="pdp-gift-box"
-                    value={value.giftBoxType || "none"}
-                    onChange={(e) => patch({ giftBoxType: e.target.value })}
-                    className="w-full h-10 px-3 rounded-xl border border-[#BBC2DD] bg-white text-xs font-semibold text-[#15095D] outline-none focus:border-[#32259B]"
-                  >
-                    {GIFT_BOXES.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        {b.label} {b.fee > 0 ? `(+${formatVnd(b.fee)})` : "(Miễn phí)"}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Note */}
-              <div>
-                <label
-                  htmlFor="pdp-gift-note"
-                  className="block text-xs font-bold text-[#15095D] mb-1"
-                >
-                  Ghi chú cho thợ thêu tại xưởng (miễn phí)
-                </label>
-                <textarea
-                  id="pdp-gift-note"
-                  rows={2}
-                  maxLength={200}
-                  value={value.giftNote || ""}
-                  onChange={(e) => patch({ giftNote: e.target.value.slice(0, 200) })}
-                  placeholder="Ghi chú thêm về kích thước hình thêu, canh lề ngực áo hoặc lời chúc..."
-                  className="w-full px-3 py-2 rounded-xl border border-[#BBC2DD] bg-white text-xs text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] resize-none"
-                />
+                    </button>
+                  );
+                })}
               </div>
             </div>
+          )}
+
+          {/* ============================================================
+              PHẦN 3: MÀU CHỈ THÊU (6 NÚT CHẤM MÀU CHÍNH XÁC MOCKUP IMAGE 2)
+              ============================================================ */}
+          <div className="space-y-2">
+            <span className="block text-xs font-bold uppercase tracking-[0.14em] text-[#15095D]">
+              MÀU CHỈ THÊU
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {inks.map((ink) => {
+                const active = previewThreadColor?.toLowerCase() === ink.hex.toLowerCase();
+                return (
+                  <button
+                    key={ink.name}
+                    type="button"
+                    onClick={() => patch({ threadColor: ink.hex })}
+                    className={`h-11 px-3 rounded-2xl border flex items-center gap-2.5 transition-all cursor-pointer text-left ${
+                      active
+                        ? "bg-[#15095D] text-white border-[#15095D] shadow-sm"
+                        : "bg-white text-[#15095D] border-[#BBC2DD] hover:border-[#15095D]"
+                    }`}
+                  >
+                    <span
+                      className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+                      style={{ backgroundColor: ink.hex }}
+                    />
+                    <span className="text-xs font-bold truncate">{ink.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {/* ============================================================
+              PHẦN 4: VỊ TRÍ THÊU (4 Ô CARD CHÍNH XÁC MOCKUP IMAGE 2)
+              ============================================================ */}
+          <div className="space-y-2">
+            <span className="block text-xs font-bold uppercase tracking-[0.14em] text-[#15095D]">
+              VỊ TRÍ THÊU
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {EMBROIDERY_PLACEMENTS.map((p) => {
+                const active = (value.placement || "left_cuff") === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => patch({ placement: p.id })}
+                    className={`p-3 rounded-2xl border text-left flex flex-col justify-center transition-all cursor-pointer ${
+                      active
+                        ? "bg-[#15095D] text-white border-[#15095D] shadow-sm"
+                        : "bg-white text-[#15095D] border-[#BBC2DD] hover:border-[#15095D]"
+                    }`}
+                  >
+                    <span className="text-xs font-bold leading-tight">{p.label}</span>
+                    <span
+                      className={`text-[10px] mt-0.5 line-clamp-1 ${
+                        active ? "text-[#BBC2DD]" : "text-[#5E607E]"
+                      }`}
+                    >
+                      {p.sublabel}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ============================================================
+              PHẦN 5: TÓM TẮT GIÁ & NÚT MUA HÀNG (CHÍNH XÁC MOCKUP IMAGE 2)
+              ============================================================ */}
+          {product && (
+            <div className="rounded-2xl bg-[#FCFDF1] border border-[#E3E5F3] p-4 sm:p-5 space-y-4">
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="font-bold uppercase tracking-[0.1em] text-[#15095D] truncate">
+                  {product.name?.split("—")[0] || "ÁO THUN SUPIMA COTTON 260 GSM"} + THÊU RIÊNG
+                </span>
+                <span className="text-[#5E607E] font-semibold shrink-0">
+                  {factory?.shortName || "Xưởng Dệt Kim Số 04"}
+                </span>
+              </div>
+
+              <div className="flex items-baseline gap-3">
+                <span className="text-2xl sm:text-3xl font-bold text-[#15095D] tabular-nums font-mono">
+                  {formatVnd(totalUnitPrice || 280000)}
+                </span>
+                {comparePrice > 0 && (
+                  <span className="text-sm text-[#8D8DC7] line-through tabular-nums font-mono">
+                    {formatVnd(comparePrice || 690000)}
+                  </span>
+                )}
+                {savingsPct > 0 && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#E5F5EC] text-[#1D7A5F] text-xs font-bold">
+                    Tiết kiệm -{savingsPct}%
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-2 pt-1">
+                <button
+                  type="button"
+                  onClick={onAddToCart}
+                  className="w-full h-12 rounded-full bg-[#15095D] text-white hover:bg-[#1F0C85] text-xs sm:text-sm font-bold uppercase tracking-[0.08em] shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+                  <span>Chọn áo để thêu ngay</span>
+                </button>
+
+                {onOpenSizeChart && (
+                  <button
+                    type="button"
+                    onClick={onOpenSizeChart}
+                    className="w-full h-11 rounded-full border border-[#BBC2DD] bg-white text-[#15095D] hover:bg-[#F6F7FC] text-xs font-bold uppercase tracking-[0.08em] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <span>Xem bảng size chi tiết</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

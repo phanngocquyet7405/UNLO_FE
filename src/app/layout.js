@@ -2,7 +2,7 @@ import "@fontsource/plus-jakarta-sans/latin-400.css";
 import "@fontsource/plus-jakarta-sans/vietnamese-400.css";
 import "@fontsource/plus-jakarta-sans/latin-700.css";
 import "@fontsource/plus-jakarta-sans/vietnamese-700.css";
-import { Libre_Bodoni, Climate_Crisis } from "next/font/google";
+import { Libre_Bodoni, Climate_Crisis, Great_Vibes } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -25,6 +25,13 @@ const climateCrisis = Climate_Crisis({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-climate-crisis",
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-great-vibes",
   display: "swap",
 });
 
@@ -58,10 +65,11 @@ export default async function RootLayout({ children }) {
   return (
     <html
       lang={locale}
-      className={`${libreBodoni.variable} ${climateCrisis.variable}`}
+      className={`${libreBodoni.variable} ${climateCrisis.variable} ${greatVibes.variable}`}
       style={{
         "--font-serif": "var(--font-libre-bodoni), 'Libre Bodoni', Georgia, serif",
         "--font-display": "var(--font-climate-crisis), 'Climate Crisis', sans-serif",
+        "--font-script": "var(--font-great-vibes), 'Great Vibes', cursive",
         "--font-sans": "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >

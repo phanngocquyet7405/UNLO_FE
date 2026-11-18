@@ -10,7 +10,7 @@ export const REALISTIC_PLACEMENTS = {
   chest_pocket: {
     id: "chest_pocket",
     label: "Ngực trái",
-    sublabel: "Vị trí kinh điển, ngang tầm mắt",
+    sublabel: "Vị trí kinh điển, tinh tế",
     coords: { left: "63%", top: "35%" },
     transform: "translate(-50%, -50%) rotate(-0.5deg)",
     textSize: "text-[16px] sm:text-[20px] md:text-[22px]",
@@ -20,33 +20,33 @@ export const REALISTIC_PLACEMENTS = {
   left_cuff: {
     id: "left_cuff",
     label: "Bo tay áo",
-    sublabel: "Đường viền bo gấu tay áo bên trái",
-    // Đo đạc chuẩn xác theo ảnh mẫu: mép bo gấu tay áo bên trái người mặc tại y=49.5%, nghiêng -15 độ
-    coords: { left: "81%", top: "49.5%" },
-    transform: "translate(-50%, -50%) rotate(-15deg)",
-    textSize: "text-[11px] sm:text-[13px] md:text-[14px]",
+    sublabel: "Kín đáo khi cử động",
+    // Đo đạc chuẩn xác theo ảnh mẫu: mép bo gấu tay áo bên trái người mặc tại y=43.5%, x=80%
+    coords: { left: "80.5%", top: "43.5%" },
+    transform: "translate(-50%, -50%) rotate(-4deg)",
+    textSize: "text-[14px] sm:text-[18px] md:text-[20px]",
     logoMaxHeight: "max-h-[28px] sm:max-h-[34px]",
     logoMaxWidth: "max-w-[40px] sm:max-w-[48px]",
   },
   hem: {
     id: "hem",
     label: "Góc tà áo",
-    sublabel: "Phía trên đường may gấu áo",
-    // Mép gấu tà áo dưới cùng tại y=86%
-    coords: { left: "63%", top: "86%" },
+    sublabel: "Tối giản vạt áo",
+    // Mép gấu tà áo dưới cùng tại y=85%
+    coords: { left: "63%", top: "85%" },
     transform: "translate(-50%, -50%) rotate(-1.5deg)",
-    textSize: "text-[12px] sm:text-[14px] md:text-[15px]",
+    textSize: "text-[14px] sm:text-[17px] md:text-[19px]",
     logoMaxHeight: "max-h-[32px] sm:max-h-[38px]",
     logoMaxWidth: "max-w-[46px] sm:max-w-[56px]",
   },
   inner_neck: {
     id: "inner_neck",
     label: "Gáy cổ áo",
-    sublabel: "Đường dệt rib bo viền cổ áo",
-    // Bo viền cổ sau tại y=18.5%
-    coords: { left: "50%", top: "18.5%" },
+    sublabel: "Sau gáy cổ trong",
+    // Bo viền cổ sau tại y=20%
+    coords: { left: "50%", top: "20%" },
     transform: "translate(-50%, -50%) rotate(0deg)",
-    textSize: "text-[10px] sm:text-[12px] md:text-[13px]",
+    textSize: "text-[12px] sm:text-[14px] md:text-[16px]",
     logoMaxHeight: "max-h-[24px] sm:max-h-[28px]",
     logoMaxWidth: "max-w-[34px] sm:max-w-[42px]",
   },
@@ -57,6 +57,7 @@ export default function RealisticEmbroideryOverlay({
   garmentColorHex = "#FCFDF1",
   className = "",
   interactiveHotspots = false,
+  showPositionBadge = true,
   onSelectPlacement,
 }) {
   if (!customization?.enabled) return null;
@@ -241,6 +242,15 @@ export default function RealisticEmbroideryOverlay({
               }}
             >
               {customization.monogramText || "H.L"}
+            </span>
+          </div>
+        )}
+
+        {/* Position label pill badge underneath monogram (giống hệt mockup Image 2) */}
+        {showPositionBadge && (
+          <div className="flex justify-center mt-1.5 pointer-events-none">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#15095D] text-white text-[9px] font-bold tracking-wide shadow-xs uppercase leading-none whitespace-nowrap">
+              {placementSpec.label}
             </span>
           </div>
         )}
