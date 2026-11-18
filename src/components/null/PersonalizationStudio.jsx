@@ -112,6 +112,7 @@ export default function PersonalizationStudio({
   savingsPct = 0,
   onAddToCart,
   onOpenSizeChart,
+  season = null, // áo theo mùa (object từ lib/seasonalGarments) hoặc null
 }) {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
@@ -125,6 +126,20 @@ export default function PersonalizationStudio({
     EMBROIDERY_PLACEMENTS.find((p) => p.id === "left_cuff") ||
     EMBROIDERY_PLACEMENTS[0];
   const currentFee = computePersonalizationFee(value, config);
+
+  // Áo theo mùa: bỏ "Gáy cổ áo" (không thấy trên ảnh mặt trước), thêm "Giữa ngực / Túi áo"
+  const placementOptions = season
+    ? [
+        EMBROIDERY_PLACEMENTS.find((p) => p.id === "chest_pocket"),
+        {
+          id: "center",
+          label: season.centerLabel,
+          sublabel: "Điểm nhấn giữa thân",
+        },
+        EMBROIDERY_PLACEMENTS.find((p) => p.id === "hem"),
+        EMBROIDERY_PLACEMENTS.find((p) => p.id === "left_cuff"),
+      ].filter(Boolean)
+    : EMBROIDERY_PLACEMENTS;
 
   const isLightGarment =
     garmentColorHex?.toLowerCase() === "#fcfdf1" ||
@@ -432,7 +447,7 @@ export default function PersonalizationStudio({
               VỊ TRÍ THÊU
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {EMBROIDERY_PLACEMENTS.map((p) => {
+              {placementOptions.map((p) => {
                 const active = (value.placement || "left_cuff") === p.id;
                 return (
                   <button

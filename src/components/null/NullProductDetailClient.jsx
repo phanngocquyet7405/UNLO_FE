@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -37,6 +37,12 @@ import NullProductCard from "@/components/null/NullProductCard";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_PRODUCTS, getProductsByFactorySlug } from "@/lib/unloCatalog";
 import { findFactoryBySlug, UNLO_FACTORIES } from "@/lib/unloFactories";
+import {
+  SEASONS,
+  SPOT_BY_PLACEMENT,
+  getSeason,
+  placementLabel,
+} from "@/lib/seasonalGarments";
 
 export default function NullProductDetailClient({ initialProduct }) {
   const router = useRouter();
@@ -71,6 +77,9 @@ export default function NullProductDetailClient({ initialProduct }) {
   const [heroZoom, setHeroZoom] = useState(false);
   const [sizeModalOpen, setSizeModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  // Áo theo mùa (null = ảnh gốc của sản phẩm). Được set khi vào từ trang chủ (?season=...)
+  const [seasonId, setSeasonId] = useState(null);
+  const applySeasonRef = useRef(null);
 
   // Smart Bundling (Block 5): Quick 3-pack color selection
   const [bundleColors, setBundleColors] = useState(() => [
@@ -103,12 +112,14 @@ export default function NullProductDetailClient({ initialProduct }) {
           hash === "#studio-theu-ten" ||
           params.get("studio") === "1" ||
           params.get("pers") === "true";
+        const seasonParam = params.get("season");
+        if (getSeason(seasonParam)) applySeasonRef.current?.(seasonParam, { syncUrl: false });
         if (isStudio) {
           setCustomization((prev) => ({
             ...prev,
             enabled: true,
             placement: params.get("pos") || prev.placement || "left_cuff",
-            monogramText: params.get("text") || prev.monogramText || "H.L",
+            monogramText: (params.get("text") || prev.monogramText || "H.L").slice(0, 5),
             font: params.get("font") || prev.font || "serif_minimal",
             threadColor: params.get("thread") || prev.threadColor || "#15095D",
           }));
@@ -150,7 +161,10 @@ export default function NullProductDetailClient({ initialProduct }) {
     );
   };
 
+  const season = getSeason(seasonId);
+
   const galleryImages = useMemo(() => {
+    if (season) return [season.views.flat.src, season.views.model.src];
     const vImgs = activeVariant?.images?.length ? activeVariant.images : [];
     const pImgs = product?.images || [];
     const merged = [...vImgs, ...pImgs]
@@ -160,9 +174,46 @@ export default function NullProductDetailClient({ initialProduct }) {
       merged.unshift("/assets/tshirt-model.jpg");
     }
     return merged.length ? [...new Set(merged)] : ["/assets/placeholder.png"];
-  }, [activeVariant, product]);
+  }, [activeVariant, product, season]);
 
   const activeHeroImage = galleryImages[selectedImageIdx] || galleryImages[0];
+
+  // Áo theo mùa: ảnh 0 = áo phẳng, ảnh 1 = mặc thử; chữ thêu hiện trên cả hai
+  const seasonalOverlay = season
+    ? { seasonId: season.id, viewId: selectedImageIdx === 1 ? "model" : "flat" }
+    : null;
+  const showEmbroidery =
+    customization.enabled && (season ? true : selectedImageIdx === 0);
+  const activeSpot = seasonalOverlay
+    ? season.views[seasonalOverlay.viewId].spots[
+        SPOT_BY_PLACEMENT[customization.placement || "chest_pocket"] || "chest"
+      ]
+    : null;
+  const activePlacementLabel = season
+    ? placementLabel(season, SPOT_BY_PLACEMENT[customization.placement || "chest_pocket"] || "chest")
+    : REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.label;
+
+  // Chọn mùa: đổi bộ ảnh, tự chọn màu "trắng" gần nhất (Milky Ivory) vì áo theo mùa đều màu trắng
+  const applySeason = (id, { syncUrl = true } = {}) => {
+    const next = getSeason(id);
+    setSeasonId(next ? next.id : null);
+    setSelectedImageIdx(0);
+    setShowFactoryVideo(false);
+    setHeroZoom(false);
+    if (next) {
+      const white = colors.find((c) => /ivory|trắng/i.test(c.name));
+      if (white) handleSelectColor(white.name);
+    }
+    if (syncUrl && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (next) url.searchParams.set("season", next.id);
+      else url.searchParams.delete("season");
+      window.history.replaceState(null, "", url.toString());
+    }
+  };
+  useEffect(() => {
+    applySeasonRef.current = applySeason;
+  });
 
   const baseUnitPrice = useMemo(() => {
     const raw = (product?.price || 0) + (activeVariant?.priceDelta || 0);
@@ -218,10 +269,14 @@ export default function NullProductDetailClient({ initialProduct }) {
           },
         }
       : {}),
+    ...(season
+      ? { seasonGarment: { id: season.id, label: season.label, product: season.product } }
+      : {}),
     ...(customization.enabled
       ? {
           customization: {
             ...customization,
+            ...(season ? { seasonId: season.id } : {}),
             monogramText: String(
               customization.customType === "logo"
                 ? (customization.monogramText || "LOGO")
@@ -335,16 +390,19 @@ export default function NullProductDetailClient({ initialProduct }) {
             ) : (
               <div className="relative w-full h-full overflow-hidden">
                 <div
-                  className="w-full h-full relative transition-transform duration-500 ease-out"
+                  className="w-full h-full relative transition-transform duration-500 ease-out [container-type:inline-size]"
+                  data-season={season?.id || undefined}
                   style={
                     heroZoom && customization.enabled
                       ? {
                           transform: "scale(2.2)",
-                          transformOrigin: `${
-                            REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.coords.left
-                          } ${
-                            REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.coords.top
-                          }`,
+                          transformOrigin: activeSpot
+                            ? `${activeSpot.x}% ${activeSpot.y}%`
+                            : `${
+                                REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.coords.left
+                              } ${
+                                REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.coords.top
+                              }`,
                         }
                       : { transform: "scale(1)" }
                   }
@@ -356,10 +414,11 @@ export default function NullProductDetailClient({ initialProduct }) {
                   />
 
                   {/* Live Realistic Embroidery / Logo Overlay directly on the main product image */}
-                  {customization.enabled && selectedImageIdx === 0 && (
+                  {showEmbroidery && (
                     <RealisticEmbroideryOverlay
                       customization={customization}
-                      garmentColorHex={activeVariant?.colorHex}
+                      seasonal={seasonalOverlay}
+                      garmentColorHex={season ? "#FFFFFF" : activeVariant?.colorHex}
                       interactiveHotspots={true}
                       onSelectPlacement={(placement) =>
                         setCustomization((prev) => ({ ...prev, placement }))
@@ -375,14 +434,14 @@ export default function NullProductDetailClient({ initialProduct }) {
                 )}
 
                 {/* Floating Live Badge when Customization is Enabled */}
-                {customization.enabled && selectedImageIdx === 0 && (
+                {showEmbroidery && (
                   <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#DCE0E7] shadow-sm text-xs">
                     <span className="w-2 h-2 rounded-full bg-[#1D7A5F] animate-ping" />
                     <span className="text-[#15095D] font-bold">
                       {customization.customType === "logo" ? "Thêu logo thật:" : "Thêu tên thật:"}
                     </span>
                     <span className="text-[#32259B] font-semibold">
-                      {REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.label}
+                      {activePlacementLabel}
                     </span>
                     <button
                       type="button"
@@ -411,8 +470,46 @@ export default function NullProductDetailClient({ initialProduct }) {
             )}
           </div>
 
+          {/* Chọn mùa: đổi bộ ảnh áo (thun cộc / dài tay / hoodie) */}
+          {product?.personalizationConfig?.enabled && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-0.5" role="group" aria-label="Chọn áo theo mùa">
+              <button
+                type="button"
+                onClick={() => applySeason(null)}
+                aria-pressed={!season}
+                className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold border cursor-pointer transition-colors ${
+                  !season
+                    ? "bg-[#15095D] text-white border-[#15095D]"
+                    : "bg-white text-[#15095D] border-[#DCE0E7] hover:bg-[#EFF2F9]"
+                }`}
+              >
+                Ảnh sản phẩm
+              </button>
+              {SEASONS.map((x) => (
+                <button
+                  key={x.id}
+                  type="button"
+                  onClick={() => applySeason(x.id)}
+                  aria-pressed={season?.id === x.id}
+                  className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold border cursor-pointer transition-colors ${
+                    season?.id === x.id
+                      ? "bg-[#15095D] text-white border-[#15095D]"
+                      : "bg-white text-[#15095D] border-[#DCE0E7] hover:bg-[#EFF2F9]"
+                  }`}
+                >
+                  {x.label} · {x.product}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Garment Color Swatches directly underneath model photo (chính xác mockup Image 2) */}
-          {colors.length > 0 && (
+          {season && (
+            <div className="py-2.5 px-3 bg-white/70 rounded-xl border border-[#DCE0E7]/60 text-xs font-bold text-[#15095D]">
+              Màu áo: <span className="font-semibold text-[#4E567A]">Trắng (mẫu {season.product.toLowerCase()} theo mùa)</span>
+            </div>
+          )}
+          {!season && colors.length > 0 && (
             <div className="flex items-center justify-between py-2.5 px-1 bg-white/70 backdrop-blur-xs rounded-xl border border-[#DCE0E7]/60">
               <span className="text-xs font-bold text-[#15095D]">
                 Màu áo: <span className="font-semibold text-[#4E567A]">{selectedColor || "Trắng sữa"}</span>
@@ -538,7 +635,7 @@ export default function NullProductDetailClient({ initialProduct }) {
           </div>
 
           {/* Color Selector */}
-          {colors.length > 0 && (
+          {!season && colors.length > 0 && (
             <div className="space-y-2.5">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#4E567A]">
                 Màu sắc: <strong className="text-[#15095D]">{selectedColor}</strong>
@@ -604,7 +701,8 @@ export default function NullProductDetailClient({ initialProduct }) {
             config={product.personalizationConfig}
             value={customization}
             onChange={handleCustomizationChange}
-            garmentColorHex={activeVariant?.colorHex || "#15095D"}
+            garmentColorHex={season ? "#FFFFFF" : activeVariant?.colorHex || "#15095D"}
+            season={season}
             isEmbeddedInProductPage={true}
             product={product}
             factory={factory}

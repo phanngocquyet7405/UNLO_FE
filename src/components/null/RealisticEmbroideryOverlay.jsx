@@ -1,6 +1,12 @@
 "use client";
 
 import React from "react";
+import {
+  SEASONS,
+  SPOT_BY_PLACEMENT,
+  FONTS,
+  placementLabel,
+} from "@/lib/seasonalGarments";
 
 /**
  * Tọa độ giải phẫu học thực tế đo đạc trực tiếp từ ảnh người mẫu áo thun (900x900px)
@@ -16,6 +22,16 @@ export const REALISTIC_PLACEMENTS = {
     textSize: "text-[16px] sm:text-[20px] md:text-[22px]",
     logoMaxHeight: "max-h-[46px] sm:max-h-[54px]",
     logoMaxWidth: "max-w-[64px] sm:max-w-[78px]",
+  },
+  center: {
+    id: "center",
+    label: "Giữa ngực",
+    sublabel: "Điểm nhấn giữa thân",
+    coords: { left: "50%", top: "42%" },
+    transform: "translate(-50%, -50%) rotate(0deg)",
+    textSize: "text-[20px] sm:text-[26px] md:text-[30px]",
+    logoMaxHeight: "max-h-[56px] sm:max-h-[68px]",
+    logoMaxWidth: "max-w-[80px] sm:max-w-[96px]",
   },
   left_cuff: {
     id: "left_cuff",
@@ -59,12 +75,38 @@ export default function RealisticEmbroideryOverlay({
   interactiveHotspots = false,
   showPositionBadge = true,
   onSelectPlacement,
+  // Áo theo mùa: { seasonId, viewId } → dùng ảnh/tọa độ riêng của từng mùa
+  seasonal = null,
 }) {
   if (!customization?.enabled) return null;
 
   const placementKey = customization.placement || "chest_pocket";
-  const placementSpec =
+  const basePlacement =
     REALISTIC_PLACEMENTS[placementKey] || REALISTIC_PLACEMENTS.chest_pocket;
+
+  const seasonView = seasonal
+    ? SEASONS.find((x) => x.id === seasonal.seasonId)?.views[seasonal.viewId]
+    : null;
+  const seasonSpotId = SPOT_BY_PLACEMENT[placementKey] || "chest";
+  const spot = seasonView?.spots[seasonSpotId] || null;
+
+  // Ở chế độ theo mùa: tọa độ lấy từ spot, cỡ chữ tính theo bề rộng khung (cqw)
+  const placementSpec = spot
+    ? {
+        ...basePlacement,
+        coords: { left: `${spot.x}%`, top: `${spot.y}%` },
+        transform: `translate(-50%, -50%) rotate(${spot.rot}deg)`,
+      }
+    : basePlacement;
+
+  const seasonFont = spot
+    ? FONTS.find((f) => f.productFont === customization.font) || FONTS[0]
+    : null;
+  const monogram = customization.monogramText || "H.L";
+  const fitLen = Math.max(monogram.trim().length, 1);
+  const seasonFontSize = spot
+    ? `${spot.size * seasonView.k * seasonFont.factor * (fitLen > 4 ? Math.max(4 / fitLen, 0.7) : 1)}cqw`
+    : null;
 
   const isLogo =
     customization.customType === "logo" &&
@@ -137,8 +179,15 @@ export default function RealisticEmbroideryOverlay({
       {/* Interactive Placement Hotspots (Tùy chọn: chạm trực tiếp lên áo để đổi vị trí) */}
       {interactiveHotspots && onSelectPlacement && (
         <div className="absolute inset-0 pointer-events-auto z-10">
-          {Object.entries(REALISTIC_PLACEMENTS).map(([key, item]) => {
+          {Object.entries(REALISTIC_PLACEMENTS)
+            .filter(([key]) =>
+              seasonView ? seasonView.spots[SPOT_BY_PLACEMENT[key]] : key !== "center",
+            )
+            .map(([key, item]) => {
             const isCurrent = key === placementKey;
+            const hot = seasonView
+              ? seasonView.spots[SPOT_BY_PLACEMENT[key]]
+              : null;
             return (
               <button
                 key={key}
@@ -151,8 +200,8 @@ export default function RealisticEmbroideryOverlay({
                   isCurrent ? "scale-110" : "opacity-40 hover:opacity-100 hover:scale-105"
                 }`}
                 style={{
-                  left: item.coords.left,
-                  top: item.coords.top,
+                  left: hot ? `${hot.x}%` : item.coords.left,
+                  top: hot ? `${hot.y}%` : item.coords.top,
                 }}
                 title={`Chọn vị trí: ${item.label}`}
                 aria-label={`Chọn vị trí thêu: ${item.label}`}
@@ -234,14 +283,23 @@ export default function RealisticEmbroideryOverlay({
             }}
           >
             <span
-              className={`leading-none select-none transition-all duration-300 ${fontClass} ${placementSpec.textSize}`}
+              className={`leading-none select-none whitespace-nowrap transition-all duration-300 ${
+                spot ? "" : `${fontClass} ${placementSpec.textSize}`
+              }`}
               style={{
                 color: threadColor,
                 textShadow: realisticTextShadow,
-                letterSpacing: "0.14em",
+                letterSpacing: spot ? "0.08em" : "0.14em",
+                ...(spot
+                  ? {
+                      fontFamily: seasonFont.family,
+                      fontWeight: seasonFont.weight,
+                      fontSize: seasonFontSize,
+                    }
+                  : {}),
               }}
             >
-              {customization.monogramText || "H.L"}
+              {monogram}
             </span>
           </div>
         )}
@@ -250,7 +308,12 @@ export default function RealisticEmbroideryOverlay({
         {showPositionBadge && (
           <div className="flex justify-center mt-1.5 pointer-events-none">
             <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#15095D] text-white text-[9px] font-bold tracking-wide shadow-xs uppercase leading-none whitespace-nowrap">
-              {placementSpec.label}
+              {seasonView
+                ? placementLabel(
+                    SEASONS.find((x) => x.id === seasonal.seasonId),
+                    seasonSpotId,
+                  ) || placementSpec.label
+                : placementSpec.label}
             </span>
           </div>
         )}
