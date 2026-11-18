@@ -30,27 +30,25 @@ const VALUES = [
 export default function AboutPage() {
   return (
     <Layout>
-      <title>Về chúng tôi – TotMart</title>
+      <title>Về chúng tôi – UNLO</title>
       <meta
         name="description"
-        content="Câu chuyện của TotMart – nơi những hộp quà tinh tuyển gặp gỡ những tâm hồn yêu nghề thủ công Việt Nam."
+        content="UNLO – Giá trị không cần gọi tên. Đồ cơ bản không logo từ các xưởng may Việt Nam đã thẩm định."
       />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-card/60 border-b border-border py-16 sm:py-24">
         <div className="relative max-w-4xl mx-auto px-6 text-center">
           <span className="inline-block text-xs font-semibold tracking-wider uppercase text-primary bg-primary/10 border border-primary/20 px-4 py-1.5 rounded-full mb-6">
-            Câu chuyện của chúng tôi
+            Triết lý UNLO
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground leading-tight tracking-tight mb-6">
-            Hộp quà không chỉ là
+            Giá Trị Không Cần
             <br />
-            <em className="text-primary not-italic font-serif">một món quà</em>
+            <em className="text-primary not-italic font-serif">Gọi Tên</em>
           </h1>
           <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-            TotMart ra đời từ niềm tin rằng mỗi sản phẩm thủ công đều mang trong
-            mình một câu chuyện — về bàn tay người thợ, về mảnh đất quê hương,
-            về tình yêu truyền thống.
+            Có những giá trị chẳng cần gọi tên vẫn luôn được trân trọng: đôi tay mẹ khâu lại chiếc cúc áo, tấm lưng áo bạc màu của bố, hay những đường kim mũi chỉ của người thợ vô danh. UNLO ra đời với niềm tin rằng giá trị thật không nằm ở nhãn mác, mà ở chất lượng bên trong.
           </p>
         </div>
       </section>

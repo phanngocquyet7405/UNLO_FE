@@ -12,6 +12,7 @@ import { UNLO_FACTORIES } from "@/lib/unloFactories";
 import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
 import LiveStatCounterBanner from "./LiveStatCounterBanner";
 import AudienceGateways from "./AudienceGateways";
+import BrandManifestoSection from "./BrandManifestoSection";
 import MagazineEditorialPosters from "./MagazineEditorialPosters";
 import BlackFridayCountdown from "./BlackFridayCountdown";
 import SupportChatbotDrawer from "./SupportChatbotDrawer";
@@ -91,6 +92,11 @@ export default function NullHomeClient() {
             1.2. AUDIENCE GATEWAYS ("BẠN LÀ AI? CHỌN ĐÚNG Ô, UNLO DẪN ĐƯỜNG")
             ================================================================ */}
         <AudienceGateways />
+
+        {/* ================================================================
+            1.3. BRAND MANIFESTO & GIỚI THIỆU CHUNG ("GIÁ TRỊ KHÔNG CẦN GỌI TÊN")
+            ================================================================ */}
+        <BrandManifestoSection />
 
         {/* ================================================================
             2. CIRCULAR CATEGORY ROW — Including "Thêu Tên" & "Combo"
