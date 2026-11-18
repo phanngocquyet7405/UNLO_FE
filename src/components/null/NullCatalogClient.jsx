@@ -112,7 +112,7 @@ export default function NullCatalogClient({
       <NullHeader />
 
       <main className="flex-1 max-w-[1380px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-8 sm:pt-11 pb-16 space-y-8">
-        {initialError && (initialError.status >= 500 || initialError.requestId) && (
+        {initialError && Number(initialError.status) >= 500 && (
           <div
             role="alert"
             className="rounded-2xl border border-[#C43D4B]/30 bg-[#FDF2F3] px-5 py-4 text-sm text-[#A52735] space-y-1"

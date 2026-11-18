@@ -68,14 +68,21 @@ export default async function ProductsPage({ searchParams: searchParamsPromise }
       brandSlug: brandSlug || undefined,
     });
     serverProducts = catalog?.products || catalog?.data || [];
-    if (catalog?.error) {
+    if (catalog?.error && Number(catalog.error.status) >= 500) {
       serverError = catalog.error;
     }
-  } catch {
+  } catch (err) {
     serverProducts = [];
+    if (err && Number(err.status) >= 500) {
+      serverError = {
+        message: err.message,
+        status: err.status,
+        requestId: err.requestId,
+      };
+    }
   }
 
-  const initialProducts =
+  let initialProducts =
     serverProducts.length > 0
       ? serverProducts
       : filterUnloProducts({
@@ -84,6 +91,18 @@ export default async function ProductsPage({ searchParams: searchParamsPromise }
           material,
           personalizable,
         });
+
+  if (category || material || personalizable) {
+    const unloFiltered = filterUnloProducts({
+      keyword,
+      category,
+      material,
+      personalizable,
+    });
+    if (unloFiltered.length > 0) {
+      initialProducts = unloFiltered;
+    }
+  }
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>

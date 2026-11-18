@@ -197,7 +197,12 @@ export async function getServerProductsCatalog({
     query.set("keyword", String(keyword).trim());
   }
   if (category && String(category).trim()) {
-    query.set("category", String(category).trim());
+    const catStr = String(category).trim();
+    if (/^[0-9a-fA-F]{24}$/.test(catStr)) {
+      query.set("category", catStr);
+    } else {
+      query.set("categorySlug", catStr);
+    }
   }
   if (brandSlug && String(brandSlug).trim()) {
     query.set("brandSlug", String(brandSlug).trim());
