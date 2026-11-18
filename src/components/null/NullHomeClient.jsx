@@ -25,6 +25,9 @@ import NullHeader from "./NullHeader";
 import NullFooter from "./NullFooter";
 import NullProductCard from "./NullProductCard";
 import TransparencyCostChart from "./TransparencyCostChart";
+import RealisticEmbroideryOverlay, {
+  REALISTIC_PLACEMENTS,
+} from "./RealisticEmbroideryOverlay";
 import { useCart } from "@/app/context/CartContext";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
@@ -93,10 +96,30 @@ const TRUST_FEATURES = [
 ];
 
 const HOME_STUDIO_PLACEMENTS = [
-  { id: "chest_pocket", label: "Ngực trái", sublabel: "Kinh điển, tinh tế", coords: { top: "30%", left: "63%" } },
-  { id: "left_cuff", label: "Bo tay áo", sublabel: "Kín đáo khi cử động", coords: { top: "33%", left: "76%" } },
-  { id: "hem", label: "Góc tà áo", sublabel: "Tối giản vạt áo", coords: { top: "80%", left: "62%" } },
-  { id: "inner_neck", label: "Gáy cổ áo", sublabel: "Sau gáy cổ trong", coords: { top: "14%", left: "50%" } },
+  {
+    id: "chest_pocket",
+    label: "Ngực trái",
+    sublabel: "Kinh điển, tinh tế",
+    coords: REALISTIC_PLACEMENTS.chest_pocket.coords,
+  },
+  {
+    id: "left_cuff",
+    label: "Bo tay áo",
+    sublabel: "Viền gấu tay áo",
+    coords: REALISTIC_PLACEMENTS.left_cuff.coords,
+  },
+  {
+    id: "hem",
+    label: "Góc tà áo",
+    sublabel: "Mép gấu áo",
+    coords: REALISTIC_PLACEMENTS.hem.coords,
+  },
+  {
+    id: "inner_neck",
+    label: "Gáy cổ áo",
+    sublabel: "Sau gáy cổ trong",
+    coords: REALISTIC_PLACEMENTS.inner_neck.coords,
+  },
 ];
 
 const HOME_STUDIO_FONTS = [
@@ -521,48 +544,14 @@ export default function NullHomeClient() {
                       />
                     )}
 
-                    {/* Target Embroidery / Logo Rendered Directly on Shirt */}
-                    <div
-                      className="absolute transition-all duration-300 pointer-events-none z-10"
-                      style={{
-                        top: currentPlacement.coords.top,
-                        left: currentPlacement.coords.left,
-                        transform: "translate(-50%, -50%)",
+                    {/* Realistic Live Embroidery / Logo (NO ugly label on shirt) */}
+                    <RealisticEmbroideryOverlay
+                      customization={{
+                        ...studioState,
+                        enabled: true,
                       }}
-                    >
-                      {studioState.customType === "logo" && studioState.logoUrl ? (
-                        <div className="relative flex flex-col items-center">
-                          <img
-                            src={studioState.logoUrl}
-                            alt="Logo preview"
-                            className="max-h-12 max-w-16 sm:max-h-14 sm:max-w-20 object-contain filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)]"
-                          />
-                          <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/90 text-white shadow-xs">
-                            {currentPlacement.label}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="relative flex flex-col items-center text-center">
-                          <span
-                            className={`leading-none select-none ${currentFont.previewClass}`}
-                            style={{
-                              color: studioState.threadColor,
-                              fontSize: "clamp(16px, 2.5vw, 24px)",
-                              textShadow:
-                                studioState.garmentColor === "ivory"
-                                  ? "0 0.8px 0.8px rgba(0,0,0,0.5), 0 1.2px 2px rgba(21,9,93,0.3)"
-                                  : "0 0.8px 0.8px rgba(255,255,255,0.4), 0 1.2px 2px rgba(0,0,0,0.6)",
-                              letterSpacing: "0.14em",
-                            }}
-                          >
-                            {studioState.monogramText || "H.L"}
-                          </span>
-                          <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/85 text-white shadow-xs">
-                            {currentPlacement.label}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                      garmentColorHex={activeGarment.hex}
+                    />
                   </div>
 
                   {/* Overlaid Badges & Zoom Switcher */}

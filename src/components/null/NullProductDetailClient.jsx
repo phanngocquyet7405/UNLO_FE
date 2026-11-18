@@ -28,6 +28,9 @@ import { useWishlist } from "@/app/context/WishlistContext";
 import PersonalizationStudio, {
   computePersonalizationFee,
 } from "@/components/null/PersonalizationStudio";
+import RealisticEmbroideryOverlay, {
+  REALISTIC_PLACEMENTS,
+} from "@/components/null/RealisticEmbroideryOverlay";
 import TransparencyCostChart from "@/components/null/TransparencyCostChart";
 import VerifiedFitReviews from "@/components/null/VerifiedFitReviews";
 import NullProductCard from "@/components/null/NullProductCard";
@@ -65,6 +68,7 @@ export default function NullProductDetailClient({ initialProduct }) {
   );
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [showFactoryVideo, setShowFactoryVideo] = useState(false);
+  const [heroZoom, setHeroZoom] = useState(false);
   const [sizeModalOpen, setSizeModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -287,17 +291,63 @@ export default function NullProductDetailClient({ initialProduct }) {
                 </div>
               </div>
             ) : (
-              <>
-                <img
-                  src={activeHeroImage}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+              <div className="relative w-full h-full overflow-hidden">
+                <div
+                  className="w-full h-full relative transition-transform duration-500 ease-out"
+                  style={
+                    heroZoom && customization.enabled
+                      ? {
+                          transform: "scale(2.2)",
+                          transformOrigin: `${
+                            REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.coords.left
+                          } ${
+                            REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.coords.top
+                          }`,
+                        }
+                      : { transform: "scale(1)" }
+                  }
+                >
+                  <img
+                    src={activeHeroImage}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Live Realistic Embroidery / Logo Overlay directly on the main product image */}
+                  {customization.enabled && selectedImageIdx === 0 && (
+                    <RealisticEmbroideryOverlay
+                      customization={customization}
+                      garmentColorHex={activeVariant?.colorHex}
+                    />
+                  )}
+                </div>
+
                 {savingsPct > 0 && (
-                  <span className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#32259B] text-white text-xs font-bold tracking-wide">
+                  <span className="absolute top-4 left-4 z-20 px-3.5 py-1.5 rounded-full bg-[#32259B] text-white text-xs font-bold tracking-wide">
                     Tiết kiệm {savingsPct}% nhờ cắt trung gian
                   </span>
                 )}
+
+                {/* Floating Live Badge when Customization is Enabled */}
+                {customization.enabled && selectedImageIdx === 0 && (
+                  <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#DCE0E7] shadow-sm text-xs">
+                    <span className="w-2 h-2 rounded-full bg-[#1D7A5F] animate-ping" />
+                    <span className="text-[#15095D] font-bold">
+                      {customization.customType === "logo" ? "Thêu logo thật:" : "Thêu tên thật:"}
+                    </span>
+                    <span className="text-[#32259B] font-semibold">
+                      {REALISTIC_PLACEMENTS[customization.placement || "chest_pocket"]?.label}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setHeroZoom(!heroZoom)}
+                      className="ml-1 pl-2 border-l border-[#BBC2DD] text-[11px] font-bold text-[#443EB1] hover:underline cursor-pointer"
+                    >
+                      {heroZoom ? "Thu nhỏ" : "Phóng to xem thớ chỉ"}
+                    </button>
+                  </div>
+                )}
+
                 <button
                   type="button"
                   onClick={() => {
@@ -305,13 +355,13 @@ export default function NullProductDetailClient({ initialProduct }) {
                     toast.success(added ? "Đã lưu vào yêu thích" : "Đã bỏ khỏi yêu thích");
                   }}
                   aria-label={liked ? "Bỏ yêu thích" : "Lưu yêu thích"}
-                  className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/95 text-[#15095D] shadow-sm grid place-items-center null-pressable cursor-pointer"
+                  className="absolute top-4 right-4 z-20 w-11 h-11 rounded-full bg-white/95 text-[#15095D] shadow-sm grid place-items-center null-pressable cursor-pointer"
                 >
                   <Heart
                     className={`w-5 h-5 ${liked ? "fill-[#443EB1] text-[#443EB1]" : ""}`}
                   />
                 </button>
-              </>
+              </div>
             )}
           </div>
 

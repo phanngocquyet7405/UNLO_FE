@@ -4,11 +4,9 @@ import { useState, useRef } from "react";
 import {
   Sparkles,
   Package,
-  Clock,
   Palette,
   Upload,
   X,
-  Check,
   ZoomIn,
   ZoomOut,
   Shirt,
@@ -16,31 +14,34 @@ import {
   Type,
 } from "lucide-react";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
+import RealisticEmbroideryOverlay, {
+  REALISTIC_PLACEMENTS,
+} from "./RealisticEmbroideryOverlay";
 
 export const EMBROIDERY_PLACEMENTS = [
   {
     id: "chest_pocket",
     label: "Ngực trái",
     sublabel: "Vị trí kinh điển, tinh tế",
-    coords: { top: "30%", left: "63%" },
+    coords: REALISTIC_PLACEMENTS.chest_pocket.coords,
   },
   {
     id: "left_cuff",
-    label: "Bo tay áo trái",
-    sublabel: "Chi tiết kín đáo khi cử động",
-    coords: { top: "33%", left: "76%" },
+    label: "Bo tay áo",
+    sublabel: "Đường viền bo gấu tay áo",
+    coords: REALISTIC_PLACEMENTS.left_cuff.coords,
   },
   {
     id: "hem",
     label: "Góc tà áo",
-    sublabel: "Điểm nhấn tối giản vạt áo",
-    coords: { top: "80%", left: "62%" },
+    sublabel: "Mép gấu áo tối giản",
+    coords: REALISTIC_PLACEMENTS.hem.coords,
   },
   {
     id: "inner_neck",
     label: "Gáy cổ áo",
-    sublabel: "Nhãn thêu kín sau gáy",
-    coords: { top: "14%", left: "50%" },
+    sublabel: "Bo viền cổ trong",
+    coords: REALISTIC_PLACEMENTS.inner_neck.coords,
   },
 ];
 
@@ -120,8 +121,6 @@ export default function PersonalizationStudio({
       ? config.allowedThreadColors
       : DEFAULT_INKS;
   const maxChars = Math.min(config.maxMonogramChars || 18, 24);
-  const currentFont =
-    EMBROIDERY_FONTS.find((f) => f.id === value.font) || EMBROIDERY_FONTS[0];
   const currentPlacement =
     EMBROIDERY_PLACEMENTS.find((p) => p.id === value.placement) ||
     EMBROIDERY_PLACEMENTS[0];
@@ -138,9 +137,6 @@ export default function PersonalizationStudio({
     value.threadColor || (isLightGarment ? "#15095D" : "#FCFDF1");
 
   const isLogoMode = value.customType === "logo";
-  const displayText = (value.monogramText || config.defaultHeadline || "H.L")
-    .trim()
-    .slice(0, maxChars);
 
   const patch = (next) => {
     onChange({ ...value, ...next });
@@ -247,7 +243,7 @@ export default function PersonalizationStudio({
                 ============================================================ */}
             <div className="lg:col-span-5 space-y-2">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-[#BBC2DD] bg-[#F6F7FC] shadow-inner select-none">
-                {/* T-Shirt Base Photo */}
+                {/* T-Shirt Base Photo with Zoom Focus */}
                 <div
                   className="w-full h-full relative transition-transform duration-500 ease-out"
                   style={
@@ -273,47 +269,11 @@ export default function PersonalizationStudio({
                     />
                   )}
 
-                  {/* Embroidery / Logo Target Overlay */}
-                  <div
-                    className="absolute transition-all duration-300 pointer-events-none"
-                    style={{
-                      top: currentPlacement.coords.top,
-                      left: currentPlacement.coords.left,
-                      transform: "translate(-50%, -50%)",
-                    }}
-                  >
-                    {isLogoMode && value.logoUrl ? (
-                      <div className="relative flex flex-col items-center">
-                        <img
-                          src={value.logoUrl}
-                          alt="Logo thêu"
-                          className="max-h-12 max-w-16 object-contain filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]"
-                        />
-                        <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/90 text-white shadow-xs">
-                          {currentPlacement.label}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="relative flex flex-col items-center text-center">
-                        <span
-                          className={`leading-none select-none ${currentFont.previewClass}`}
-                          style={{
-                            color: previewThreadColor,
-                            fontSize: "clamp(15px, 2.4vw, 22px)",
-                            textShadow: isLightGarment
-                              ? "0 0.8px 0.8px rgba(0,0,0,0.5), 0 1.2px 2px rgba(21,9,93,0.3)"
-                              : "0 0.8px 0.8px rgba(255,255,255,0.4), 0 1.2px 2px rgba(0,0,0,0.6)",
-                            letterSpacing: "0.12em",
-                          }}
-                        >
-                          {displayText || "H.L"}
-                        </span>
-                        <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/85 text-white shadow-xs">
-                          {currentPlacement.label}
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                  {/* Realistic Embroidery / Logo Overlay (NO ugly label badge on shirt) */}
+                  <RealisticEmbroideryOverlay
+                    customization={value}
+                    garmentColorHex={garmentColorHex}
+                  />
                 </div>
 
                 {/* Viewport Zoom Controls & Badge Overlay */}
@@ -342,7 +302,7 @@ export default function PersonalizationStudio({
 
                 <div className="absolute bottom-3 inset-x-3 text-center">
                   <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/85 text-[#FCFDF1] text-[10px] backdrop-blur-xs">
-                    Mô phỏng đường thêu vi tính thực tế trên áo Supima Cotton
+                    Mô phỏng đường thêu vi tính trực tiếp trên áo Supima Cotton
                   </p>
                 </div>
               </div>
@@ -407,7 +367,7 @@ export default function PersonalizationStudio({
                         patch({ monogramText: e.target.value.slice(0, maxChars) })
                       }
                       placeholder={config.defaultHeadline || "VD: H.L hoặc MINH"}
-                      className="w-full h-11 px-4 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-sm font-semibold text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] focus:bg-white"
+                      className="w-full h-11 px-4 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-sm font-bold text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] focus:bg-white tracking-wider"
                     />
                     <p className="text-[10px] text-[#4E567A] mt-1">
                       Tối đa {maxChars} ký tự. Gợi ý: Chữ cái đầu họ tên (VD: H.L, N.Q, NAM)
@@ -470,14 +430,14 @@ export default function PersonalizationStudio({
                           <img
                             src={value.logoUrl}
                             alt="Logo preview"
-                            className="w-10 h-10 object-contain rounded-lg bg-white border border-[#BBC2DD] p-1"
+                            className="w-10 h-10 object-contain rounded-lg bg-white border border-[#BBC2DD] p-1 shadow-xs"
                           />
                           <div>
                             <p className="text-xs font-bold text-[#15095D] line-clamp-1">
                               {value.logoName || "Logo đã tải lên"}
                             </p>
                             <p className="text-[10px] text-[#1D7A5F] font-semibold">
-                              ✓ Đã ghép lên áo phông xem trước
+                              ✓ Đã gắn vào thớ vải áo phông xem trước
                             </p>
                           </div>
                         </div>
@@ -486,14 +446,14 @@ export default function PersonalizationStudio({
                           <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="text-xs font-semibold text-[#32259B] hover:underline"
+                            className="text-xs font-semibold text-[#32259B] hover:underline cursor-pointer"
                           >
                             Đổi logo
                           </button>
                           <button
                             type="button"
                             onClick={clearLogo}
-                            className="w-7 h-7 rounded-full bg-white text-[#8D8DC7] hover:text-[#A52735] grid place-items-center border border-[#DCE0E7]"
+                            className="w-7 h-7 rounded-full bg-white text-[#8D8DC7] hover:text-[#A52735] grid place-items-center border border-[#DCE0E7] cursor-pointer"
                             title="Xóa logo"
                           >
                             <X className="w-3.5 h-3.5" />
@@ -542,7 +502,7 @@ export default function PersonalizationStudio({
                               monogramText: "LOGO",
                             })
                           }
-                          className="px-2.5 py-1 rounded-full bg-[#EFF2F9] border border-[#BBC2DD] text-[10px] font-bold text-[#32259B] hover:bg-[#15095D] hover:text-white transition-colors"
+                          className="px-2.5 py-1 rounded-full bg-[#EFF2F9] border border-[#BBC2DD] text-[10px] font-bold text-[#32259B] hover:bg-[#15095D] hover:text-white transition-colors cursor-pointer"
                         >
                           + {s.label}
                         </button>
