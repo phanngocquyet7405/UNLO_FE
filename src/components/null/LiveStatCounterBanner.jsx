@@ -89,7 +89,7 @@ export default function LiveStatCounterBanner() {
   return (
     <div
       ref={containerRef}
-      className="relative z-20 max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 -mt-16 sm:-mt-20 lg:-mt-24 pointer-events-auto"
+      className="relative z-20 max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 mt-8 sm:mt-12 lg:mt-14 pointer-events-auto"
     >
       <div className="bg-white rounded-3xl border border-[#DCE0E7] shadow-[0_24px_60px_-20px_rgba(21,9,93,0.18)] overflow-hidden">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-[#DCE0E7]/80">

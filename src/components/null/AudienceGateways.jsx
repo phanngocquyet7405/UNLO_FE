@@ -47,7 +47,7 @@ export const AUDIENCE_PATHS = [
 
 export default function AudienceGateways() {
   return (
-    <section className="pt-16 sm:pt-20 pb-8 space-y-12">
+    <section className="pt-10 sm:pt-14 pb-8 space-y-12">
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 space-y-8">
         {/* Section Header */}
         <div className="text-center max-w-xl mx-auto space-y-2">
