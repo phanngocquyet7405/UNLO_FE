@@ -10,6 +10,12 @@ import {
   Sparkles,
   ChevronRight,
   RotateCcw,
+  Search,
+  User,
+  ShoppingBag,
+  Globe,
+  Menu,
+  X,
 } from "lucide-react";
 import { AppContext } from "@/app/context/AppContext";
 import { useCart } from "@/app/context/CartContext";
@@ -34,9 +40,24 @@ import { UNLO_PRODUCTS, filterUnloProducts } from "@/lib/unloCatalog";
  */
 const NAV_ITEMS = [
   {
-    label: "Cửa hàng",
+    label: "Tất cả sản phẩm",
     href: "/products",
     categoryKey: "all",
+  },
+  {
+    label: "Săn giá xưởng",
+    href: "/products?sort=price_asc",
+    sortKey: "price_asc",
+  },
+  {
+    label: "Hàng mới về",
+    href: "/products?sort=newest",
+    sortKey: "newest",
+  },
+  {
+    label: "Bán chạy nhất",
+    href: "/products?sort=bestselling",
+    sortKey: "bestselling",
   },
   {
     label: "Áo thun",
@@ -49,16 +70,29 @@ const NAV_ITEMS = [
     categoryKey: "linen-tailoring",
   },
   {
-    label: "Hoodie & Áo nỉ",
+    label: "Hoodie & Nỉ",
     href: "/products?category=sweat-hoodie",
     categoryKey: "sweat-hoodie",
-    keywordKey: "hoodie",
   },
   {
     label: "Quần",
     href: "/products?category=pants-bottoms",
     categoryKey: "pants-bottoms",
-    keywordKey: "quan",
+  },
+  {
+    label: "Đồ len",
+    href: "/products?category=wool-knitwear",
+    categoryKey: "wool-knitwear",
+  },
+  {
+    label: "Đồ da & Túi",
+    href: "/products?category=leather-goods",
+    categoryKey: "leather-goods",
+  },
+  {
+    label: "Gia dụng",
+    href: "/products?category=ceramics-home",
+    categoryKey: "ceramics-home",
   },
   {
     label: "Cá nhân hóa",
@@ -71,19 +105,9 @@ const NAV_ITEMS = [
     routePrefix: "/b2b",
   },
   {
-    label: "Black Friday",
+    label: "Ưu đãi mùa",
     href: "/#black-friday",
-    special: "black-friday",
-  },
-  {
-    label: "Hồ sơ xưởng",
-    href: "/factories",
-    routePrefix: "/factories",
-  },
-  {
-    label: "Hỗ trợ",
-    href: "/returns",
-    routePrefix: "/returns",
+    special: "holiday-gifts",
   },
 ];
 
@@ -190,9 +214,12 @@ export default function NullHeader() {
   const isItemActive = (item) => {
     if (item.categoryKey) {
       if (item.categoryKey === "all") {
-        return pathname === "/products" && !searchString.includes("category=");
+        return pathname === "/products" && !searchString.includes("category=") && !searchString.includes("sort=");
       }
       return pathname === "/products" && searchString.includes(`category=${item.categoryKey}`);
+    }
+    if (item.sortKey) {
+      return pathname === "/products" && searchString.includes(`sort=${item.sortKey}`);
     }
     if (item.keywordKey) {
       return pathname === "/products" && searchString.includes(`keyword=${item.keywordKey}`);
@@ -234,37 +261,28 @@ export default function NullHeader() {
       </div>
 
       {/* ================================================================
-          2. SITE HEADER (header.site) — Layout: auto 1fr auto
-          Left: Burger + Logo UNLO
-          Center: nav.main (Cửa hàng, Áo thun, Sơ mi, Hoodie, Quần, Cá nhân hóa, Doanh nghiệp, Black Friday, Xưởng, Hỗ trợ)
-          Right: .tools (Search, Account, Wishlist, Cart)
+          2. SITE HEADER (header.site) — 2-Row Quince Style
+          Row 1: Logo, Search Box, Sign In, Wishlist, Cart, Country
+          Row 2: Horizontal Category Subnavigation Links
           ================================================================ */}
       <header
-        className={`sticky top-0 z-50 w-full bg-white/96 backdrop-blur-[10px] border-b transition-all duration-200 ${
+        className={`sticky top-0 z-50 w-full bg-white/98 backdrop-blur-[10px] border-b transition-all duration-200 ${
           scrolled
             ? "border-[#DDE0EC] shadow-[0_10px_30px_rgba(21,9,93,0.06)]"
             : "border-[#DDE0EC]"
         }`}
       >
-        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 grid grid-cols-[auto_1fr_auto] items-center gap-4 lg:gap-6">
+        {/* ROW 1: Logo & Tools */}
+        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4 border-b border-[#EAEBED]/70">
           {/* Left: Mobile Hamburger + UNLO Brand Logo */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
               className="xl:hidden w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
               aria-label="Mở menu điều hướng"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                className="w-5 h-5"
-                aria-hidden="true"
-              >
-                <path d="M4 7h16M4 12h16M4 17h16" />
-              </svg>
+              <Menu className="w-5 h-5" />
             </button>
 
             <Link
@@ -275,108 +293,56 @@ export default function NullHeader() {
               <img
                 src="/assets/logo/unlo-header.png"
                 alt="UNLO"
-                className="h-7 sm:h-[1.8rem] w-auto object-contain select-none"
+                className="h-7 sm:h-[1.95rem] w-auto object-contain select-none"
                 loading="eager"
               />
             </Link>
           </div>
 
-          {/* Center: nav.main (Desktop) */}
-          <nav
-            aria-label="Danh mục chính UNLO"
-            className="hidden xl:flex items-center justify-center gap-1 flex-wrap min-w-0"
-          >
-            {NAV_ITEMS.map((item) => {
-              const active = isItemActive(item);
+          {/* Right: Search Box + Sign In + Wishlist + Cart + Country/Region */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            {/* Desktop Search Input with Coral Search Button (Quince Style) */}
+            <form onSubmit={handleSearchSubmit} className="relative hidden md:flex items-center">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search"
+                aria-label="Tìm kiếm sản phẩm, chất liệu, xưởng"
+                className="w-48 lg:w-64 xl:w-80 h-9 pl-4 pr-11 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
+              />
+              <button
+                type="submit"
+                aria-label="Tìm kiếm"
+                className="absolute right-1 w-7 h-7 rounded-full bg-[#EB6D48] hover:bg-[#D95F3B] text-white grid place-items-center transition-colors cursor-pointer"
+              >
+                <Search className="w-3.5 h-3.5" />
+              </button>
+            </form>
 
-              if (item.special === "black-friday") {
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="bg-[#0B0A1F] text-white hover:bg-[#15095D] font-semibold text-[13px] px-3.5 py-1.5 rounded-full transition-colors flex items-center gap-1.5 ml-1 shadow-xs"
-                  >
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              }
-
-              if (item.special === "personalize") {
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className={`font-semibold text-[13px] px-3.5 py-1.5 rounded-full transition-colors flex items-center gap-1.5 ${
-                      active
-                        ? "bg-[#32259B] text-white"
-                        : "bg-[#EFF2F9] text-[#443EB1] hover:bg-[#32259B] hover:text-white"
-                    }`}
-                  >
-                    <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`text-[13px] font-medium px-3 py-1.5 rounded-full transition-colors whitespace-nowrap ${
-                    active
-                      ? "text-[#15095D] font-bold bg-[#F4F5FB]"
-                      : "text-[#1A1838] hover:text-[#15095D] hover:bg-[#F4F5FB]"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Right: .tools (Search, Account, Wishlist, Cart) */}
-          <div className="flex items-center gap-1 sm:gap-1.5 justify-self-end shrink-0">
-            {/* 1. Open Search Box */}
+            {/* Mobile Search Button */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              aria-label="Tìm kiếm sản phẩm, xưởng..."
-              className="w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors relative"
+              aria-label="Tìm kiếm"
+              className="md:hidden w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                className="w-[21px] h-[21px]"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="6.5" />
-                <path d="m16 16 4.5 4.5" />
-              </svg>
+              <Search className="w-5 h-5" />
             </button>
 
-            {/* 2. User Account & Orders */}
+            {/* Sign In / Account Dropdown */}
             <div ref={accountRef} className="relative">
               <button
                 type="button"
-                onClick={() => setAccountOpen((v) => !v)}
+                onClick={() => (user ? setAccountOpen((v) => !v) : router.push("/login"))}
                 aria-label="Tài khoản và đơn hàng"
                 aria-expanded={accountOpen}
-                className="w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+                className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-full text-xs font-medium text-[#15095D] hover:text-[#32259B] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  className="w-[21px] h-[21px]"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="8.5" r="3.8" />
-                  <path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" />
-                </svg>
+                <User className="w-[18px] h-[18px] text-[#15095D]" />
+                <span className="hidden sm:inline">
+                  {user ? (user.name ? user.name.split(" ").slice(-1)[0] : "Tài khoản") : "Sign In"}
+                </span>
               </button>
 
               {accountOpen && (
@@ -444,45 +410,93 @@ export default function NullHeader() {
               )}
             </div>
 
-            {/* 3. Wishlist Link */}
+            {/* Wishlist Link */}
             <Link
               href="/wishlist"
               aria-label="Danh sách yêu thích"
-              className="relative w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+              className="relative w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
             >
-              <Heart className="w-[20px] h-[20px] stroke-[1.6]" aria-hidden="true" />
+              <Heart className="w-[19px] h-[19px] stroke-[1.6]" aria-hidden="true" />
               {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-[#15095D] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums">
+                <span className="absolute top-0.5 right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#15095D] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums">
                   {wishlistCount}
                 </span>
               )}
             </Link>
 
-            {/* 4. Cart Bag Button */}
+            {/* Cart Bag Button */}
             <button
               type="button"
               onClick={() => setIsCartOpen?.(true)}
               aria-label={`Giỏ hàng (${cartCount || 0} sản phẩm)`}
-              className="relative w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+              className="relative w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                className="w-[21px] h-[21px]"
-                aria-hidden="true"
-              >
-                <path d="M5 8h14l-1.2 12H6.2z" />
-                <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
-              </svg>
+              <ShoppingBag className="w-[19px] h-[19px] stroke-[1.6]" aria-hidden="true" />
               {cartCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-[#15095D] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums">
+                <span className="absolute top-0.5 right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EB6D48] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums shadow-xs">
                   {cartCount}
                 </span>
               )}
             </button>
+
+            {/* Country / Region */}
+            <div className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-[#15095D] pl-2 border-l border-[#E1E4EA]">
+              <Globe className="w-4 h-4 text-[#4E567A]" />
+              <span>VN</span>
+            </div>
           </div>
+        </div>
+
+        {/* ROW 2: Horizontal Category Subnavigation Links (Quince Style) */}
+        <div className="hidden md:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 overflow-x-auto no-scrollbar">
+          <nav
+            aria-label="Danh mục chính UNLO"
+            className="flex items-center gap-6 xl:gap-8 text-[13px] font-medium whitespace-nowrap"
+          >
+            {NAV_ITEMS.map((item) => {
+              const active = isItemActive(item);
+
+              if (item.special === "holiday-gifts") {
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="text-[#C25E34] hover:text-[#A0451F] font-semibold transition-colors flex items-center gap-1"
+                  >
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              }
+
+              if (item.special === "personalize") {
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="text-[#443EB1] hover:text-[#15095D] font-semibold transition-colors flex items-center gap-1.5"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`relative py-1 transition-colors ${
+                    active
+                      ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                      : "text-[#2B2D38] hover:text-[#15095D] hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:h-[2px] hover:after:bg-[#15095D]/40"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </header>
 

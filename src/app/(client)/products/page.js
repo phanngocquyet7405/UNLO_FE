@@ -82,34 +82,34 @@ export default async function ProductsPage({ searchParams: searchParamsPromise }
     }
   }
 
-  let initialProducts =
-    serverProducts.length > 0
-      ? serverProducts
-      : filterUnloProducts({
-          keyword,
-          category,
-          material,
-          personalizable,
-        });
+  // Ensure the complete UNLO catalog (25 items) is available on /products
+  const unloCatalogItems = filterUnloProducts({
+    keyword,
+    category,
+    material,
+    personalizable,
+  });
 
-  if (category || material || personalizable) {
-    const unloFiltered = filterUnloProducts({
-      keyword,
-      category,
-      material,
-      personalizable,
-    });
-    if (unloFiltered.length > 0) {
-      initialProducts = unloFiltered;
-    }
-  }
+  // Merge serverProducts and unloCatalogItems so all products are available
+  const existingKeys = new Set(
+    serverProducts.map((p) => String(p.slug || p._id || p.id)),
+  );
+  const extraUnloItems = unloCatalogItems.filter(
+    (item) =>
+      !existingKeys.has(String(item.slug)) &&
+      !existingKeys.has(String(item._id)),
+  );
+  const initialProducts =
+    serverProducts.length > 0
+      ? [...serverProducts, ...extraUnloItems]
+      : unloCatalogItems;
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
       <NullCatalogClient
         initialProducts={initialProducts}
         initialError={serverError}
-        preferInitialWhenUnfiltered={serverProducts.length > 0}
+        preferInitialWhenUnfiltered={true}
       />
     </Suspense>
   );
