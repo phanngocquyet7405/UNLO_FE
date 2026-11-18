@@ -1,0 +1,316 @@
+"use client";
+/**
+ * page.js — AdminSubscribePlanPage
+ * ─────────────────────────────────────────────────────────────────
+ * Quản lý Subscription Templates (mẫu gói).
+ *
+ * BE routes được dùng:
+ *   POST   create-subscription-template    PlanFormDialog (create)
+ *   GET    all-subscription-templates      usePlanList
+ *   GET    get-subscription-template/:id   PlanDetailDialog
+ *   PATCH  update-subscription-template/:id PlanFormDialog (edit)
+ *   DELETE delete-subscription-template/:id DeleteConfirmDialog
+ *
+ * KHÔNG quản lý user subscriptions ở đây — đó là trang riêng.
+ * ─────────────────────────────────────────────────────────────────
+ */
+
+import { useState, useCallback } from "react";
+import { Plus, RefreshCw, Search, Filter, ChevronDown, CreditCard } from "lucide-react";
+import { toast } from "sonner";
+import { AdminPageHeader } from "../components/shared";
+import { updateTemplateApi } from "@/app/services/api/subscribePlanService";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import { PlanStats } from "../components/SubscribePlans/PlanTemplate/PlanStats";
+import { PlanTable } from "../components/SubscribePlans/PlanTemplate/PlanTable";
+import { PlanDetailDialog } from "../components/SubscribePlans/PlanTemplate/PlanDetailDialog";
+import { PlanFormDialog } from "../components/SubscribePlans/PlanTemplate/PlanFormDialog";
+import { DeleteTemplateDialog } from "../components/SubscribePlans/PlanTemplate/DeleteTemplateDialog";
+
+import {
+  usePlanList,
+  STATUS_OPTIONS,
+  PLAN_TYPE_OPTIONS,
+} from "../../../hooks/usePlanList";
+
+export default function AdminSubscribePlanPage() {
+  // ── Data ──────────────────────────────────────────────────────────────────
+  const {
+    plans,
+    filtered,
+    isLoading,
+    search,
+    setSearch,
+    statusFilter,
+    setStatusFilter,
+    planTypeFilter,
+    setPlanTypeFilter,
+    hasActiveFilters,
+    clearFilters,
+    sortKey,
+    sortDir,
+    handleSort,
+    fetchPlans,
+    deleteTarget,
+    setDeleteTarget,
+    isDeleting,
+    handleDeleteConfirm,
+  } = usePlanList();
+
+  // ── Detail dialog ─────────────────────────────────────────────────────────
+  const [detailTemplate, setDetailTemplate] = useState(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
+  const handleViewDetail = useCallback((template) => {
+    setDetailTemplate(template);
+    setDetailOpen(true);
+  }, []);
+
+  // ── Form dialog (create / edit) ───────────────────────────────────────────
+  const [formOpen, setFormOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState(null); // null = create mode
+
+  const handleOpenCreate = useCallback(() => {
+    setEditTarget(null);
+    setFormOpen(true);
+  }, []);
+
+  const handleEditClick = useCallback((template) => {
+    setEditTarget(template);
+    setFormOpen(true);
+  }, []);
+
+  // ── Delete dialog ─────────────────────────────────────────────────────────
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleDeleteClick = useCallback(
+    (template) => {
+      setDeleteTarget(template);
+      setDeleteOpen(true);
+    },
+    [setDeleteTarget],
+  );
+
+  const handleConfirmAndClose = useCallback(async () => {
+    await handleDeleteConfirm();
+    setDeleteOpen(false);
+  }, [handleDeleteConfirm]);
+
+  const handleToggleActive = useCallback(
+    async (template) => {
+      try {
+        const nextActive = !template.isActive;
+        await updateTemplateApi(template._id, { isActive: nextActive });
+        toast.success(
+          nextActive
+            ? `Đã hiển thị mẫu gói "${template.name}"`
+            : `Đã ẩn mẫu gói "${template.name}"`,
+        );
+        fetchPlans();
+      } catch (err) {
+        const msg =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Không thể cập nhật trạng thái";
+        toast.error(msg);
+      }
+    },
+    [fetchPlans],
+  );
+
+  // ─────────────────────────────────────────────────────────────────────────
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* ── Header ── */}
+      <AdminPageHeader
+        title="Mẫu gói đăng ký"
+        description="Quản lý các mẫu gói hiển thị cho khách hàng chọn đăng ký"
+        icon={CreditCard}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={fetchPlans}
+              disabled={isLoading}
+              className="min-h-11 min-w-11"
+              size="icon"
+            >
+              <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
+            </Button>
+
+            <Button
+              className="min-h-11 gap-1.5"
+              onClick={handleOpenCreate}
+            >
+              <Plus size={16} />
+              Tạo mẫu gói
+            </Button>
+          </div>
+        }
+      />
+
+      {/* ── Stats ── */}
+      <PlanStats plans={plans} />
+
+      {/* ── Table Card ── */}
+      <Card className="border border-border shadow-sm overflow-hidden">
+        <CardHeader className="border-b bg-card px-5 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardTitle className="text-sm font-semibold text-foreground">
+              Danh sách mẫu gói
+              {hasActiveFilters && (
+                <span className="ml-2 text-xs font-normal text-primary">
+                  (đang lọc)
+                </span>
+              )}
+            </CardTitle>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              {/* Status filter */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="min-h-11 gap-1 text-xs"
+                  >
+                    <Filter size={11} />
+                    {
+                      STATUS_OPTIONS.find((o) => o.value === statusFilter)
+                        ?.label
+                    }
+                    <ChevronDown size={11} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {STATUS_OPTIONS.map((o) => (
+                    <DropdownMenuItem
+                      key={o.value}
+                      onClick={() => setStatusFilter(o.value)}
+                      className={
+                        statusFilter === o.value
+                          ? "bg-muted/50 font-medium"
+                          : ""
+                      }
+                    >
+                      {o.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Plan type filter */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="min-h-11 gap-1 text-xs"
+                  >
+                    <Filter size={11} />
+                    {
+                      PLAN_TYPE_OPTIONS.find((o) => o.value === planTypeFilter)
+                        ?.label
+                    }
+                    <ChevronDown size={11} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {PLAN_TYPE_OPTIONS.map((o) => (
+                    <DropdownMenuItem
+                      key={o.value}
+                      onClick={() => setPlanTypeFilter(o.value)}
+                      className={
+                        planTypeFilter === o.value
+                          ? "bg-muted/50 font-medium"
+                          : ""
+                      }
+                    >
+                      {o.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 text-xs text-muted-foreground hover:text-muted-foreground"
+                  onClick={clearFilters}
+                >
+                  Xoá bộ lọc
+                </Button>
+              )}
+
+              <div className="relative">
+                <Search
+                  size={13}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+                />
+                <Input
+                  placeholder="Tên gói, ID..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-8 min-h-11 text-xs w-48"
+                />
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+
+        <PlanTable
+          filtered={filtered}
+          totalPlans={plans.length}
+          isLoading={isLoading}
+          sortKey={sortKey}
+          sortDir={sortDir}
+          onSort={handleSort}
+          onViewDetail={handleViewDetail}
+          onEditClick={handleEditClick}
+          onDeleteClick={handleDeleteClick}
+          onToggleActive={handleToggleActive}
+        />
+      </Card>
+
+      {/* ── Dialogs ── */}
+
+      {/* Detail */}
+      <PlanDetailDialog
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        template={detailTemplate}
+        onEditClick={handleEditClick}
+        onDeleteClick={handleDeleteClick}
+      />
+
+      {/* Create / Edit form */}
+      <PlanFormDialog
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        editTarget={editTarget}
+        onSuccess={fetchPlans}
+      />
+
+      {/* Delete confirm */}
+      <DeleteTemplateDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        template={deleteTarget}
+        onConfirm={handleConfirmAndClose}
+        isDeleting={isDeleting}
+      />
+    </div>
+  );
+}

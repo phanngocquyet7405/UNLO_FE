@@ -1,0 +1,38 @@
+import { axiosConfig } from "./axiosConfig";
+import { API_ENDPOINTS } from "./apiEndpoints";
+
+export const getAllBoxesApi = (params) =>
+  axiosConfig.get(API_ENDPOINTS.BOXES.GET_ALL, { params });
+
+export const getBoxByIdApi = (id) =>
+  axiosConfig.get(API_ENDPOINTS.BOXES.PUBLIC_BY_ID(id));
+
+// Trang quản trị cần xem MỌI box (hết hạn, chưa tới hạn, quà tặng) → endpoint admin.
+// getBoxByIdApi (public) chỉ trả box đang bán, không phải quà tặng.
+export const getAdminBoxByIdApi = (id) =>
+  axiosConfig.get(API_ENDPOINTS.BOXES.GET_BY_ID(id));
+
+export const getProductsInBoxApi = (id) =>
+  axiosConfig.get(API_ENDPOINTS.BOXES.GET_PRODUCTS(id));
+
+export const getBoxOffersApi = () =>
+  axiosConfig.get(API_ENDPOINTS.BOXES.GET_OFFERS);
+
+export const getAllCouponsApi = (params = {}) =>
+  axiosConfig.get(API_ENDPOINTS.COUPONS.GET_ALL, { params });
+
+export const createBoxApi = (formData) =>
+  axiosConfig.post(API_ENDPOINTS.BOXES.CREATE, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+export const updateBoxApi = (id, formData) =>
+  axiosConfig.put(API_ENDPOINTS.BOXES.UPDATE(id), formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+export const adjustBoxStockApi = (id, data) =>
+  axiosConfig.patch(API_ENDPOINTS.BOXES.ADJUST_STOCK(id), data);
+
+export const deleteBoxApi = (id) =>
+  axiosConfig.delete(API_ENDPOINTS.BOXES.DELETE(id));

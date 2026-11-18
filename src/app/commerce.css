@@ -1,0 +1,110 @@
+/* UNLO Storefront Utility Layer — Celestial Indigo & Libre Bodoni Editorial System */
+.tm-commerce {
+  --tm-accent: var(--primary);
+  --tm-accent-hover: #1f0c85;
+  --tm-wash: var(--secondary);
+  --tm-paper: var(--card);
+  --tm-line: var(--border);
+  color: var(--foreground);
+  font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  line-height: 1.65;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  scrollbar-color: var(--border) var(--card);
+}
+.tm-commerce--atelier {
+  --tm-accent: var(--primary);
+  --tm-accent-hover: #1f0c85;
+  --tm-wash: var(--secondary);
+  --tm-paper: var(--card);
+  --tm-line: var(--border);
+  color: var(--foreground);
+}
+.tm-commerce ::selection { background: color-mix(in srgb, #8d8dc7 35%, transparent); color: var(--foreground); }
+.tm-commerce :where(button, a, input, textarea, select, summary):focus-visible {
+  outline: 2px solid #443eb1;
+  outline-offset: 3px;
+}
+.tm-commerce :where(input, textarea) { caret-color: var(--foreground); accent-color: var(--primary); }
+.tm-commerce :where(button, input, textarea, select) { font: inherit; }
+.tm-commerce button { cursor: pointer; }
+.tm-commerce button:disabled { cursor: not-allowed; opacity: .45; }
+
+.tm-commerce .tm-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  min-height: 3.25rem; padding: .85rem 1.75rem; border: 1px solid transparent;
+  border-radius: 9999px; font-size: .875rem; font-weight: 600; letter-spacing: .03em;
+  line-height: 1.4; text-align: center;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.tm-commerce .tm-button:active:not(:disabled) { transform: scale(0.975); }
+.tm-commerce .tm-button--primary {
+  background: #32259b;
+  color: #ffffff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tm-commerce .tm-button--primary:hover:not(:disabled) { background: #1f0c85; }
+  .tm-commerce .tm-button--outline:hover:not(:disabled) { background: #15095d; color: #ffffff; }
+}
+.tm-commerce .tm-button--outline {
+  background: transparent;
+  color: #15095d;
+  border-color: #bbc2dd;
+}
+.tm-text-button { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.75rem; padding: .5rem .75rem; text-decoration: underline; text-underline-offset: .3em; }
+.tm-product-title { font-size: clamp(1.75rem, 2.7vw, 2.5rem); font-weight: 600; line-height: 1.18; letter-spacing: -.015em; text-wrap: balance; }
+.tm-commerce--atelier .tm-product-title { font-family: var(--font-serif), "Libre Bodoni", Georgia, serif; }
+.tm-purchase { display: grid; gap: 1.5rem; min-width: 0; }
+.tm-price-block { padding-block: 1rem; border-block: 1px solid var(--tm-line); }
+.tm-price { color: var(--foreground); font-size: clamp(1.5rem, 2.2vw, 1.85rem); font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.tm-quantity-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+.tm-quantity { display: inline-flex; align-items: center; border: 1px solid var(--tm-line); border-radius: 9999px; background: var(--card); padding-inline: .25rem; }
+.tm-quantity button { display: grid; place-items: center; min-width: 2.75rem; min-height: 2.75rem; border-radius: 9999px; transition: background-color 140ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1); }
+.tm-quantity button:active:not(:disabled) { transform: scale(0.93); }
+.tm-quantity output { min-width: 2.75rem; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tm-delivery-note { display: flex; align-items: flex-start; gap: .75rem; padding-top: 1.25rem; border-top: 1px solid var(--tm-line); font-size: .875rem; color: var(--muted-foreground); }
+.tm-gallery { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.tm-gallery__image { position: relative; aspect-ratio: 3 / 4; background: var(--secondary); border-radius: 1.25rem; overflow: hidden; }
+.tm-gallery__thumbnails { display: flex; gap: .65rem; overflow-x: auto; padding: .25rem; scrollbar-width: thin; }
+.tm-gallery__thumbnail { position: relative; flex: 0 0 4.5rem; height: 5.75rem; border-radius: .75rem; border: 1.5px solid transparent; background: var(--secondary); overflow: hidden; transition: border-color 160ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1); }
+.tm-gallery__thumbnail:active { transform: scale(0.96); }
+.tm-gallery__thumbnail[aria-pressed="true"] { border-color: #32259b; }
+.tm-gallery__discount { position: absolute; left: 1rem; bottom: 1rem; background: rgba(255,255,255,0.94); color: var(--foreground); padding: .35rem .85rem; border-radius: 9999px; font-size: .75rem; font-weight: 600; backdrop-filter: blur(8px); }
+.tm-plan-card { overflow: hidden; border: 1px solid var(--tm-line); border-radius: 1.25rem; background: var(--tm-paper); display: flex; flex-direction: column; min-width: 0; }
+.tm-plan-card__image { position: relative; aspect-ratio: 4 / 3; background: var(--muted); }
+.tm-plan-card__body { display: flex; flex-direction: column; flex: 1; gap: 1.25rem; padding: 1.5rem; }
+.tm-modal { max-height: 92dvh; overflow: auto; padding: 0; background: var(--card); border-radius: 1.5rem; }
+.tm-modal__layout { display: grid; min-width: 0; }
+.tm-modal__gallery { padding: 1.5rem; background: var(--muted); }
+.tm-modal__body { padding: 1.5rem; min-width: 0; }
+.tm-modal__footer { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--tm-line); display: grid; gap: 1rem; }
+.tm-address-field { display: grid; gap: .45rem; min-width: 0; }
+.tm-address-field label { color: var(--muted-foreground); font-size: .875rem; font-weight: 500; }
+.tm-address-field input { min-width: 0; width: 100%; min-height: 2.85rem; padding: .6rem 1rem; background: var(--card); color: var(--foreground); border: 1px solid var(--input); border-radius: .75rem; font-size: .95rem; }
+.tm-address-field input[aria-invalid="true"] { border-color: var(--destructive); }
+.tm-notice { padding: 1.25rem; border: 1px solid color-mix(in srgb, var(--warning) 35%, var(--border)); border-radius: 1rem; background: color-mix(in srgb, var(--warning) 8%, var(--card)); color: var(--warning-text); }
+.tm-notice h2, .tm-notice h3 { font-size: 1rem; font-weight: 600; line-height: 1.4; color: var(--warning-text); }
+.tm-state { padding: 3.5rem 1.5rem; text-align: center; max-width: 40rem; margin-inline: auto; }
+.tm-state h1, .tm-state h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: .75rem; font-family: var(--font-serif), "Libre Bodoni", Georgia, serif; }
+.tm-state p { color: var(--muted-foreground); margin-bottom: 1.5rem; }
+.tm-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .65rem; color: var(--muted-foreground); margin-bottom: 1.5rem; font-size: .875rem; }
+.tm-breadcrumb a { display: inline-flex; align-items: center; min-height: 2.5rem; }
+.tm-breadcrumb a:hover { color: var(--foreground); text-decoration: underline; text-underline-offset: .25em; }
+.tm-section { margin-top: 4.5rem; padding-top: 3rem; border-top: 1px solid var(--tm-line); }
+.tm-section h2 { font-size: clamp(1.65rem, 2.5vw, 2.25rem); font-weight: 600; margin-bottom: 1.5rem; line-height: 1.22; font-family: var(--font-serif), "Libre Bodoni", Georgia, serif; text-wrap: balance; }
+.tm-tab-list { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; border-bottom: 1px solid var(--tm-line); margin-bottom: 1.5rem; }
+.tm-tab-list button { min-height: 2.75rem; padding: .5rem .25rem; font-size: .875rem; font-weight: 500; color: var(--muted-foreground); border-bottom: 2px solid transparent; transition: color 150ms ease, border-color 150ms ease; }
+.tm-tab-list button[aria-pressed="true"] { border-color: #32259b; color: #15095d; }
+.tm-suggestion { display: flex; flex-direction: column; border-radius: 1.25rem; overflow: hidden; min-width: 0; background: var(--card); }
+.tm-suggestion__image { position: relative; aspect-ratio: 3 / 4; background: var(--secondary); border-radius: 1.25rem; overflow: hidden; }
+.tm-suggestion__body { display: grid; gap: .4rem; padding: .85rem .25rem; flex: 1; }
+@media (min-width: 1024px) {
+  .tm-gallery:not(.tm-gallery--compact) { flex-direction: row-reverse; align-items: flex-start; }
+  .tm-gallery:not(.tm-gallery--compact) .tm-gallery__image { flex: 1; aspect-ratio: 3 / 4; }
+  .tm-gallery:not(.tm-gallery--compact) .tm-gallery__thumbnails { flex: 0 0 5rem; flex-direction: column; max-height: 38rem; overflow-y: auto; }
+  .tm-modal__layout { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+}

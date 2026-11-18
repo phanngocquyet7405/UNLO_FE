@@ -1,0 +1,99 @@
+{
+  "header": {
+    "promoBadge": "Explore the catalog",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "myAccount": "My Account",
+    "administrator": "Administrator",
+    "dashboard": "Dashboard",
+    "myProfile": "My Profile",
+    "logOut": "Log Out",
+    "guestFallbackName": "User"
+  },
+  "nav": {
+    "products": "Products",
+    "brands": "Brands",
+    "featuredBrands": "Featured Brands",
+    "otherBrands": "Other Brands",
+    "newProducts": "New Products",
+    "otherProducts": "More Products"
+  },
+  "search": {
+    "placeholder": "Search products...",
+    "loading": "Searching...",
+    "noResults": "No products found for \"{query}\"",
+    "viewAllResults": "View all results for \"{query}\""
+  },
+  "footer": {
+    "appPromoLine1": "Download our app to get",
+    "appPromoLine2": "app-exclusive offers and",
+    "appPromoLine3": "discounts!",
+    "qrCode": "QR CODE",
+    "brandsTitle": "Brands",
+    "informationTitle": "Information",
+    "supportTitle": "Support",
+    "weAcceptTitle": "We Accept",
+    "copyright": "© {year} TotMart Box. All rights reserved.",
+    "brandLinks": {
+      "snackBox": "TotMart Snack Box",
+      "boutique": "TotMart Boutique",
+      "market": "TotMart Market"
+    },
+    "information": {
+      "aboutUs": "About Us",
+      "todaysOffers": "Today's Offers",
+      "referFriend": "Refer a Friend",
+      "corporateGifts": "Corporate Gifts",
+      "rewards": "Rewards",
+      "blogs": "Blogs",
+      "careers": "Careers"
+    },
+    "support": {
+      "contactUs": "Contact Us",
+      "community": "Community",
+      "privacyPolicy": "Privacy Policy",
+      "terms": "Terms",
+      "faq": "FAQ",
+      "shippingPolicy": "Shipping Policy",
+      "accessibility": "Accessibility Statement"
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "loading": "Loading checkout process...",
+    "stepAddress": "Address",
+    "stepReview": "Review",
+    "stepPayment": "Payment",
+    "cartTypes": "{types} kinds · {count} items",
+    "back": "Back",
+    "changePaymentMethod": "Change payment method",
+    "recreateQr": "Regenerate QR Code",
+    "recheckPayment": "I have transferred, check again",
+    "qrCountdown": "Payment QR expires in",
+    "qrExpiredTitle": "Payment session expired",
+    "qrExpiredDesc": "This payment session has expired. Please regenerate a new QR code or change your payment method.",
+    "quoteChanged": "Product prices or inventory have changed. Please review your cart.",
+    "viewCart": "Review cart",
+    "orderSuccess": "Order Placed Successfully",
+    "cod": "Cash on Delivery (COD)",
+    "online": "Bank Transfer QR (SePay)"
+  },
+  "cartDrawer": {
+    "title": "Shopping Cart",
+    "emptyTitle": "Your cart is empty",
+    "emptyDesc": "No items yet. Explore our curated gift boxes!",
+    "continueShopping": "Continue shopping",
+    "suggestionsTitle": "You May Also Like",
+    "suggestionsCollapsed": "Suggested items",
+    "loadingSuggestions": "Loading suggestions...",
+    "noSuggestions": "No suggestions available.",
+    "addSuccess": "Added {name} to cart 🛒",
+    "subtotalConfirmed": "Items & options total",
+    "subtotalEstimated": "Listed item prices",
+    "shippingNoteConfirmed": "Shipping fees are settled directly with the courier.",
+    "shippingNoteEstimated": "Quantity discounts and service options confirmed at checkout.",
+    "checkoutNow": "Checkout Now",
+    "viewCartDetails": "View Full Cart",
+    "close": "Close cart"
+  }
+}

@@ -1,0 +1,459 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-text: var(--warning-text);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.35);
+  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-3xl: calc(var(--radius) * 2.25);
+  --radius-4xl: calc(var(--radius) * 2.75);
+  --ease-emil: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* =========================================================================
+ * UNLO Design System — Celestial Indigo, Periwinkle & Milky Way Ivory
+ * Moodboard Palette:
+ *   #15095D Midnight Indigo   #1F0C85 Royal Indigo    #32259B Deep Iris
+ *   #443EB1 UNLO Core Indigo  #625FBC Iris Violet     #8D8DC7 Lilac Blue
+ *   #9EA1D2 Dusty Periwinkle  #BBC2DD Periwinkle Mist #DCE0E7 Cloud Mist
+ *   #EFF2F9 Meteor Ice Canvas #FCFDF1 Milky Way Ivory #0B2056 Galaxy Navy
+ *   #334EAB Planetary Blue    #6B94D6 Universe Blue   #C2D9F0 Venus Sky
+ * ========================================================================= */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Moodboard Named Palette Tokens */
+  --unlo-midnight: #15095d;
+  --unlo-royal: #1f0c85;
+  --unlo-iris-deep: #32259b;
+  --unlo-indigo: #443eb1;
+  --unlo-iris: #625fbc;
+  --unlo-lilac: #8d8dc7;
+  --unlo-periwinkle: #9ea1d2;
+  --unlo-mist: #bbc2dd;
+  --unlo-cloud: #dce0e7;
+  --unlo-meteor: #eff2f9;
+  --unlo-ivory: #fcfdf1;
+  --unlo-galaxy: #0b2056;
+  --unlo-deep-sea: #183563;
+  --unlo-dive: #2b467c;
+  --unlo-planetary: #334eab;
+  --unlo-sailing: #5775b8;
+  --unlo-universe: #6b94d6;
+  --unlo-venus: #c2d9f0;
+  --unlo-sky: #d4e4f7;
+
+  /* Semantic UI Tokens */
+  --background: #ffffff;
+  --foreground: #15095d;
+  --card: #ffffff;
+  --card-foreground: #15095d;
+  --popover: #ffffff;
+  --popover-foreground: #15095d;
+  --primary: #32259b;
+  --primary-foreground: #ffffff;
+  --secondary: #eff2f9;
+  --secondary-foreground: #15095d;
+  --muted: #eff2f9;
+  --muted-foreground: #4e567a;
+  --accent: #e4e7f5;
+  --accent-foreground: #15095d;
+
+  /* Backwards-compatible semantic slots remapped to UNLO Indigo */
+  --obsidian: #15095d;
+  --obsidian-deep: #0b2056;
+  --terracotta: #443eb1;
+  --terracotta-hover: #32259b;
+  --star-gold: #443eb1;
+  --cta-warm: #32259b;
+  --cta-warm-hover: #1f0c85;
+  --cta-warm-foreground: #ffffff;
+  --flax: #625fbc;
+
+  --destructive: #c43d4b;
+  --destructive-foreground: #ffffff;
+  --destructive-text: #a52735;
+  --success: #1d7a5f;
+  --success-foreground: #ffffff;
+  --success-text: #15624b;
+  --warning: #b7791f;
+  --warning-foreground: #15095d;
+  --warning-text: #8a5612;
+
+  --border: #dce0e7;
+  --input: #bbc2dd;
+  --ring: #443eb1;
+
+  --chart-1: #15095d;
+  --chart-2: #443eb1;
+  --chart-3: #6b94d6;
+  --chart-4: #9ea1d2;
+  --chart-5: #bbc2dd;
+  --radius: 0.875rem;
+
+  --sidebar: #f6f7fc;
+  --sidebar-foreground: #15095d;
+  --sidebar-primary: #32259b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eff2f9;
+  --sidebar-accent-foreground: #15095d;
+  --sidebar-border: #dce0e7;
+  --sidebar-ring: #443eb1;
+}
+
+.dark {
+  --background: #0b1433;
+  --foreground: #fcfdf1;
+  --card: #121d45;
+  --card-foreground: #fcfdf1;
+  --popover: #121d45;
+  --popover-foreground: #fcfdf1;
+  --primary: #9ea1d2;
+  --primary-foreground: #15095d;
+  --secondary: #182557;
+  --secondary-foreground: #fcfdf1;
+  --muted: #182557;
+  --muted-foreground: #bbc2dd;
+  --accent: #22306b;
+  --accent-foreground: #fcfdf1;
+  --cta-warm: #625fbc;
+  --cta-warm-hover: #8d8dc7;
+  --cta-warm-foreground: #ffffff;
+  --border: #283673;
+  --input: #344488;
+  --ring: #9ea1d2;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply min-h-screen bg-background text-foreground selection:bg-[#8d8dc7]/30 selection:text-[#15095d];
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+}
+
+@layer components {
+  /* English Bold Display Accent (Climate Crisis from Moodboard) */
+  .unlo-display-en {
+    font-family: var(--font-display), "Climate Crisis", sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    font-weight: 400;
+  }
+
+  /* Primary Royal Indigo Pill CTA */
+  .unlo-pill-primary,
+  .null-pill-terracotta,
+  .null-pill-warm {
+    background-color: #32259b;
+    color: #ffffff;
+    border-radius: 9999px;
+    transition:
+      background-color 180ms ease,
+      transform 140ms var(--ease-out),
+      box-shadow 180ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .unlo-pill-primary:hover:not(:disabled),
+    .null-pill-terracotta:hover:not(:disabled),
+    .null-pill-warm:hover:not(:disabled) {
+      background-color: #1f0c85;
+    }
+  }
+  .unlo-pill-primary:active:not(:disabled),
+  .null-pill-terracotta:active:not(:disabled),
+  .null-pill-warm:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+
+  /* Soft Periwinkle / Lilac Hero Pill (Exact Astera Moodboard CTA) */
+  .unlo-pill-lilac {
+    background-color: #bbc2dd;
+    color: #15095d;
+    border-radius: 9999px;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease,
+      transform 140ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .unlo-pill-lilac:hover:not(:disabled) {
+      background-color: #fcfdf1;
+      color: #15095d;
+    }
+  }
+  .unlo-pill-lilac:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+
+  /* Deep Midnight Indigo Pill CTA */
+  .unlo-pill-midnight,
+  .null-pill-dark {
+    background-color: #15095d;
+    color: #ffffff;
+    border-radius: 9999px;
+    transition:
+      background-color 180ms ease,
+      transform 140ms var(--ease-out),
+      opacity 160ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .unlo-pill-midnight:hover:not(:disabled),
+    .null-pill-dark:hover:not(:disabled) {
+      background-color: #32259b;
+    }
+  }
+  .unlo-pill-midnight:active:not(:disabled),
+  .null-pill-dark:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+
+  /* Clean Outlined Pill Button (Astera "Add to Cart" style) */
+  .unlo-pill-outline {
+    background-color: #ffffff;
+    color: #15095d;
+    border: 1px solid #bbc2dd;
+    border-radius: 9999px;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease,
+      transform 140ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .unlo-pill-outline:hover:not(:disabled) {
+      background-color: #15095d;
+      color: #ffffff;
+      border-color: #15095d;
+    }
+  }
+  .unlo-pill-outline:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Tactile press feedback */
+  .null-pressable {
+    transition:
+      transform 140ms var(--ease-out),
+      background-color 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease,
+      opacity 160ms ease;
+  }
+  .null-pressable:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Origin-aware rounded popover */
+  .null-popover {
+    transform-origin: top right;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition:
+      opacity 160ms var(--ease-out),
+      transform 180ms var(--ease-out);
+  }
+  @starting-style {
+    .null-popover {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.96);
+    }
+  }
+
+  /* Touch-safe editorial image hover */
+  .null-card-img {
+    transition: transform 520ms var(--ease-out);
+    will-change: transform;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover .null-card-img {
+      transform: scale(1.045);
+    }
+  }
+
+  /* Concentric swatch ring */
+  .null-swatch {
+    position: relative;
+    border-radius: 9999px;
+    transition: transform 150ms var(--ease-out), box-shadow 160ms ease;
+  }
+  .null-swatch[data-active="true"] {
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 3.5px #32259b;
+  }
+
+  .null-morph-text {
+    transition:
+      opacity 180ms var(--ease-out),
+      filter 180ms var(--ease-out),
+      color 180ms ease;
+  }
+
+  .shadow-null,
+  .shadow-totmart {
+    @apply rounded-2xl border border-border;
+    transition: border-color 180ms ease, box-shadow 200ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .shadow-null:hover,
+    .shadow-totmart:hover {
+      border-color: #9ea1d2;
+      box-shadow: 0 14px 32px -20px rgba(21, 9, 93, 0.2);
+    }
+  }
+
+  .serif-heading {
+    @apply font-serif font-semibold tracking-tight text-[#15095D];
+    text-wrap: balance;
+  }
+
+  .product-grid {
+    @apply grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10;
+  }
+
+  .null-eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-[#4E567A];
+  }
+
+  .null-mono-spec {
+    @apply font-mono text-xs tabular-nums tracking-tight;
+  }
+}
+
+@layer utilities {
+  .page-canvas {
+    background: var(--background);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .transition-smooth {
+    transition:
+      opacity 180ms var(--ease-out),
+      transform 180ms var(--ease-out),
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+}
+
+@keyframes nullReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInDown {
+  from { transform: translateY(-16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideInUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.null-hero-reveal { animation: nullReveal 460ms var(--ease-out) both; }
+.null-hero-reveal-delay { animation: nullReveal 520ms var(--ease-out) 100ms both; }
+.animate-slide-in-right { animation: slideInRight 260ms var(--ease-drawer); }
+.animate-slide-in-down { animation: slideInDown 240ms var(--ease-out); }
+.animate-slide-in-up { animation: slideInUp 220ms var(--ease-out); }
+.animate-fade-in { animation: fadeIn 200ms var(--ease-out); }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #eff2f9; }
+::-webkit-scrollbar-thumb { background: #bbc2dd; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #625fbc; }
+
+@media (prefers-reduced-motion: reduce) {
+  .null-hero-reveal,
+  .null-hero-reveal-delay,
+  .animate-slide-in-right,
+  .animate-slide-in-down,
+  .animate-slide-in-up,
+  .animate-fade-in {
+    animation: fadeIn 180ms ease both !important;
+  }
+  .null-card-img,
+  .null-pressable,
+  .unlo-pill-primary,
+  .unlo-pill-lilac,
+  .unlo-pill-midnight,
+  .unlo-pill-outline,
+  .null-pill-warm,
+  .null-pill-terracotta,
+  .null-pill-dark,
+  .null-popover {
+    transition: opacity 150ms ease, background-color 150ms ease, border-color 150ms ease !important;
+    transform: none !important;
+  }
+}

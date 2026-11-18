@@ -1,0 +1,99 @@
+{
+  "header": {
+    "promoBadge": "Sản xuất trực tiếp OEM/ODM · Giá tốt hơn 40–60%",
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "myAccount": "Tài khoản",
+    "administrator": "Quản trị NU:LL HQ",
+    "dashboard": "Bảng điều khiển",
+    "myProfile": "Hồ sơ của tôi",
+    "logOut": "Đăng xuất",
+    "guestFallbackName": "Thành viên"
+  },
+  "nav": {
+    "products": "Bộ sưu tập",
+    "brands": "Xưởng đối tác",
+    "featuredBrands": "Xưởng OEM/ODM Việt Nam",
+    "otherBrands": "Đối tác kiểm định",
+    "newProducts": "Thiết yếu nổi bật",
+    "otherProducts": "Danh mục khác"
+  },
+  "search": {
+    "placeholder": "Tìm áo thun Supima, sơ mi Linen, túi Canvas...",
+    "loading": "Đang tìm kiếm...",
+    "noResults": "Không tìm thấy sản phẩm cho \"{query}\"",
+    "viewAllResults": "Xem tất cả kết quả cho \"{query}\""
+  },
+  "footer": {
+    "appPromoLine1": "NU:LL — Giữ chất lượng.",
+    "appPromoLine2": "Bỏ sự phô trương.",
+    "appPromoLine3": "Thêm dấu ấn riêng.",
+    "qrCode": "NU:LL",
+    "brandsTitle": "Khám phá NU:LL",
+    "informationTitle": "Minh bạch & Dịch vụ",
+    "supportTitle": "Hỗ trợ khách hàng",
+    "weAcceptTitle": "Thanh toán",
+    "copyright": "© {year} NU:LL Essentials Vietnam. Bảo lưu mọi quyền.",
+    "brandLinks": {
+      "snackBox": "Bộ sưu tập Thiết yếu",
+      "boutique": "Gom đơn giá xưởng",
+      "market": "Quà tặng Doanh nghiệp B2B"
+    },
+    "information": {
+      "aboutUs": "Từ xưởng đến tay bạn",
+      "todaysOffers": "Chiến dịch Group-Buy",
+      "referFriend": "Giới thiệu & Affiliate",
+      "corporateGifts": "Đồng phục & Quà B2B",
+      "rewards": "Cá nhân hóa Monogram",
+      "blogs": "Tiêu chuẩn chất liệu",
+      "careers": "Hợp tác xưởng OEM"
+    },
+    "support": {
+      "contactUs": "Liên hệ tư vấn",
+      "community": "Cộng đồng NU:LL",
+      "privacyPolicy": "Chính sách bảo mật",
+      "terms": "Điều khoản sử dụng",
+      "faq": "Câu hỏi thường gặp",
+      "shippingPolicy": "Đổi size & Hoàn trả",
+      "accessibility": "Hướng dẫn bảo quản"
+    }
+  },
+  "checkout": {
+    "title": "Thanh toán",
+    "loading": "Đang tải tiến trình thanh toán...",
+    "stepAddress": "Địa chỉ",
+    "stepReview": "Kiểm tra",
+    "stepPayment": "Thanh toán",
+    "cartTypes": "{types} dòng · {count} sản phẩm",
+    "back": "Quay lại",
+    "changePaymentMethod": "Đổi phương thức thanh toán",
+    "recreateQr": "Tạo lại mã QR",
+    "recheckPayment": "Tôi đã chuyển khoản, kiểm tra lại",
+    "qrCountdown": "Mã thanh toán hết hạn sau",
+    "qrExpiredTitle": "Mã thanh toán đã hết hạn",
+    "qrExpiredDesc": "Phiên thanh toán đã hết thời gian hiệu lực. Vui lòng tạo lại mã QR mới hoặc đổi phương thức thanh toán.",
+    "quoteChanged": "Giá hoặc tồn kho biến thể đã thay đổi. Vui lòng kiểm tra lại giỏ hàng.",
+    "viewCart": "Xem lại giỏ hàng",
+    "orderSuccess": "Đặt hàng thành công",
+    "cod": "Thanh toán khi nhận hàng (COD)",
+    "online": "Chuyển khoản VietQR (SePay)"
+  },
+  "cartDrawer": {
+    "title": "Túi đồ của bạn",
+    "emptyTitle": "Túi đồ đang trống",
+    "emptyDesc": "Khám phá các thiết kế tối giản chuẩn xưởng và tùy chọn thêu Monogram tinh tế từ NU:LL.",
+    "continueShopping": "Khám phá bộ sưu tập",
+    "suggestionsTitle": "Gợi ý phối đồ tối giản",
+    "suggestionsCollapsed": "Gợi ý phối đồ",
+    "loadingSuggestions": "Đang tải gợi ý...",
+    "noSuggestions": "Chưa có sản phẩm gợi ý.",
+    "addSuccess": "Đã thêm {name} vào túi đồ",
+    "subtotalConfirmed": "Tạm tính (đã gồm cá nhân hóa)",
+    "subtotalEstimated": "Tạm tính dự kiến",
+    "shippingNoteConfirmed": "Miễn phí vận chuyển dự kiến cho đơn từ 499.000đ. Đơn có thêu cá nhân hóa cộng thêm 1–2 ngày hoàn thiện.",
+    "shippingNoteEstimated": "Phụ phí thêu Monogram và ưu đãi gom đơn được xác nhận chính xác ở bước thanh toán.",
+    "checkoutNow": "Tiến hành thanh toán",
+    "viewCartDetails": "Xem chi tiết túi đồ",
+    "close": "Đóng túi đồ"
+  }
+}

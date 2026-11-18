@@ -1,0 +1,23 @@
+import { Shield } from "lucide-react";
+
+export default function TrustBadge() {
+  return (
+    <section className="py-16 text-center border-t">
+      <p className="text-muted-foreground">Chưa chắc chắn?</p>
+      <h3 className="font-bold text-xl mb-6">Hủy theo chính sách gói</h3>
+      <div className="flex flex-wrap justify-center gap-6">
+        {[
+          "Thanh toán bảo mật",
+          "Ship trả trực tiếp bên giao hàng",
+          "Hoàn tiền theo số kỳ chưa giao",
+          "Liên hệ hỗ trợ",
+        ].map((item) => (
+          <div key={item} className="flex gap-2 items-center">
+            <Shield className="w-4 h-4 text-success-text" />
+            {item}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

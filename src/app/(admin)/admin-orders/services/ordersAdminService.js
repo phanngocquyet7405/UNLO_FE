@@ -1,0 +1,242 @@
+/**
+ * ordersAdminService.js
+ * Service layer cho admin-orders — wrap orderService (raw API), chuẩn hoá
+ * shape đơn hàng, và định nghĩa cấu hình trạng thái.
+ *
+ * Khớp đúng enum + field thật của Order model (TotMartAPI/src/models/Order.js).
+ * status và paymentStatus là 2 field TÁCH BIỆT — status là vòng đời giao
+ * hàng (pending/processing/shipped/delivered/cancelled/returned/on_hold),
+ * paymentStatus là trạng thái tiền (pending/paid/failed). Không gộp 2 field
+ * này làm một như bản cũ (từng có "pending_payment" là 1 giá trị của status,
+ * SAI — đó thực ra là paymentStatus = "pending").
+ */
+
+import { orderService } from "@/app/services/api/orderService";
+import { parseApiResponse, parseApiItem } from "../../utils/parseApiResponse";
+
+// ─── Trạng thái đơn hàng (khớp enum thật ở Order.js) ────────────────────────
+
+export const ORDER_STATUS = {
+  PENDING: "pending",
+  PROCESSING: "processing",
+  SHIPPED: "shipped",
+  DELIVERED: "delivered",
+  CANCELLED: "cancelled",
+  RETURNED: "returned",
+  ON_HOLD: "on_hold",
+};
+
+export const ORDER_STATUS_CONFIG = {
+  [ORDER_STATUS.PENDING]: {
+    label: "Chờ xác nhận",
+    badgeClass: "border-warning/30 bg-warning/15 text-warning-text",
+    dotClass: "bg-warning",
+  },
+  [ORDER_STATUS.PROCESSING]: {
+    label: "Đang chuẩn bị hàng",
+    badgeClass: "border-primary/30 bg-primary/15 text-primary",
+    dotClass: "bg-primary",
+  },
+  [ORDER_STATUS.SHIPPED]: {
+    label: "Đang giao hàng",
+    badgeClass: "border-ring/40 bg-ring/15 text-ring",
+    dotClass: "bg-ring",
+  },
+  [ORDER_STATUS.DELIVERED]: {
+    label: "Đã giao hàng",
+    badgeClass: "border-success/30 bg-success/15 text-success-text",
+    dotClass: "bg-success",
+  },
+  [ORDER_STATUS.CANCELLED]: {
+    label: "Đã huỷ",
+    badgeClass: "border-border bg-muted text-muted-foreground",
+    dotClass: "bg-muted-foreground",
+  },
+  [ORDER_STATUS.RETURNED]: {
+    label: "Đã hoàn trả",
+    badgeClass: "border-destructive/30 bg-destructive/15 text-destructive-text",
+    dotClass: "bg-destructive",
+  },
+  [ORDER_STATUS.ON_HOLD]: {
+    label: "Cần xử lý (thiếu hàng)",
+    badgeClass: "border-destructive/40 bg-destructive/20 text-destructive-text font-semibold",
+    dotClass: "bg-destructive animate-pulse",
+  },
+};
+
+export const ORDER_STATUS_OPTIONS = Object.entries(ORDER_STATUS_CONFIG).map(
+  ([value, cfg]) => ({ value, label: cfg.label }),
+);
+
+/**
+ * Danh sách action khả dụng cho đơn hiện tại — mỗi action gắn với ĐÚNG 1
+ * route BE (xem updateAdminOrderStatus bên dưới). Một số transition có
+ * side-effect (hoàn kho, hoàn coupon, hoàn tiền, hoặc set paymentStatus)
+ * nên KHÔNG đi qua route "status" chung — nếu sửa transition ở đây, nhớ
+ * đối chiếu lại orderAdminController.GENERIC_TRANSITIONS ở BE cho khớp.
+ */
+export function getNextStatusOptions(order) {
+  if (!order) return [];
+  const { status, paymentMethod } = order;
+  const options = [];
+
+  if (status === ORDER_STATUS.PENDING) {
+    if (paymentMethod === "cod") {
+      options.push({
+        value: ORDER_STATUS.PROCESSING,
+        label: "Xác nhận đơn (COD)",
+        action: "confirm-cod",
+      });
+    }
+    // Đơn online "pending" nghĩa là chưa thanh toán — tự động chuyển
+    // "processing" qua webhook SePay khi khách chuyển khoản, không có action
+    // thủ công nào cho admin ở trạng thái này ngoài huỷ.
+    options.push({
+      value: ORDER_STATUS.CANCELLED,
+      label: "Huỷ đơn",
+      action: "cancel",
+    });
+  }
+
+  if (status === ORDER_STATUS.PROCESSING) {
+    options.push({
+      value: ORDER_STATUS.SHIPPED,
+      label: "Chuyển sang đang giao",
+      action: "status",
+    });
+    options.push({
+      value: ORDER_STATUS.CANCELLED,
+      label: "Huỷ đơn",
+      action: "cancel",
+    });
+  }
+
+  if (status === ORDER_STATUS.SHIPPED) {
+    options.push(
+      paymentMethod === "cod"
+        ? {
+            value: ORDER_STATUS.DELIVERED,
+            label: "Xác nhận đã giao (thu tiền COD)",
+            action: "mark-cod-delivered",
+          }
+        : {
+            value: ORDER_STATUS.DELIVERED,
+            label: "Xác nhận đã giao",
+            action: "status",
+          },
+    );
+  }
+
+  if (status === ORDER_STATUS.ON_HOLD) {
+    options.push({
+      value: ORDER_STATUS.PROCESSING,
+      label: "Kiểm tra và giữ hàng để xử lý tiếp",
+      action: "reserve-stock",
+    });
+  }
+
+  // "delivered", "cancelled", "returned" — trạng thái cuối, không có action
+  if (status === ORDER_STATUS.DELIVERED && paymentMethod === 'cod' && order.paymentStatus === 'pending') {
+    options.push({ value: ORDER_STATUS.DELIVERED, label: 'Xác nhận đối soát tiền COD', action: 'mark-cod-delivered' });
+  }
+  // tiếp theo.
+  return options;
+}
+
+// ─── Chuẩn hoá dữ liệu ──────────────────────────────────────────────────────
+
+function normalizeOrder(raw) {
+  if (!raw) return null;
+
+  const id = raw._id ?? raw.id;
+  const addr = raw.shippingAddress ?? {};
+
+  return {
+    id,
+    code: raw.orderId ?? (id ? `#${String(id).slice(-6).toUpperCase()}` : "—"),
+    status: raw.status ?? ORDER_STATUS.PENDING,
+    // Tách riêng khỏi status — xem ghi chú đầu file.
+    paymentStatus: raw.paymentStatus ?? "pending",
+    paymentMethod: raw.paymentMethod ?? "cod",
+    items: Array.isArray(raw.products)
+      ? raw.products.map((p) => ({
+          productId: p.productId,
+          name: p.name,
+          brandName:
+            typeof p.brand?.name === "string" && p.brand.name.trim()
+              ? p.brand.name.trim()
+              : "—",
+          quantity: p.quantity ?? 1,
+          price: p.unitPrice ?? 0,
+          lineTotal: p.totalPrice ?? (p.unitPrice ?? 0) * (p.quantity ?? 1),
+          lineId: p.lineId,
+          gift: p.gift,
+        }))
+      : [],
+    // Reshape từ shippingAddress thật (fullName/phone/address/district/city)
+    // sang shape mà AddressBlock (OrderDetailDialog.jsx) đang dùng
+    // (fullName/phone/street/district/province).
+    address: {
+      fullName: addr.fullName ?? "—",
+      phone: addr.phone ?? "—",
+      street: addr.address ?? "",
+      district: addr.district ?? "",
+      province: addr.city ?? "",
+    },
+    note: raw.note ?? "",
+    shippingFee: raw.shippingFee ?? 0,
+    shippingMode: raw.shippingMode || "legacy_fixed",
+    discount: raw.discountAmount ?? 0,
+    giftFee: raw.giftFee ?? 0,
+    bulkDiscountAmount: raw.bulkDiscountAmount ?? 0,
+    totalPrice: raw.totalAmount ?? 0,
+    customer: {
+      // raw.userId đã được BE populate("userId", "name email phone")
+      name: raw.userId?.name ?? addr.fullName ?? "—",
+      phone: raw.userId?.phone ?? addr.phone ?? "—",
+      email: raw.userId?.email ?? raw.customerEmail ?? null,
+    },
+    createdAt: raw.createdAt ?? null,
+    updatedAt: raw.updatedAt ?? null,
+  };
+}
+
+export function getOrderItemsCount(order) {
+  return (order?.items ?? []).reduce(
+    (sum, item) => sum + (item.quantity ?? 1),
+    0,
+  );
+}
+
+// ─── API calls ──────────────────────────────────────────────────────────────
+
+export async function fetchAdminOrders(params = {}) {
+  const res = await orderService.getAllOrders(params);
+  const list = parseApiResponse(res);
+  return list.map(normalizeOrder).filter(Boolean);
+}
+
+export async function fetchAdminOrderById(id) {
+  const res = await orderService.getOrderById(id);
+  return normalizeOrder(parseApiItem(res?.data ?? res));
+}
+
+/**
+ * Đổi trạng thái — nhận cả `order` (cần paymentMethod để chọn đúng action)
+ * và `opt` (option user vừa bấm, lấy từ getNextStatusOptions() ở trên, đã
+ * có sẵn `action`). Route đúng action tới đúng API — KHÔNG tự suy luận lại
+ * transition ở đây để tránh lệch với getNextStatusOptions().
+ */
+export async function updateAdminOrderStatus(order, opt) {
+  switch (opt.action) {
+    case "reserve-stock": return orderService.resolveInventoryHold(order.id);
+    case "confirm-cod":
+      return orderService.confirmCod(order.id);
+    case "cancel":
+      return orderService.cancelOrder(order.id);
+    case "mark-cod-delivered":
+      return orderService.markCodDelivered(order.id);
+    default:
+      return orderService.updateOrderStatus(order.id, opt.value);
+  }
+}
