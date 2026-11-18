@@ -94,31 +94,34 @@ export default function NullProductDetailClient({ initialProduct }) {
   });
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hash = window.location.hash;
-      const params = new URLSearchParams(window.location.search);
-      const isStudio =
-        hash === "#studio" ||
-        hash === "#studio-theu-ten" ||
-        params.get("studio") === "1" ||
-        params.get("pers") === "true";
-      if (isStudio) {
-        setCustomization((prev) => ({
-          ...prev,
-          enabled: true,
-          placement: params.get("pos") || prev.placement || "left_cuff",
-          monogramText: params.get("text") || prev.monogramText || "H.L",
-          font: params.get("font") || prev.font || "serif_minimal",
-          threadColor: params.get("thread") || prev.threadColor || "#15095D",
-        }));
-        setSelectedImageIdx(0);
-        setShowFactoryVideo(false);
-        const el = document.getElementById("studio");
-        if (el) {
-          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+    const timer = setTimeout(() => {
+      if (typeof window !== "undefined") {
+        const hash = window.location.hash;
+        const params = new URLSearchParams(window.location.search);
+        const isStudio =
+          hash === "#studio" ||
+          hash === "#studio-theu-ten" ||
+          params.get("studio") === "1" ||
+          params.get("pers") === "true";
+        if (isStudio) {
+          setCustomization((prev) => ({
+            ...prev,
+            enabled: true,
+            placement: params.get("pos") || prev.placement || "left_cuff",
+            monogramText: params.get("text") || prev.monogramText || "H.L",
+            font: params.get("font") || prev.font || "serif_minimal",
+            threadColor: params.get("thread") || prev.threadColor || "#15095D",
+          }));
+          setSelectedImageIdx(0);
+          setShowFactoryVideo(false);
+          const el = document.getElementById("studio");
+          if (el) {
+            setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
+          }
         }
       }
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleCustomizationChange = (next) => {

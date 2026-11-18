@@ -25,37 +25,30 @@ export default function QuickAddModal({ product, isOpen, onClose }) {
     return [...map.values()];
   }, [variants]);
 
-  const [selectedColor, setSelectedColor] = useState(colors[0]?.name || "");
+  const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [showSizeTable, setShowSizeTable] = useState(false);
 
-  // Sync initial color
-  useEffect(() => {
-    if (colors.length && !selectedColor) {
-      setSelectedColor(colors[0]?.name);
-    }
-  }, [colors, selectedColor]);
+  const activeColor = selectedColor || colors[0]?.name || "";
 
   // Sizes available for selected color
   const availableSizes = useMemo(() => {
     return variants
-      .filter((v) => !selectedColor || v.colorName === selectedColor)
+      .filter((v) => !activeColor || v.colorName === activeColor)
       .map((v) => ({
         id: v._id,
         size: v.size,
         stock: v.stock ?? 10,
         priceDelta: v.priceDelta || 0,
       }));
-  }, [variants, selectedColor]);
+  }, [variants, activeColor]);
 
-  // Auto select first in-stock size
-  useEffect(() => {
-    if (availableSizes.length) {
-      const inStock = availableSizes.find((s) => s.stock > 0) || availableSizes[0];
-      setSelectedSize(inStock?.size || "");
-    }
-  }, [availableSizes]);
+  const activeSize =
+    selectedSize ||
+    availableSizes.find((s) => s.stock > 0)?.size ||
+    availableSizes[0]?.size ||
+    "";
 
   // Escape key handler
   useEffect(() => {
@@ -76,8 +69,8 @@ export default function QuickAddModal({ product, isOpen, onClose }) {
 
   const currentVariant = variants.find(
     (v) =>
-      (!selectedColor || v.colorName === selectedColor) &&
-      (!selectedSize || v.size === selectedSize)
+      (!activeColor || v.colorName === activeColor) &&
+      (!activeSize || v.size === activeSize)
   );
 
   const price = product.price || 245000;
@@ -99,7 +92,7 @@ export default function QuickAddModal({ product, isOpen, onClose }) {
       quantity,
     });
 
-    toast.success(`Đã thêm ${product.name} (Size ${selectedSize}) vào giỏ hàng`);
+    toast.success(`Đã thêm ${product.name} (Size ${activeSize}) vào giỏ hàng`);
     onClose();
     setIsCartOpen?.(true);
   };
@@ -172,12 +165,12 @@ export default function QuickAddModal({ product, isOpen, onClose }) {
                   <div className="flex items-center justify-between text-xs font-bold text-[#15095D]">
                     <span>Màu sắc:</span>
                     <span className="font-normal text-[#4E567A]">
-                      {selectedColor}
+                      {activeColor}
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     {colors.map((c) => {
-                      const active = selectedColor === c.name;
+                      const active = activeColor === c.name;
                       return (
                         <button
                           key={c.name}
@@ -213,7 +206,7 @@ export default function QuickAddModal({ product, isOpen, onClose }) {
 
                 <div className="grid grid-cols-4 gap-2">
                   {availableSizes.map((s) => {
-                    const active = selectedSize === s.size;
+                    const active = activeSize === s.size;
                     const outOfStock = s.stock <= 0;
                     return (
                       <button

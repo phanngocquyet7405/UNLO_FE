@@ -169,12 +169,12 @@ export default function PasswordRecovery({ reset = false, token = "" }) {
                 />
               )}
               {error && (
-                <div
+                <p
                   role="alert"
                   className="p-3 rounded-xl bg-destructive/10 border border-destructive/25 text-destructive-text text-xs"
                 >
                   {error}
-                </div>
+                </p>
               )}
               <AuthButton type="submit" disabled={loading}>
                 {loading ? "Đang xử lý..." : reset ? "Lưu mật khẩu" : "Gửi liên kết"}

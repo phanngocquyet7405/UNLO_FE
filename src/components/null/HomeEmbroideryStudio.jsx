@@ -562,7 +562,7 @@ export default function HomeEmbroideryStudio() {
               <div className="flex items-center gap-3 pt-1 flex-wrap">
                 <Link
                   href={`/products/ao-thun-cotton-supima-260gsm-det-kim-nguyen-khoi-690000000000000000000101?pers=true&text=${encodeURIComponent(
-                    customText || "H.L",
+                    monogramText || "H.L",
                   )}&font=${
                     selectedFont === 1
                       ? "italic_atelier"
@@ -570,7 +570,7 @@ export default function HomeEmbroideryStudio() {
                       ? "sans_architect"
                       : "serif_minimal"
                   }&thread=${encodeURIComponent(
-                    selectedThread.hex,
+                    currentThread.hex,
                   )}&pos=${
                     selectedPos === 1 ? "chest_pocket" : selectedPos === 2 ? "hem" : "left_cuff"
                   }#studio`}

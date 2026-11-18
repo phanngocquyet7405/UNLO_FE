@@ -79,7 +79,9 @@ async function main() {
 
   const pendingAttempt = (uid = runtime.customerId) =>
     page.evaluate((targetUid) => {
-      const raw = localStorage.getItem(`totmart_checkout_attempt_${targetUid}`);
+      const raw =
+        localStorage.getItem(`totmart_checkout_attempt_${targetUid}`) ||
+        localStorage.getItem(`null_checkout_attempt_${targetUid}`);
       return raw ? JSON.parse(raw) : null;
     }, uid);
 
@@ -89,7 +91,9 @@ async function main() {
     const btn = page.getByRole('button', { name: /Thêm vào giỏ/i }).first();
     await btn.click();
     await page.waitForFunction(() => {
-      const cartKeys = Object.keys(localStorage).filter((k) => k.startsWith('totmart_cart_'));
+      const cartKeys = Object.keys(localStorage).filter(
+        (k) => k.startsWith('totmart_cart_') || k.startsWith('null_cart_')
+      );
       return cartKeys.some((k) => {
         try {
           return JSON.parse(localStorage.getItem(k)).items.length > 0;

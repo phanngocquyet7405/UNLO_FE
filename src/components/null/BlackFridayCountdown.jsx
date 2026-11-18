@@ -58,16 +58,18 @@ export default function BlackFridayCountdown() {
     minutes: 0,
     seconds: 0,
   });
-  const [reminded, setReminded] = useState(false);
+  const [reminded, setReminded] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("unlo_bf_reminder") === "true";
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("unlo_bf_reminder");
-      if (saved === "true") setReminded(true);
-    } catch {
-      // storage blocked fallback
-    }
-
     const calculate = () => {
       const now = new Date().getTime();
       const difference = BF_TARGET - now;

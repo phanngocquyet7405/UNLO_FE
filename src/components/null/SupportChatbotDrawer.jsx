@@ -57,6 +57,16 @@ const QUICK_ACTIONS = [
   },
 ];
 
+let msgCounter = 1000;
+function makeMessage(sender, text) {
+  return {
+    id: ++msgCounter,
+    sender,
+    text,
+    timestamp: "Vừa xong",
+  };
+}
+
 export default function SupportChatbotDrawer() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
@@ -79,15 +89,7 @@ export default function SupportChatbotDrawer() {
     if (!text) return;
 
     // Add user message
-    const userMsg = {
-      id: Date.now(),
-      sender: "user",
-      text,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+    const userMsg = makeMessage("user", text);
 
     setMessages((prev) => [...prev, userMsg]);
     if (!textToSend) setInputVal("");
@@ -113,15 +115,7 @@ export default function SupportChatbotDrawer() {
 
       setMessages((prev) => [
         ...prev,
-        {
-          id: Date.now() + 1,
-          sender: "bot",
-          text: botResponse,
-          timestamp: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
+        makeMessage("bot", botResponse),
       ]);
       setIsTyping(false);
     }, 600);

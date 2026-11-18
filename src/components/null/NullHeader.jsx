@@ -113,9 +113,12 @@ export default function NullHeader() {
 
   // Sync client query string for active nav tabs without triggering Next.js deopt
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSearchString(window.location.search || "");
-    }
+    const timer = setTimeout(() => {
+      if (typeof window !== "undefined") {
+        setSearchString(window.location.search || "");
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   if (prevPathname !== pathname) {
