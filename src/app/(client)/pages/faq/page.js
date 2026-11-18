@@ -1,9 +1,9 @@
 import FaqPageClient from "./FaqPageClient";
 
 export const metadata = {
-  title: "FAQ – Câu hỏi thường gặp – TotMart",
+  title: "Câu Hỏi Thường Gặp (FAQ) | UNLO — Brandless M2C",
   description:
-    "Giải đáp mọi thắc mắc về đặt hàng, vận chuyển, gói Subscribe và chính sách đổi trả tại TotMart.",
+    "Giải đáp mọi thắc mắc về mô hình M2C, minh bạch bóc tách chi phí, chất lượng kiểm định 12 bước AQL 2.5 và chính sách tự đổi trả 30 ngày tại UNLO.",
 };
 
 export default function FAQPage() {

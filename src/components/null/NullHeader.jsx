@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Sparkles,
   ChevronRight,
+  ChevronDown,
   RotateCcw,
   Search,
   User,
@@ -25,89 +26,159 @@ import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_PRODUCTS, filterUnloProducts } from "@/lib/unloCatalog";
 
 /**
- * Danh mục điều hướng chuẩn UNLO v3 từ prototype index.html:
- * NAV = [
- *   ["#cua-hang", "Cửa hàng"],
- *   ["#cua-hang", "Áo thun", "ao-thun"],
- *   ["#cua-hang", "Sơ mi", "so-mi"],
- *   ["#cua-hang", "Hoodie & Áo nỉ", "hoodie"],
- *   ["#cua-hang", "Quần", "quan"],
- *   ["#ca-nhan-hoa", "Cá nhân hóa"],
- *   ["#doanh-nghiep", "Doanh nghiệp"],
- *   ["#black-friday", "Black Friday"],
- *   ["#ho-tro", "Hỗ trợ"]
- * ]
+ * CẤU TRÚC ĐIỀU HƯỚNG PHÂN TẦNG TIẾT KIỆM KHÔNG GIAN (UNLO HIERARCHICAL NAVIGATION)
+ * Gom các mục con vào 7 mục cha tinh gọn, tích hợp toàn bộ các mục Pages (About, FAQ, Contact Us, Factories).
  */
-const NAV_ITEMS = [
+export const NAV_GROUPS = [
   {
+    type: "link",
     label: "Tất cả sản phẩm",
     href: "/products",
     categoryKey: "all",
   },
   {
-    label: "Săn giá xưởng",
-    href: "/products?sort=price_asc",
-    sortKey: "price_asc",
+    type: "dropdown",
+    id: "collections",
+    label: "Bộ sưu tập",
+    children: [
+      {
+        label: "Hàng mới về",
+        href: "/products?sort=newest",
+        sortKey: "newest",
+        desc: "Thiết kế đồ cơ bản xuất xưởng mới nhất",
+        badge: "Mới",
+      },
+      {
+        label: "Bán chạy nhất",
+        href: "/products?sort=bestselling",
+        sortKey: "bestselling",
+        desc: "Sản phẩm được cộng đồng M2C tin chọn",
+      },
+      {
+        label: "Săn giá xưởng",
+        href: "/products?sort=price_asc",
+        sortKey: "price_asc",
+        desc: "Mức giá gốc trực tiếp từ chuyền may",
+      },
+      {
+        label: "Ưu đãi mùa",
+        href: "/#black-friday",
+        desc: "Các kiện hàng thiết yếu ưu đãi cuối năm",
+        badge: "Hot",
+      },
+    ],
   },
   {
-    label: "Hàng mới về",
-    href: "/products?sort=newest",
-    sortKey: "newest",
+    type: "dropdown",
+    id: "apparel",
+    label: "Trang phục",
+    children: [
+      {
+        label: "Áo thun & Dệt kim",
+        href: "/products?category=cotton-basics",
+        categoryKey: "cotton-basics",
+        desc: "Cotton Supima 260 GSM, Pima & Polo Tencel",
+      },
+      {
+        label: "Sơ mi Linen & Oxford",
+        href: "/products?category=linen-tailoring",
+        categoryKey: "linen-tailoring",
+        desc: "100% European Linen 185 GSM & Royal Oxford",
+      },
+      {
+        label: "Áo nỉ & Hoodie",
+        href: "/products?category=sweat-hoodie",
+        categoryKey: "sweat-hoodie",
+        desc: "French Terry 380 GSM & Heavyweight Hoodie 420 GSM",
+      },
+      {
+        label: "Quần Kaki & Quần Âu",
+        href: "/products?category=pants-bottoms",
+        categoryKey: "pants-bottoms",
+        desc: "Chino cạp chun ẩn & Trousers xếp ly relaxed",
+      },
+      {
+        label: "Đồ len & Áo khoác",
+        href: "/products?category=wool-knitwear",
+        categoryKey: "wool-knitwear",
+        desc: "Merino Wool 19.5 Micron & Trench Coat DWR",
+      },
+    ],
   },
   {
-    label: "Bán chạy nhất",
-    href: "/products?sort=bestselling",
-    sortKey: "bestselling",
+    type: "dropdown",
+    id: "lifestyle",
+    label: "Phụ kiện & Đời sống",
+    children: [
+      {
+        label: "Đồ da nguyên tấm Ý",
+        href: "/products?category=leather-goods",
+        categoryKey: "leather-goods",
+        desc: "Ví da bò Full-grain & Túi công sở laptop",
+      },
+      {
+        label: "Túi Canvas 16oz",
+        href: "/products?category=canvas-accessories",
+        categoryKey: "canvas-accessories",
+        desc: "Vải bố hạng nặng quai da bò mộc Nam Định",
+      },
+      {
+        label: "Gốm sứ Bát Tràng",
+        href: "/products?category=ceramics-home",
+        categoryKey: "ceramics-home",
+        desc: "Bộ cốc men lì nung 1.280°C chuẩn an toàn LFGB",
+      },
+    ],
   },
   {
-    label: "Áo thun",
-    href: "/products?category=cotton-basics",
-    categoryKey: "cotton-basics",
-  },
-  {
-    label: "Sơ mi",
-    href: "/products?category=linen-tailoring",
-    categoryKey: "linen-tailoring",
-  },
-  {
-    label: "Hoodie & Nỉ",
-    href: "/products?category=sweat-hoodie",
-    categoryKey: "sweat-hoodie",
-  },
-  {
-    label: "Quần",
-    href: "/products?category=pants-bottoms",
-    categoryKey: "pants-bottoms",
-  },
-  {
-    label: "Đồ len",
-    href: "/products?category=wool-knitwear",
-    categoryKey: "wool-knitwear",
-  },
-  {
-    label: "Đồ da & Túi",
-    href: "/products?category=leather-goods",
-    categoryKey: "leather-goods",
-  },
-  {
-    label: "Gia dụng",
-    href: "/products?category=ceramics-home",
-    categoryKey: "ceramics-home",
-  },
-  {
+    type: "link",
     label: "Cá nhân hóa",
     href: "/#studio-theu-ten",
     special: "personalize",
   },
   {
+    type: "link",
     label: "Doanh nghiệp",
     href: "/b2b",
     routePrefix: "/b2b",
   },
   {
-    label: "Ưu đãi mùa",
-    href: "/#black-friday",
-    special: "holiday-gifts",
+    type: "dropdown",
+    id: "pages",
+    label: "Về UNLO",
+    children: [
+      {
+        label: "Câu chuyện thương hiệu (About Us)",
+        href: "/pages/about",
+        desc: "Triết lý 'Giá trị không cần gọi tên' & Hành trình M2C",
+        badge: "Story",
+      },
+      {
+        label: "Giá trị cốt lõi & Sứ mệnh",
+        href: "/pages/about#values",
+        desc: "Chất lượng, Minh bạch & Kiến tạo giá trị từ sự tử tế",
+      },
+      {
+        label: "Minh bạch giá thành (Price Chart)",
+        href: "/pages/about#price-chart",
+        desc: "Biểu đồ so sánh giá mục tiêu UNLO vs Hàng trôi nổi & Bán lẻ",
+      },
+      {
+        label: "Hồ sơ 4 nhà máy đối tác",
+        href: "/factories",
+        desc: "Khám phá các xưởng OEM Tier-1 tại Hưng Yên, Bắc Ninh, Bình Dương",
+      },
+      {
+        label: "Câu hỏi thường gặp (FAQ)",
+        href: "/pages/faq",
+        desc: "Giải đáp về quy trình đặt hàng, kiểm định và tự đổi trả 30 ngày",
+      },
+      {
+        label: "Liên hệ & Hỗ trợ xưởng",
+        href: "/pages/contact-us",
+        desc: "Hotline 1900 6826, email hỗ trợ và gửi tin nhắn trực tiếp",
+      },
+    ],
   },
 ];
 
@@ -129,13 +200,17 @@ export default function NullHeader() {
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileAccordion, setMobileAccordion] = useState(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchString, setSearchString] = useState("");
   const [prevPathname, setPrevPathname] = useState(pathname);
+  const [openNavDropdown, setOpenNavDropdown] = useState(null);
+
   const accountRef = useRef(null);
   const searchInputRef = useRef(null);
+  const navLeaveTimeoutRef = useRef(null);
 
   // Sync client query string for active nav tabs without triggering Next.js deopt
   useEffect(() => {
@@ -152,6 +227,7 @@ export default function NullHeader() {
     if (mobileOpen) setMobileOpen(false);
     if (searchOpen) setSearchOpen(false);
     if (accountOpen) setAccountOpen(false);
+    if (openNavDropdown) setOpenNavDropdown(null);
   }
 
   useEffect(() => {
@@ -159,7 +235,7 @@ export default function NullHeader() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     if (!accountOpen) return;
@@ -197,6 +273,17 @@ export default function NullHeader() {
     };
   }, [searchOpen]);
 
+  const handleNavMouseEnter = (id) => {
+    if (navLeaveTimeoutRef.current) clearTimeout(navLeaveTimeoutRef.current);
+    setOpenNavDropdown(id);
+  };
+
+  const handleNavMouseLeave = () => {
+    navLeaveTimeoutRef.current = setTimeout(() => {
+      setOpenNavDropdown(null);
+    }, 180);
+  };
+
   const searchResults = useMemo(() => {
     const q = searchQuery.trim();
     if (!searchOpen) return [];
@@ -230,13 +317,20 @@ export default function NullHeader() {
     return pathname === item.href;
   };
 
+  const isGroupActive = (group) => {
+    if (group.type === "link") return isItemActive(group);
+    if (group.children) {
+      return group.children.some((child) => isItemActive(child));
+    }
+    return false;
+  };
+
   const isStaff = user?.role === "admin" || user?.role === "merchant";
 
   return (
     <>
       {/* ================================================================
-          1. TOP PROMO BAR (.promo) — Chuẩn xác như index.html
-          ✦ Black Friday 27.11 · Giảm đến 50% ✦ Miễn phí giao hàng cho kiện từ 499.000đ ✦ Giá xưởng giảm theo số lượng từ 10 sản phẩm
+          1. TOP PROMO BAR (.promo)
           ================================================================ */}
       <div className="bg-[#15095D] text-[#E8E9FA] text-[11px] sm:text-xs tracking-[0.14em] uppercase font-medium border-b border-[#1F0C85]">
         <div className="max-w-[1760px] mx-auto px-4 flex items-center justify-center gap-6 py-2.5 whitespace-nowrap overflow-hidden text-center">
@@ -249,10 +343,12 @@ export default function NullHeader() {
               Black Friday 27.11 · Giảm đến 50%
             </Link>
           </span>
+
           <span className="inline-flex items-center gap-2">
             <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
             <span>Miễn phí giao hàng cho kiện từ 499.000đ</span>
           </span>
+
           <span className="hidden xl:inline-flex items-center gap-2">
             <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
             <span>Giá xưởng giảm theo số lượng từ 10 sản phẩm</span>
@@ -261,47 +357,44 @@ export default function NullHeader() {
       </div>
 
       {/* ================================================================
-          2. SITE HEADER (header.site) — 2-Row Quince Style
-          Row 1: Logo, Search Box, Sign In, Wishlist, Cart, Country
-          Row 2: Horizontal Category Subnavigation Links
+          2. DUAL-ROW HEADER (Quince 2-Row Layout + Hierarchical Subnav)
           ================================================================ */}
       <header
         className={`sticky top-0 z-50 w-full bg-white/98 backdrop-blur-[10px] border-b transition-all duration-200 ${
           scrolled
-            ? "border-[#DDE0EC] shadow-[0_10px_30px_rgba(21,9,93,0.06)]"
+            ? "border-[#BBC2DD] shadow-[0_4px_24px_rgba(21,9,93,0.06)]"
             : "border-[#DDE0EC]"
         }`}
       >
-        {/* ROW 1: Logo & Tools */}
-        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4 border-b border-[#EAEBED]/70">
-          {/* Left: Mobile Hamburger + UNLO Brand Logo */}
-          <div className="flex items-center gap-3 shrink-0">
+        {/* ROW 1: Main Brand Bar */}
+        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4 border-b border-[#F0F2F7]">
+          {/* Left: Mobile Menu Trigger + Brand Logo */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="xl:hidden w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
               aria-label="Mở menu điều hướng"
+              aria-expanded={mobileOpen}
+              className="md:hidden w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             <Link
               href="/"
-              className="inline-flex items-center focus-visible:outline-2 focus-visible:outline-[#443EB1] rounded-lg"
-              aria-label="UNLO trang chủ"
+              className="flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg"
             >
               <img
                 src="/assets/logo/unlo-header.png"
-                alt="UNLO"
-                className="h-7 sm:h-[1.95rem] w-auto object-contain select-none"
-                loading="eager"
+                alt="UNLO — Brandless M2C"
+                className="h-8 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
             </Link>
           </div>
 
           {/* Right: Search Box + Sign In + Wishlist + Cart + Country/Region */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            {/* Desktop Search Input with Coral Search Button (Quince Style) */}
+            {/* Desktop Search Input with Coral Search Button */}
             <form onSubmit={handleSearchSubmit} className="relative hidden md:flex items-center">
               <input
                 type="text"
@@ -447,53 +540,100 @@ export default function NullHeader() {
           </div>
         </div>
 
-        {/* ROW 2: Horizontal Category Subnavigation Links (Quince Style) */}
-        <div className="hidden md:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 overflow-x-auto no-scrollbar">
+        {/* ROW 2: Hierarchical Category & Pages Subnavigation (Space-Saving) */}
+        <div
+          className="hidden md:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible"
+          onMouseLeave={handleNavMouseLeave}
+        >
           <nav
             aria-label="Danh mục chính UNLO"
-            className="flex items-center gap-6 xl:gap-8 text-[13px] font-medium whitespace-nowrap"
+            className="flex items-center gap-7 lg:gap-9 text-[13px] font-medium"
           >
-            {NAV_ITEMS.map((item) => {
-              const active = isItemActive(item);
-
-              if (item.special === "holiday-gifts") {
+            {NAV_GROUPS.map((group) => {
+              if (group.type === "link") {
+                const active = isItemActive(group);
                 return (
                   <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-[#C25E34] hover:text-[#A0451F] font-semibold transition-colors flex items-center gap-1"
+                    key={group.label}
+                    href={group.href}
+                    className={`relative py-1 transition-colors flex items-center gap-1.5 ${
+                      active
+                        ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                        : "text-[#2B2D38] hover:text-[#15095D]"
+                    }`}
                   >
-                    <span>{item.label}</span>
+                    {group.special === "personalize" && (
+                      <Sparkles className="w-3.5 h-3.5 text-[#443EB1]" />
+                    )}
+                    <span>{group.label}</span>
                   </Link>
                 );
               }
 
-              if (item.special === "personalize") {
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-[#443EB1] hover:text-[#15095D] font-semibold transition-colors flex items-center gap-1.5"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              }
+              // Dropdown Group (Parent containing children)
+              const isGroupOpen = openNavDropdown === group.id;
+              const groupActive = isGroupActive(group);
 
               return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`relative py-1 transition-colors ${
-                    active
-                      ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
-                      : "text-[#2B2D38] hover:text-[#15095D] hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:h-[2px] hover:after:bg-[#15095D]/40"
-                  }`}
+                <div
+                  key={group.id}
+                  className="relative"
+                  onMouseEnter={() => handleNavMouseEnter(group.id)}
                 >
-                  {item.label}
-                </Link>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenNavDropdown((cur) => (cur === group.id ? null : group.id))
+                    }
+                    className={`relative py-1 flex items-center gap-1 transition-colors cursor-pointer ${
+                      groupActive || isGroupOpen
+                        ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                        : "text-[#2B2D38] hover:text-[#15095D]"
+                    }`}
+                  >
+                    <span>{group.label}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-[#6B7280] transition-transform duration-200 ${
+                        isGroupOpen ? "rotate-180 text-[#15095D]" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu Popover */}
+                  {isGroupOpen && (
+                    <div
+                      className="absolute left-0 mt-2 min-w-[280px] sm:min-w-[320px] bg-white border border-[#DCE0E7] rounded-2xl shadow-[0_16px_40px_rgba(21,9,93,0.12)] p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150"
+                      onMouseEnter={() => handleNavMouseEnter(group.id)}
+                    >
+                      <div className="space-y-1">
+                        {group.children.map((child) => (
+                          <Link
+                            key={child.label}
+                            href={child.href}
+                            onClick={() => setOpenNavDropdown(null)}
+                            className="flex flex-col p-2.5 rounded-xl hover:bg-[#F4F5FB] transition-colors group/item"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-semibold text-[#15095D] group-hover/item:text-[#32259B]">
+                                {child.label}
+                              </span>
+                              {child.badge && (
+                                <span className="px-1.5 py-0.5 rounded-full bg-[#EB6D48] text-white text-[9px] font-bold uppercase tracking-wider">
+                                  {child.badge}
+                                </span>
+                              )}
+                            </div>
+                            {child.desc && (
+                              <span className="text-[11px] text-[#5E607E] line-clamp-1 mt-0.5">
+                                {child.desc}
+                              </span>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </nav>
@@ -501,7 +641,7 @@ export default function NullHeader() {
       </header>
 
       {/* ================================================================
-          3. LIVE SEARCH OVERLAY (.searchbox) — Chuẩn xác như index.html
+          3. LIVE SEARCH OVERLAY (.searchbox)
           ================================================================ */}
       {searchOpen && (
         <div
@@ -518,102 +658,97 @@ export default function NullHeader() {
             <div className="max-w-[1320px] mx-auto px-4 sm:px-6">
               <form
                 onSubmit={handleSearchSubmit}
-                className="flex items-center gap-3 border-b-2 border-[#15095D] pb-2.5"
+                className="relative flex items-center border-b-2 border-[#15095D] pb-3"
               >
-                <label htmlFor="sq" className="sr-only">
-                  Tìm kiếm
-                </label>
+                <Search className="w-5 h-5 text-[#625FBC] mr-3 shrink-0" aria-hidden="true" />
                 <input
-                  id="sq"
                   ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm áo thun, hoodie, xưởng…"
-                  autoComplete="off"
-                  className="flex-1 font-serif text-2xl sm:text-3xl text-[#15095D] placeholder:text-[#BBC2DD] outline-none bg-transparent min-w-0"
+                  placeholder="Tìm sản phẩm, chất liệu vải, xưởng sản xuất..."
+                  className="w-full font-serif text-lg sm:text-2xl text-[#15095D] placeholder:text-[#8D8DC7] outline-none bg-transparent"
                 />
                 <button
                   type="button"
                   onClick={() => setSearchOpen(false)}
                   aria-label="Đóng tìm kiếm"
-                  className="w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors text-lg"
+                  className="w-8 h-8 rounded-full grid place-items-center text-[#4E567A] hover:bg-[#EFF2F9]"
                 >
-                  ✕
+                  <X className="w-5 h-5" />
                 </button>
               </form>
 
               {/* Suggestions */}
-              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#5E607E] mt-3">
-                <span className="font-medium text-[#15095D]">Gợi ý:</span>
-                {SEARCH_SUGGESTIONS.map((tag, idx) => (
+              <div className="flex items-center gap-2 pt-3 overflow-x-auto no-scrollbar">
+                <span className="text-xs text-[#8D8DC7] shrink-0 font-medium">Gợi ý:</span>
+                {SEARCH_SUGGESTIONS.map((tag) => (
                   <button
                     key={tag}
                     type="button"
-                    onClick={() => setSearchQuery(tag)}
-                    className="hover:text-[#15095D] hover:underline cursor-pointer"
+                    onClick={() => {
+                      setSearchQuery(tag);
+                      setSearchOpen(false);
+                      router.push(`/products?keyword=${encodeURIComponent(tag)}`);
+                    }}
+                    className="text-xs px-3 py-1 rounded-full bg-[#EFF2F9] text-[#15095D] hover:bg-[#15095D] hover:text-[#FCFDF1] transition-colors whitespace-nowrap cursor-pointer"
                   >
                     {tag}
-                    {idx < SEARCH_SUGGESTIONS.length - 1 && (
-                      <span className="mx-1.5 text-[#BBC2DD]">·</span>
-                    )}
                   </button>
                 ))}
               </div>
 
-              {/* Dynamic Search Results */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-5 max-h-[60vh] overflow-y-auto">
-                {searchResults.length > 0 ? (
-                  searchResults.map((p) => (
-                    <Link
-                      key={p._id}
-                      href={`/products/${p.slug}-${p._id}`}
-                      onClick={() => setSearchOpen(false)}
-                      className="grid grid-cols-[64px_1fr] gap-3 items-center p-2 rounded-xl hover:bg-[#F4F5FB] transition-colors group"
-                    >
-                      <img
-                        src={p.images?.[0]?.url || p.images?.[0]}
-                        alt={p.name}
-                        className="w-16 h-[76px] object-cover rounded-md bg-[#EFF2F9]"
-                      />
-                      <div className="min-w-0">
-                        <p className="font-semibold text-xs sm:text-sm text-[#15095D] line-clamp-1 group-hover:text-[#32259B]">
+              {/* Instant Search Results */}
+              {searchResults.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-[#EFF2F9]">
+                  <p className="text-xs uppercase tracking-[0.14em] text-[#8D8DC7] font-bold mb-3">
+                    {searchQuery ? "Kết quả phù hợp" : "Sản phẩm xưởng nổi bật"}
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    {searchResults.map((p) => (
+                      <Link
+                        key={p._id}
+                        href={`/products/${p.slug}`}
+                        onClick={() => setSearchOpen(false)}
+                        className="group flex flex-col gap-1.5 p-2 rounded-2xl hover:bg-[#F6F7FC] transition-colors"
+                      >
+                        <div className="aspect-square rounded-xl bg-[#EFF2F9] overflow-hidden border border-[#DCE0E7]">
+                          <img
+                            src={p.images?.[0]?.url || "/assets/img/p-tee-250.jpg"}
+                            alt={p.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <p className="text-xs font-semibold text-[#15095D] line-clamp-1 group-hover:text-[#32259B]">
                           {p.name}
                         </p>
-                        <p className="text-xs text-[#5E607E] mt-0.5">
-                          <strong className="font-semibold text-[#15095D]">
-                            {formatVnd(p.price)}
-                          </strong>{" "}
-                          · {p.creatorName || "Xưởng Dệt Kim"}
+                        <p className="text-xs font-bold text-[#15095D]">
+                          {formatVnd(p.price)}
                         </p>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <p className="text-xs sm:text-sm text-[#5E607E] py-4 col-span-full">
-                    Không tìm thấy sản phẩm cho “{searchQuery}”.
-                  </p>
-                )}
-              </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
 
       {/* ================================================================
-          4. MOBILE DRAWER (.drawer) — Chuẩn xác như index.html
+          4. MOBILE DRAWER (.drawer) — Phân tầng theo nhóm danh mục & Pages
           ================================================================ */}
       {mobileOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Menu di động UNLO"
-          className="fixed inset-0 z-70 bg-[#15095D]/35 backdrop-blur-[3px] xl:hidden"
+          className="fixed inset-0 z-70 bg-[#15095D]/35 backdrop-blur-[3px] md:hidden"
           onClick={() => setMobileOpen(false)}
         >
           <nav
             aria-label="Menu di động"
-            className="fixed top-0 bottom-0 left-0 w-[min(340px,86vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-2 shadow-2xl animate-in slide-in-from-left duration-200"
+            className="fixed top-0 bottom-0 left-0 w-[min(340px,86vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3 shadow-2xl animate-in slide-in-from-left duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
@@ -621,7 +756,7 @@ export default function NullHeader() {
               <img
                 src="/assets/logo/unlo-header.png"
                 alt="UNLO"
-                className="h-[26px] w-auto object-contain"
+                className="h-[28px] w-auto object-contain"
               />
               <button
                 type="button"
@@ -633,71 +768,112 @@ export default function NullHeader() {
               </button>
             </div>
 
-            {/* Navigation links matching index.html NAV */}
-            <div className="flex flex-col">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`py-3 px-1 border-b border-[#DDE0EC] text-sm flex items-center justify-between transition-colors ${
-                    item.special === "personalize"
-                      ? "text-[#443EB1] font-semibold"
-                      : item.special === "black-friday"
-                        ? "text-[#15095D] font-bold"
-                        : "text-[#1A1838] font-medium hover:text-[#15095D]"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    {item.special === "personalize" && (
-                      <Sparkles className="w-4 h-4 text-[#443EB1]" />
+            {/* Hierarchical Accordions for Mobile */}
+            <div className="flex flex-col divide-y divide-[#EFF2F9]">
+              {NAV_GROUPS.map((group) => {
+                if (group.type === "link") {
+                  return (
+                    <Link
+                      key={group.label}
+                      href={group.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="py-3 px-1 text-sm font-medium text-[#1A1838] hover:text-[#15095D] flex items-center justify-between"
+                    >
+                      <span className="flex items-center gap-2">
+                        {group.special === "personalize" && (
+                          <Sparkles className="w-4 h-4 text-[#443EB1]" />
+                        )}
+                        {group.label}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-[#BBC2DD]" />
+                    </Link>
+                  );
+                }
+
+                const isOpen = mobileAccordion === group.id;
+                return (
+                  <div key={group.id} className="py-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMobileAccordion((cur) => (cur === group.id ? null : group.id))
+                      }
+                      className="w-full py-2 px-1 text-sm font-semibold text-[#15095D] flex items-center justify-between cursor-pointer"
+                    >
+                      <span>{group.label}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-[#4E567A] transition-transform duration-200 ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {isOpen && (
+                      <div className="pl-3 pr-1 py-1 space-y-1.5 border-l-2 border-[#15095D]/20 ml-2 animate-in fade-in">
+                        {group.children.map((child) => (
+                          <Link
+                            key={child.label}
+                            href={child.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="block py-1.5 text-xs text-[#4E567A] hover:text-[#15095D] font-medium"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>{child.label}</span>
+                              {child.badge && (
+                                <span className="px-1.5 py-0.2 rounded-full bg-[#EB6D48] text-white text-[9px] font-bold">
+                                  {child.badge}
+                                </span>
+                              )}
+                            </div>
+                            {child.desc && (
+                              <div className="text-[10px] text-[#8C93A8] line-clamp-1 mt-0.5">
+                                {child.desc}
+                              </div>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
                     )}
-                    {item.label}
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-[#BBC2DD]" />
-                </Link>
-              ))}
-
-              <Link
-                href="/bundles"
-                onClick={() => setMobileOpen(false)}
-                className="py-3 px-1 border-b border-[#DDE0EC] text-sm text-[#1A1838] font-medium flex items-center justify-between"
-              >
-                <span>Tự tạo Combo (-20%)</span>
-                <ChevronRight className="w-4 h-4 text-[#BBC2DD]" />
-              </Link>
-
-              <Link
-                href="/group-buy"
-                onClick={() => setMobileOpen(false)}
-                className="py-3 px-1 border-b border-[#DDE0EC] text-sm text-[#1A1838] font-medium flex items-center justify-between"
-              >
-                <span>Gom đơn MOQ</span>
-                <ChevronRight className="w-4 h-4 text-[#BBC2DD]" />
-              </Link>
-
-              <Link
-                href="/profile/orders"
-                onClick={() => setMobileOpen(false)}
-                className="py-3 px-1 border-b border-[#DDE0EC] text-sm text-[#1A1838] font-medium flex items-center justify-between"
-              >
-                <span>Đơn hàng của tôi</span>
-                <ChevronRight className="w-4 h-4 text-[#BBC2DD]" />
-              </Link>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Bottom Slogan */}
-            <div className="mt-auto pt-6 text-center">
-              <p className="font-serif italic text-xs text-[#5E607E] leading-relaxed">
-                “Giữ chất lượng xuất khẩu. Cắt bỏ chi phí logo trung gian.”
-              </p>
+            {/* Bottom Actions */}
+            <div className="mt-auto pt-4 border-t border-[#DDE0EC] flex flex-col gap-2">
+              <Link
+                href="/returns"
+                onClick={() => setMobileOpen(false)}
+                className="w-full text-center py-2.5 rounded-full border border-[#DDE0EC] text-xs font-semibold text-[#15095D] hover:bg-[#F4F5FB]"
+              >
+                Cổng Tự Đổi Trả 30 Ngày
+              </Link>
+              {user ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    logout?.();
+                  }}
+                  className="w-full text-center py-2 text-xs font-semibold text-[#A52735]"
+                >
+                  Đăng xuất ({user.name || user.email})
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="w-full text-center py-2.5 rounded-full bg-[#15095D] text-white text-xs font-semibold hover:bg-[#1F0C85]"
+                >
+                  Đăng nhập / Đăng ký
+                </Link>
+              )}
             </div>
           </nav>
         </div>
       )}
 
-      {/* Slide-Over Cart Drawer */}
-      <CartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen?.(false)} />
     </>
   );
 }
