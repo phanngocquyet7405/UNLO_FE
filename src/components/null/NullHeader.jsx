@@ -50,12 +50,14 @@ const NAV_ITEMS = [
   },
   {
     label: "Hoodie & Áo nỉ",
-    href: "/products?keyword=hoodie",
+    href: "/products?category=sweat-hoodie",
+    categoryKey: "sweat-hoodie",
     keywordKey: "hoodie",
   },
   {
     label: "Quần",
-    href: "/products?keyword=quan",
+    href: "/products?category=pants-bottoms",
+    categoryKey: "pants-bottoms",
     keywordKey: "quan",
   },
   {

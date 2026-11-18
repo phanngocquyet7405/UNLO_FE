@@ -8,47 +8,74 @@ export const UNLO_CATEGORIES = [
   {
     id: "cotton-basics",
     label: "Áo Thun & Dệt Kim",
-    shortLabel: "Dệt Kim",
+    shortLabel: "Áo Thun",
     enTag: "KNITWEAR",
-    description: "Áo thun Supima Cotton 260 GSM & Polo Tencel sản xuất trực tiếp tại Xưởng Dệt Kim Số 04 Hưng Yên.",
+    description: "Áo thun Cotton Supima 260 GSM, Pima Heavyweight & Polo Tencel xuất xưởng KCN Phố Nối.",
     href: "/products?category=cotton-basics",
     image: "/assets/img/cat-ao-thun.jpg",
+  },
+  {
+    id: "linen-tailoring",
+    label: "Sơ Mi & Quần Linen",
+    shortLabel: "Sơ Mi",
+    enTag: "LINEN",
+    description: "100% sợi lanh châu Âu 185 GSM may cuốn sườn French Seam & Sơ mi Oxford dệt nổi Bắc Ninh.",
+    href: "/products?category=linen-tailoring",
+    image: "/assets/img/cat-so-mi.jpg",
+  },
+  {
+    id: "sweat-hoodie",
+    label: "Áo Nỉ & Hoodie",
+    shortLabel: "Nỉ & Hoodie",
+    enTag: "FLEECE",
+    description: "Áo nỉ French Terry 380 GSM & Heavyweight Hoodie 420 GSM đứng phom không xù lông.",
+    href: "/products?category=sweat-hoodie",
+    image: "/assets/img/cat-ao-ni.jpg",
+  },
+  {
+    id: "pants-bottoms",
+    label: "Quần Kaki & Quần Âu",
+    shortLabel: "Quần",
+    enTag: "TROUSERS",
+    description: "Quần Chino cạp chun ẩn, Jogger nỉ French Terry & Quần âu xếp ly Relaxed chống nhăn.",
+    href: "/products?category=pants-bottoms",
+    image: "/assets/img/cat-quan.jpg",
+  },
+  {
+    id: "wool-knitwear",
+    label: "Đồ Len & Áo Khoác",
+    shortLabel: "Đồ Len",
+    enTag: "OUTERWEAR",
+    description: "Áo len Merino 19.5 Micron, Cashmere Blend & Trench Coat chống thấm DWR xuất khẩu.",
+    href: "/products?category=wool-knitwear",
+    image: "/assets/img/cat-dong-phuc.jpg",
   },
   {
     id: "leather-goods",
     label: "Đồ Da Nguyên Tấm",
     shortLabel: "Đồ Da",
     enTag: "LEATHER",
-    description: "Ví da, thắt lưng & túi công sở da bò Full-grain Ý từ Xưởng Đồ Da Số 02 Bình Dương.",
+    description: "Ví da bò Full-grain Ý, túi công sở laptop gia công thủ công tại Bình Dương.",
     href: "/products?category=leather-goods",
     image: "/assets/img/p-tote.jpg",
-  },
-  {
-    id: "linen-tailoring",
-    label: "Sơ Mi & Quần Linen",
-    shortLabel: "Linen",
-    enTag: "LINEN",
-    description: "100% sợi lanh châu Âu 185 GSM may cuốn sườn French Seam tại Xưởng Số 07 Bắc Ninh.",
-    href: "/products?category=linen-tailoring",
-    image: "/assets/img/cat-so-mi.jpg",
-  },
-  {
-    id: "ceramics-home",
-    label: "Gốm Sứ & Gia Dụng",
-    shortLabel: "Gốm Sứ",
-    enTag: "HOME",
-    description: "Cốc gốm và bộ bàn ăn men lì nung 1.280°C chuẩn an toàn thực phẩm LFGB từ Bát Tràng.",
-    href: "/products?category=ceramics-home",
-    image: "/assets/img/cat-dong-phuc.jpg",
   },
   {
     id: "canvas-accessories",
     label: "Túi & Phụ Kiện Xưởng",
     shortLabel: "Phụ Kiện",
     enTag: "CARRY",
-    description: "Túi tote Canvas 16oz, bao da hộ chiếu và phụ kiện hằng ngày cắt bỏ mọi chi phí logo.",
+    description: "Túi tote Canvas 16oz hạng nặng quai da bò và phụ kiện vải mộc Nam Định.",
     href: "/products?category=canvas-accessories",
     image: "/assets/img/cat-tui.jpg",
+  },
+  {
+    id: "ceramics-home",
+    label: "Gốm Sứ & Gia Dụng",
+    shortLabel: "Gốm Sứ",
+    enTag: "HOME",
+    description: "Bộ cốc gốm men lì nung 1.280°C chuẩn an toàn thực phẩm LFGB Bát Tràng.",
+    href: "/products?category=ceramics-home",
+    image: "/assets/img/tile-dong-phuc.jpg",
   },
 ];
 
@@ -852,6 +879,2371 @@ export const UNLO_PRODUCTS = [
     fitReviews: [],
     makerQa: [],
   },
+{
+  "_id": "690000000000000000000109",
+  "slug": "ao-thun-pima-cotton-heavyweight-280gsm",
+  "name": "Áo Thun Pima Cotton Heavyweight 280 GSM — Form Suông Relaxed",
+  "categorySlug": "cotton-basics",
+  "categoryName": "Áo Thun & Dệt Kim",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Pima Cotton",
+  "price": 265000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 184,
+  "soldCount": 920,
+  "stock": 195,
+  "badge": {
+    "label": "HEAVYWEIGHT 280 GSM",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": true,
+  "factoryVideoCaption": "Thử nghiệm độ phục hồi bo cổ & định lượng vải 280 GSM tại phòng lab xưởng",
+  "descriptions": "Dòng áo thun định lượng cao 280 GSM dày dặn đứng phom, dệt từ sợi Pima Cotton Peru tuyển chọn. Bo cổ dệt rib đôi 2.5cm ép nhiệt phẳng, xử lý bề mặt cạo lông xơ vi mô chống xù và hạn chế bám bụi.",
+  "images": [
+    {
+      "url": "/assets/img/p-tee-den.jpg"
+    },
+    {
+      "url": "/assets/img/ed-tee-man.jpg"
+    },
+    {
+      "url": "/assets/img/p-tee-nam.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Pima Cotton xơ dài nhập khẩu",
+    "gsmWeight": 280,
+    "origin": "Xưởng Dệt Kim Số 04 — KCN Phố Nối, Hưng Yên",
+    "shrinkage": "Co rút ngang < 1.5%, dọc < 2% sau giặt nước 40°C",
+    "dimensions": "Form Relaxed vai trễ nhẹ tôn dáng",
+    "qcBatchCode": "LOT-PM26-092 · AQL 2.5 Passed"
+  },
+  "specComparison": [
+    {
+      "label": "Định lượng (GSM)",
+      "unlo": "280 GSM dày dặn chống lộ",
+      "retail": "180 GSM mỏng dễ dính người"
+    },
+    {
+      "label": "Chất liệu sợi",
+      "unlo": "Pima Cotton xơ siêu dài",
+      "retail": "Cotton Carded sợi ngắn pha PE"
+    },
+    {
+      "label": "Bo cổ áo",
+      "unlo": "Rib 2.5cm pha Spandex chống dão",
+      "retail": "Bo mỏng mau quăn mép"
+    },
+    {
+      "label": "Mức giá M2C",
+      "unlo": "265.000₫ (Trực tiếp xưởng)",
+      "retail": "720.000₫ (Qua 4 khâu phân phối)"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 265000,
+    "traditionalRetailPrice": 720000,
+    "materialCost": 122000,
+    "materialDesc": "Vải Pima Cotton 280 GSM dệt mật độ cao",
+    "manufacturingCost": 52000,
+    "manufacturingDesc": "May cuốn nách đôi & vắt sổ 4 chỉ tại xưởng Hưng Yên",
+    "packagingShippingCost": 38000,
+    "packagingShippingDesc": "Túi tự hủy sinh học & hộp carton chuẩn M2C",
+    "platformQcCost": 53000,
+    "platformQcDesc": "Kiểm tra độ đều GSM & độ co giãn bo cổ"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 60 kg",
+      "chest": "104 cm",
+      "length": "68 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m74",
+      "weight": "61 – 70 kg",
+      "chest": "110 cm",
+      "length": "71 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m80",
+      "weight": "71 – 80 kg",
+      "chest": "116 cm",
+      "length": "73 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m79 – 1m88",
+      "weight": "81 – 92 kg",
+      "chest": "122 cm",
+      "length": "76 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "innerLabelFee": 20000,
+    "extraLeadDays": 2,
+    "defaultHeadline": "U.N",
+    "defaultSubline": "Thêu chỉ chìm ngực trái",
+    "allowedThreadColors": [
+      {
+        "name": "Off White",
+        "hex": "#F5F5F0"
+      },
+      {
+        "name": "Charcoal",
+        "hex": "#2A2A2A"
+      },
+      {
+        "name": "Navy Indigo",
+        "hex": "#15095D"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001901",
+      "colorName": "Onyx Black",
+      "colorHex": "#1C1C1E",
+      "size": "S",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001902",
+      "colorName": "Onyx Black",
+      "colorHex": "#1C1C1E",
+      "size": "M",
+      "stock": 60,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001903",
+      "colorName": "Onyx Black",
+      "colorHex": "#1C1C1E",
+      "size": "L",
+      "stock": 55,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001904",
+      "colorName": "Onyx Black",
+      "colorHex": "#1C1C1E",
+      "size": "XL",
+      "stock": 45,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [
+    {
+      "id": "fr-109-1",
+      "author": "Vũ Đình Trọng",
+      "date": "12/11/2026",
+      "rating": 5,
+      "heightCm": 175,
+      "weightKg": 72,
+      "sizeBought": "L",
+      "fitRating": "true_to_size",
+      "comment": "Áo dày thật sự, mặc vào đứng phom che ngực mỡ cực tốt. Cổ áo chắc nịch, giặt máy không lo bai dão."
+    }
+  ],
+  "makerQa": [
+    {
+      "id": "qa-109-1",
+      "question": "Áo màu đen giặt nhiều lần có bị phai hay bạc màu không?",
+      "asker": "Hoàng Long",
+      "answer": "Xưởng sử dụng công nghệ nhuộm hoạt tính Reactive Dye đạt chuẩn cấp 4-5 kháng phai màu. Quý khách chỉ cần lộn trái áo và phơi bóng râm.",
+      "responder": "Kỹ sư dệt may Nguyễn H. — Xưởng Số 04"
+    }
+  ]
+},
+{
+  "_id": "690000000000000000000110",
+  "slug": "ao-thun-compact-cotton-trang-tinh-khiet",
+  "name": "Áo Thun Cotton Compact Trắng Tinh Khiết — Bo Cổ Chống Dão",
+  "categorySlug": "cotton-basics",
+  "categoryName": "Áo Thun & Dệt Kim",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Compact Cotton",
+  "price": 215000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 342,
+  "soldCount": 1680,
+  "stock": 240,
+  "badge": {
+    "label": "DAILY ESSENTIAL",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Chiếc áo thun trắng hoàn hảo cho mọi ngày. Công nghệ dệt sợi kéo Compact giúp các sợi bông cuộn chặt vào lõi, bề mặt nhẵn mịn như lụa, hạn chế xù lông gấp 3 lần cotton thông thường.",
+  "images": [
+    {
+      "url": "/assets/img/p-tee-trang.jpg"
+    },
+    {
+      "url": "/assets/img/cut-tee-man.webp"
+    },
+    {
+      "url": "/assets/img/ed-tee-man2.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Combed Compact Cotton 220 GSM",
+    "gsmWeight": 220,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 2% sau 30 lần giặt",
+    "dimensions": "Regular Fit tiêu chuẩn",
+    "qcBatchCode": "LOT-CP26-088 · Kiểm tra độ đục quang học"
+  },
+  "specComparison": [
+    {
+      "label": "Độ mịn mặt vải",
+      "unlo": "Sợi Compact nhẵn bóng",
+      "retail": "Sợi thường xơ xù sau 3 lần giặt"
+    },
+    {
+      "label": "Độ thấu quang",
+      "unlo": "Không lộ núm ngực (220 GSM)",
+      "retail": "Mỏng 150 GSM dễ lộ"
+    },
+    {
+      "label": "Bo cổ",
+      "unlo": "Rib dệt đúp 2cm may đè 2 kim",
+      "retail": "Rib đơn 1 kim dễ rách chỉ"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 215000,
+    "traditionalRetailPrice": 580000,
+    "materialCost": 95000,
+    "materialDesc": "Sợi Compact Cotton chải kỹ",
+    "manufacturingCost": 45000,
+    "manufacturingDesc": "Cắt may rập xuất khẩu Nhật",
+    "packagingShippingCost": 35000,
+    "packagingShippingDesc": "Bao bì tái chế & giao hàng",
+    "platformQcCost": 40000,
+    "platformQcDesc": "Kiểm tra độ đều màu trắng & tạp chất"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m58 – 1m66",
+      "weight": "48 – 58 kg",
+      "chest": "100 cm",
+      "length": "66 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m65 – 1m73",
+      "weight": "59 – 68 kg",
+      "chest": "106 cm",
+      "length": "69 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m72 – 1m79",
+      "weight": "69 – 78 kg",
+      "chest": "112 cm",
+      "length": "72 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m78 – 1m86",
+      "weight": "79 – 88 kg",
+      "chest": "118 cm",
+      "length": "74 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "innerLabelFee": 20000,
+    "extraLeadDays": 2,
+    "defaultHeadline": "T.M",
+    "defaultSubline": "Thêu chỉ xám nhạt gấu áo",
+    "allowedThreadColors": [
+      {
+        "name": "Silver Grey",
+        "hex": "#B0B5C0"
+      },
+      {
+        "name": "Navy",
+        "hex": "#15095D"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001911",
+      "colorName": "Pure White",
+      "colorHex": "#FFFFFF",
+      "size": "S",
+      "stock": 50,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001912",
+      "colorName": "Pure White",
+      "colorHex": "#FFFFFF",
+      "size": "M",
+      "stock": 80,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001913",
+      "colorName": "Pure White",
+      "colorHex": "#FFFFFF",
+      "size": "L",
+      "stock": 70,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001914",
+      "colorName": "Pure White",
+      "colorHex": "#FFFFFF",
+      "size": "XL",
+      "stock": 40,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000111",
+  "slug": "ao-thun-sun-bleached-sand-220gsm",
+  "name": "Áo Thun Nhuộm Màu Cát Nắng Sun-Bleached Sand 220 GSM",
+  "categorySlug": "cotton-basics",
+  "categoryName": "Áo Thun & Dệt Kim",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Garment Dye",
+  "price": 235000,
+  "salePercent": 0,
+  "rate": 4.8,
+  "reviewCount": 96,
+  "soldCount": 430,
+  "stock": 120,
+  "badge": {
+    "label": "VINTAGE WASH",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Tông màu vàng cát nắng tự nhiên lấy cảm hứng từ bãi cát ven biển miền Trung. Quy trình nhuộm Garment Dye sau may hoàn thiện mang lại hiệu ứng bạc màu vintage độc bản tại các đường gân chỉ.",
+  "images": [
+    {
+      "url": "/assets/img/ed-sun.jpg"
+    },
+    {
+      "url": "/assets/img/ed-beige-tee.jpg"
+    },
+    {
+      "url": "/assets/img/cut-sun.webp"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton Garment Dye 220 GSM",
+    "gsmWeight": 220,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "Đã qua giặt sấy nhiệt cao tại xưởng (0% co ngót thêm)",
+    "dimensions": "Boxy Relaxed Fit",
+    "qcBatchCode": "LOT-SB26-031 · Đạt độ bền màu cấp 4"
+  },
+  "specComparison": [
+    {
+      "label": "Kỹ thuật nhuộm",
+      "unlo": "Garment Dye sau may",
+      "retail": "Nhuộm cuộn vải đại trà"
+    },
+    {
+      "label": "Độ co ngót",
+      "unlo": "0% (Đã co nhiệt tối đa tại xưởng)",
+      "retail": "5% sau lần giặt đầu"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 235000,
+    "traditionalRetailPrice": 620000,
+    "materialCost": 105000,
+    "materialDesc": "Vải bông mộc & thuốc nhuộm hữu cơ",
+    "manufacturingCost": 50000,
+    "manufacturingDesc": "May hoàn thiện & giặt wash stone",
+    "packagingShippingCost": 38000,
+    "packagingShippingDesc": "Bao bì tái chế & vận chuyển",
+    "platformQcCost": 42000,
+    "platformQcDesc": "Kiểm tra độ đều màu từng chiếc"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "50 – 60 kg",
+      "chest": "104 cm",
+      "length": "67 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m74",
+      "weight": "61 – 70 kg",
+      "chest": "110 cm",
+      "length": "70 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m80",
+      "weight": "71 – 80 kg",
+      "chest": "116 cm",
+      "length": "72 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m79 – 1m87",
+      "weight": "81 – 90 kg",
+      "chest": "122 cm",
+      "length": "75 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001921",
+      "colorName": "Sun Bleached",
+      "colorHex": "#E6D7B9",
+      "size": "S",
+      "stock": 25,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001922",
+      "colorName": "Sun Bleached",
+      "colorHex": "#E6D7B9",
+      "size": "M",
+      "stock": 40,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001923",
+      "colorName": "Sun Bleached",
+      "colorHex": "#E6D7B9",
+      "size": "L",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001924",
+      "colorName": "Sun Bleached",
+      "colorHex": "#E6D7B9",
+      "size": "XL",
+      "stock": 20,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000112",
+  "slug": "ao-thun-be-toi-gian-soft-sand",
+  "name": "Áo Thun Cổ Tròn Màu Be Tối Giản Soft Sand — Dệt Sợi Hữu Cơ",
+  "categorySlug": "cotton-basics",
+  "categoryName": "Áo Thun & Dệt Kim",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Supima Cotton",
+  "price": 225000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 112,
+  "soldCount": 540,
+  "stock": 140,
+  "badge": {
+    "label": "NEW COLORWAY",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Tông màu be trung tính dịu mắt, dễ dàng phối cùng quần âu, quần kaki hay khoác sơ mi bên ngoài. Sợi Cotton Supima xử lý chải kỹ giúp áo mềm rủ tự nhiên mà không mất phom.",
+  "images": [
+    {
+      "url": "/assets/img/ed-beige-tee2.jpg"
+    },
+    {
+      "url": "/assets/img/cut-beige-tee.webp"
+    },
+    {
+      "url": "/assets/img/ed-cream.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Supima Cotton sợi dài 240 GSM",
+    "gsmWeight": 240,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 2% sau 40 lần giặt",
+    "dimensions": "Regular Fit tôn dáng",
+    "qcBatchCode": "LOT-BG26-042 · AQL 2.5"
+  },
+  "specComparison": [
+    {
+      "label": "Màu sắc",
+      "unlo": "Tông be trầm thanh lịch",
+      "retail": "Màu vàng chói dễ ố bẩn"
+    },
+    {
+      "label": "Độ bền phom",
+      "unlo": "Bo cổ đôi dệt mật độ cao",
+      "retail": "Bo cổ đơn nhanh bai dão"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 225000,
+    "traditionalRetailPrice": 590000,
+    "materialCost": 100000,
+    "materialDesc": "Sợi Cotton Supima nhuộm an toàn",
+    "manufacturingCost": 48000,
+    "manufacturingDesc": "Cắt may rập chuẩn",
+    "packagingShippingCost": 37000,
+    "packagingShippingDesc": "Bao bì thân thiện môi trường",
+    "platformQcCost": 40000,
+    "platformQcDesc": "Kiểm tra chất lượng hoàn thiện"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m58 – 1m66",
+      "weight": "50 – 58 kg",
+      "chest": "102 cm",
+      "length": "67 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m66 – 1m73",
+      "weight": "59 – 68 kg",
+      "chest": "108 cm",
+      "length": "70 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m72 – 1m79",
+      "weight": "69 – 78 kg",
+      "chest": "114 cm",
+      "length": "72 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m78 – 1m86",
+      "weight": "79 – 88 kg",
+      "chest": "120 cm",
+      "length": "75 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "extraLeadDays": 2
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001931",
+      "colorName": "Soft Sand",
+      "colorHex": "#D8CBB7",
+      "size": "S",
+      "stock": 30,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001932",
+      "colorName": "Soft Sand",
+      "colorHex": "#D8CBB7",
+      "size": "M",
+      "stock": 50,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001933",
+      "colorName": "Soft Sand",
+      "colorHex": "#D8CBB7",
+      "size": "L",
+      "stock": 40,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001934",
+      "colorName": "Soft Sand",
+      "colorHex": "#D8CBB7",
+      "size": "XL",
+      "stock": 20,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000113",
+  "slug": "ao-so-mi-oxford-cotton-royal-80-2",
+  "name": "Áo Sơ Mi Oxford Cotton Dệt Nổi Royal Oxford 80/2",
+  "categorySlug": "linen-tailoring",
+  "categoryName": "Sơ Mi & Quần Linen",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Oxford Cotton",
+  "price": 385000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 215,
+  "soldCount": 880,
+  "stock": 160,
+  "badge": {
+    "label": "CLASSIC SHIRT",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": true,
+  "factoryVideoCaption": "Gia công cổ áo khuy cài giấu & may cuốn sườn tại Xưởng Bắc Ninh",
+  "descriptions": "Vải Royal Oxford dệt kiểu giỏ rơm (basketweave) từ sợi đôi 80/2 tạo cấu trúc dệt nổi thoáng khí, đanh dày mà không thô ráp. Cổ bẻ Button-down có khuy gài giữ phom hoàn hảo kể cả khi không thắt cà vạt.",
+  "images": [
+    {
+      "url": "/assets/img/p-oxford.jpg"
+    },
+    {
+      "url": "/assets/img/j-nu-xanh.jpg"
+    },
+    {
+      "url": "/assets/img/cat-so-mi.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Long-Staple Cotton sợi đôi 80/2",
+    "gsmWeight": 175,
+    "origin": "Xưởng Dệt May Linen Số 07 Bắc Ninh",
+    "shrinkage": "< 1.5% sau giặt máy",
+    "dimensions": "Form Regular Tailored chuẩn công sở & thường nhật",
+    "qcBatchCode": "LOT-OX26-104 · Kiểm tra đường cuốn sườn"
+  },
+  "specComparison": [
+    {
+      "label": "Cấu trúc dệt",
+      "unlo": "Dệt sợi đôi 80/2 mềm xốp",
+      "retail": "Dệt sợi đơn mỏng dễ nhăn"
+    },
+    {
+      "label": "Khuy áo",
+      "unlo": "Khuy vỏ trai tự nhiên 4 lỗ đính chéo",
+      "retail": "Khuy nhựa tái chế dễ vỡ"
+    },
+    {
+      "label": "Kỹ thuật ráp thân",
+      "unlo": "Cuốn sườn Pháp 5 mũi/cm giấu biên",
+      "retail": "Vắt sổ lộ chỉ cọ da"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 385000,
+    "traditionalRetailPrice": 890000,
+    "materialCost": 160000,
+    "materialDesc": "Vải Royal Oxford 80/2 & khuy vỏ trai",
+    "manufacturingCost": 95000,
+    "manufacturingDesc": "May cuốn sườn Pháp 21 công đoạn",
+    "packagingShippingCost": 45000,
+    "packagingShippingDesc": "Hộp giấy định hình bảo vệ cổ áo",
+    "platformQcCost": 85000,
+    "platformQcDesc": "Kiểm tra 100% kích thước cổ & tay áo"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 62 kg",
+      "chest": "104 cm",
+      "length": "72 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m68 – 1m74",
+      "weight": "63 – 71 kg",
+      "chest": "110 cm",
+      "length": "74 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m80",
+      "weight": "72 – 80 kg",
+      "chest": "116 cm",
+      "length": "76 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m78 – 1m88",
+      "weight": "81 – 92 kg",
+      "chest": "122 cm",
+      "length": "78 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "extraLeadDays": 2,
+    "defaultHeadline": "K.N",
+    "defaultSubline": "Thêu monogram cổ tay áo",
+    "allowedThreadColors": [
+      {
+        "name": "Navy Blue",
+        "hex": "#15095D"
+      },
+      {
+        "name": "Sky Blue",
+        "hex": "#628ECB"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001941",
+      "colorName": "Light Oxford Blue",
+      "colorHex": "#C7D8E8",
+      "size": "S",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001942",
+      "colorName": "Light Oxford Blue",
+      "colorHex": "#C7D8E8",
+      "size": "M",
+      "stock": 55,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001943",
+      "colorName": "Light Oxford Blue",
+      "colorHex": "#C7D8E8",
+      "size": "L",
+      "stock": 45,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001944",
+      "colorName": "Light Oxford Blue",
+      "colorHex": "#C7D8E8",
+      "size": "XL",
+      "stock": 25,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000114",
+  "slug": "ao-so-mi-denim-wash-mem-indigo-6-5oz",
+  "name": "Áo Sơ Mi Denim Wash Mềm Indigo Lightweight 6.5oz",
+  "categorySlug": "linen-tailoring",
+  "categoryName": "Sơ Mi & Quần Linen",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Chambray Denim",
+  "price": 440000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 168,
+  "soldCount": 620,
+  "stock": 110,
+  "badge": {
+    "label": "INDIGO WASH",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Chất liệu Denim sợi bông 100% định lượng nhẹ 6.5oz, qua quy trình giặt enzyme sinh học làm mềm vải, tạo cảm giác êm ái trên da ngay từ lần mặc đầu tiên. Phù hợp mặc độc lập hoặc khoác ngoài áo thun trơn.",
+  "images": [
+    {
+      "url": "/assets/img/p-so-mi-denim.jpg"
+    },
+    {
+      "url": "/assets/img/p-chambray.jpg"
+    },
+    {
+      "url": "/assets/img/j-ao-xanh.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton Denim 6.5oz",
+    "gsmWeight": 210,
+    "origin": "Xưởng Dệt May Số 07 Bắc Ninh",
+    "shrinkage": "< 1% (Đã wash mềm tại xưởng)",
+    "dimensions": "Form Overshirt đa dụng",
+    "qcBatchCode": "LOT-DN26-067 · Không tồn dư hóa chất wash"
+  },
+  "specComparison": [
+    {
+      "label": "Độ mềm vải",
+      "unlo": "Enzyme wash mềm êm da",
+      "retail": "Denim thô cứng dặm ngứa"
+    },
+    {
+      "label": "Chỉ may",
+      "unlo": "Chỉ đôi viền vàng đồng chịu lực",
+      "retail": "Chỉ đơn dễ đứt đường may"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 440000,
+    "traditionalRetailPrice": 980000,
+    "materialCost": 190000,
+    "materialDesc": "Vải Denim sợi bông tự nhiên & khuy mạ đồng",
+    "manufacturingCost": 110000,
+    "manufacturingDesc": "May chi tiết & công đoạn giặt làm mềm",
+    "packagingShippingCost": 45000,
+    "packagingShippingDesc": "Bao bì carton M2C",
+    "platformQcCost": 95000,
+    "platformQcDesc": "Kiểm tra độ đều màu wash"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 62 kg",
+      "chest": "106 cm",
+      "length": "71 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m68 – 1m74",
+      "weight": "63 – 72 kg",
+      "chest": "112 cm",
+      "length": "73 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m80",
+      "weight": "73 – 81 kg",
+      "chest": "118 cm",
+      "length": "75 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m78 – 1m88",
+      "weight": "82 – 93 kg",
+      "chest": "124 cm",
+      "length": "78 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001951",
+      "colorName": "Light Indigo",
+      "colorHex": "#4C6B8B",
+      "size": "S",
+      "stock": 20,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001952",
+      "colorName": "Light Indigo",
+      "colorHex": "#4C6B8B",
+      "size": "M",
+      "stock": 40,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001953",
+      "colorName": "Light Indigo",
+      "colorHex": "#4C6B8B",
+      "size": "L",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001954",
+      "colorName": "Light Indigo",
+      "colorHex": "#4C6B8B",
+      "size": "XL",
+      "stock": 15,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000115",
+  "slug": "ao-so-mi-chambray-xanh-khoi-keo-xuoc",
+  "name": "Áo Sơ Mi Chambray Xanh Khói Sợi Kéo Xước — Cổ Trụ Tối Giản",
+  "categorySlug": "linen-tailoring",
+  "categoryName": "Sơ Mi & Quần Linen",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Chambray",
+  "price": 395000,
+  "salePercent": 0,
+  "rate": 4.8,
+  "reviewCount": 88,
+  "soldCount": 390,
+  "stock": 95,
+  "badge": {
+    "label": "BAND COLLAR",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Vải Chambray đan chéo sợi dọc màu chàm và sợi ngang màu trắng tạo ánh khói mộc mạc. Thiết kế cổ tàu (Band Collar) gọn gàng, phù hợp cho những ngày làm việc cần sự chỉn chu nhưng phóng khoáng.",
+  "images": [
+    {
+      "url": "/assets/img/p-chambray.jpg"
+    },
+    {
+      "url": "/assets/img/p-so-mi-denim.jpg"
+    },
+    {
+      "url": "/assets/img/p-oxford.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton Chambray 160 GSM",
+    "gsmWeight": 160,
+    "origin": "Xưởng Dệt May Số 07 Bắc Ninh",
+    "shrinkage": "< 1.5%",
+    "dimensions": "Form suông Regular",
+    "qcBatchCode": "LOT-CH26-052 · Đạt tiêu chuẩn xuất khẩu EU"
+  },
+  "specComparison": [
+    {
+      "label": "Kiểu cổ áo",
+      "unlo": "Cổ trụ ép mex mềm chống gãy",
+      "retail": "Cổ cứng cấn cổ khó chịu"
+    },
+    {
+      "label": "Chất liệu",
+      "unlo": "Chambray 100% sợi tự nhiên",
+      "retail": "Pha Poly gây bí nóng"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 395000,
+    "traditionalRetailPrice": 850000,
+    "materialCost": 165000,
+    "materialDesc": "Vải dệt Chambray sợi đôi",
+    "manufacturingCost": 98000,
+    "manufacturingDesc": "May hoàn thiện tại Bắc Ninh",
+    "packagingShippingCost": 42000,
+    "packagingShippingDesc": "Đóng gói tiêu chuẩn",
+    "platformQcCost": 90000,
+    "platformQcDesc": "Kiểm tra từng mũi khâu nẹp cổ"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 60 kg",
+      "chest": "104 cm",
+      "length": "70 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m74",
+      "weight": "61 – 70 kg",
+      "chest": "110 cm",
+      "length": "72 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m80",
+      "weight": "71 – 80 kg",
+      "chest": "116 cm",
+      "length": "75 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m78 – 1m86",
+      "weight": "81 – 90 kg",
+      "chest": "122 cm",
+      "length": "77 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "extraLeadDays": 2
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001961",
+      "colorName": "Smoky Indigo",
+      "colorHex": "#5B758E",
+      "size": "S",
+      "stock": 20,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001962",
+      "colorName": "Smoky Indigo",
+      "colorHex": "#5B758E",
+      "size": "M",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001963",
+      "colorName": "Smoky Indigo",
+      "colorHex": "#5B758E",
+      "size": "L",
+      "stock": 25,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001964",
+      "colorName": "Smoky Indigo",
+      "colorHex": "#5B758E",
+      "size": "XL",
+      "stock": 15,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000116",
+  "slug": "ao-ni-sweatshirt-french-terry-380gsm",
+  "name": "Áo Nỉ Chui Đầu Sweatshirt French Terry 380 GSM — Đứng Phom",
+  "categorySlug": "sweat-hoodie",
+  "categoryName": "Áo Nỉ & Hoodie",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "French Terry",
+  "price": 380000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 270,
+  "soldCount": 1150,
+  "stock": 180,
+  "badge": {
+    "label": "WINTER ESSENTIAL",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": true,
+  "factoryVideoCaption": "Kiểm tra mặt dệt da cá vảy xích French Terry & bo gấu đàn hồi",
+  "descriptions": "Vải nỉ chân cua French Terry mật độ cao 380 GSM, dệt từ sợi bông thiên nhiên dày dặn, cách nhiệt tốt mà vẫn thoáng khí. Bo cổ, gấu áo và cổ tay pha Spandex đàn hồi chống bai nhão qua nhiều mùa đông.",
+  "images": [
+    {
+      "url": "/assets/img/p-sweat.jpg"
+    },
+    {
+      "url": "/assets/img/cat-ao-ni.jpg"
+    },
+    {
+      "url": "/assets/img/p-sweat-hong.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton French Terry 380 GSM",
+    "gsmWeight": 380,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 2% sau giặt nước lạnh",
+    "dimensions": "Form Relaxed vai drop thời thượng",
+    "qcBatchCode": "LOT-FT26-118 · Đạt tiêu chuẩn kháng xù lông cấp 4"
+  },
+  "specComparison": [
+    {
+      "label": "Mặt trong áo",
+      "unlo": "Da cá vảy xích không rụng lông",
+      "retail": "Nỉ bông nhân tạo dễ rụng lông dính áo trong"
+    },
+    {
+      "label": "Độ dày",
+      "unlo": "380 GSM dày nặng giữ nhiệt",
+      "retail": "260 GSM mỏng dính gió lạnh"
+    },
+    {
+      "label": "Bo cổ & gấu",
+      "unlo": "Rib dệt dày 5cm co giãn tốt",
+      "retail": "Bo pha poly nhão sau 2 lần giặt"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 380000,
+    "traditionalRetailPrice": 890000,
+    "materialCost": 175000,
+    "materialDesc": "Vải French Terry 380 GSM & sợi bo gấu",
+    "manufacturingCost": 85000,
+    "manufacturingDesc": "May ráp 4 kim 6 chỉ chịu lực cao",
+    "packagingShippingCost": 45000,
+    "packagingShippingDesc": "Bao bì bảo vệ sản phẩm dày",
+    "platformQcCost": 75000,
+    "platformQcDesc": "Kiểm tra đường may nách & vai áo"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 62 kg",
+      "chest": "110 cm",
+      "length": "68 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m74",
+      "weight": "63 – 72 kg",
+      "chest": "116 cm",
+      "length": "70 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m81",
+      "weight": "73 – 82 kg",
+      "chest": "122 cm",
+      "length": "73 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m79 – 1m89",
+      "weight": "83 – 95 kg",
+      "chest": "128 cm",
+      "length": "76 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "extraLeadDays": 2,
+    "defaultHeadline": "L.H",
+    "defaultSubline": "Thêu chỉ trắng cổ tay trái",
+    "allowedThreadColors": [
+      {
+        "name": "Off White",
+        "hex": "#F5F5F0"
+      },
+      {
+        "name": "Indigo",
+        "hex": "#15095D"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001971",
+      "colorName": "Heather Grey",
+      "colorHex": "#A0A4A8",
+      "size": "S",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001972",
+      "colorName": "Heather Grey",
+      "colorHex": "#A0A4A8",
+      "size": "M",
+      "stock": 65,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001973",
+      "colorName": "Heather Grey",
+      "colorHex": "#A0A4A8",
+      "size": "L",
+      "stock": 50,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001974",
+      "colorName": "Heather Grey",
+      "colorHex": "#A0A4A8",
+      "size": "XL",
+      "stock": 30,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000117",
+  "slug": "ao-ni-sweatshirt-pastel-dusty-pink",
+  "name": "Áo Nỉ Chui Đầu Pastel Dusty Pink — Xử Lý Chống Xù Lông",
+  "categorySlug": "sweat-hoodie",
+  "categoryName": "Áo Nỉ & Hoodie",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "French Terry",
+  "price": 380000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 145,
+  "soldCount": 560,
+  "stock": 130,
+  "badge": {
+    "label": "PASTEL SERIES",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Tông màu hồng bụi phấn (Dusty Pink) ấm áp, tôn da và trẻ trung. Chất nỉ bông dệt 360 GSM mềm mịn, lót trong êm ái, thích hợp cho cả nam và nữ mặc đôi hoặc mặc phối layer mùa lạnh.",
+  "images": [
+    {
+      "url": "/assets/img/p-sweat-hong.jpg"
+    },
+    {
+      "url": "/assets/img/j-hong.jpg"
+    },
+    {
+      "url": "/assets/img/p-sweat.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton French Terry 360 GSM",
+    "gsmWeight": 360,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 2%",
+    "dimensions": "Unisex Relaxed Fit",
+    "qcBatchCode": "LOT-DP26-081 · Nhuộm chuẩn Eco-Tex"
+  },
+  "specComparison": [
+    {
+      "label": "Màu sắc",
+      "unlo": "Hồng bụi thanh lịch không kén da",
+      "retail": "Hồng dạ quang chói gắt"
+    },
+    {
+      "label": "Mặt vải",
+      "unlo": "Cạo lông xơ mịn chống vón cục",
+      "retail": "Dễ vón cục sau 1 lần giặt"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 380000,
+    "traditionalRetailPrice": 890000,
+    "materialCost": 175000,
+    "materialDesc": "Vải nỉ French Terry & thuốc nhuộm an toàn",
+    "manufacturingCost": 85000,
+    "manufacturingDesc": "May hoàn thiện tại Hưng Yên",
+    "packagingShippingCost": 45000,
+    "packagingShippingDesc": "Bao bì M2C tiêu chuẩn",
+    "platformQcCost": 75000,
+    "platformQcDesc": "Kiểm tra độ đều màu & bo tay"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m55 – 1m65",
+      "weight": "45 – 55 kg",
+      "chest": "106 cm",
+      "length": "66 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m63 – 1m72",
+      "weight": "55 – 65 kg",
+      "chest": "112 cm",
+      "length": "69 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m70 – 1m78",
+      "weight": "65 – 76 kg",
+      "chest": "118 cm",
+      "length": "72 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m76 – 1m85",
+      "weight": "76 – 88 kg",
+      "chest": "124 cm",
+      "length": "75 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "extraLeadDays": 2
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001981",
+      "colorName": "Dusty Pink",
+      "colorHex": "#D8A2A8",
+      "size": "S",
+      "stock": 25,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001982",
+      "colorName": "Dusty Pink",
+      "colorHex": "#D8A2A8",
+      "size": "M",
+      "stock": 45,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001983",
+      "colorName": "Dusty Pink",
+      "colorHex": "#D8A2A8",
+      "size": "L",
+      "stock": 40,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001984",
+      "colorName": "Dusty Pink",
+      "colorHex": "#D8A2A8",
+      "size": "XL",
+      "stock": 20,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000118",
+  "slug": "ao-hoodie-heavyweight-fleece-420gsm",
+  "name": "Áo Nỉ Có Mũ Heavyweight Hoodie 420 GSM — Túi Kangaroo Giấu Mũi",
+  "categorySlug": "sweat-hoodie",
+  "categoryName": "Áo Nỉ & Hoodie",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Cotton Fleece",
+  "price": 460000,
+  "salePercent": 0,
+  "rate": 5,
+  "reviewCount": 389,
+  "soldCount": 1450,
+  "stock": 210,
+  "badge": {
+    "label": "420 GSM HEAVYWEIGHT",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": true,
+  "factoryVideoCaption": "Mũ trùm 2 lớp đứng phom & túi Kangaroo may gia cố bar-tack",
+  "descriptions": "Mẫu áo hoodie dày nhất của UNLO với định lượng 420 GSM giữ ấm vượt trội trong mùa đông miền Bắc. Mũ trùm may 2 lớp vải dày dặn giúp phom mũ luôn đứng tròn không bị xẹp lép, dây rút đúc đầu kim loại mờ không rỉ.",
+  "images": [
+    {
+      "url": "/assets/img/p-hoodie.jpg"
+    },
+    {
+      "url": "/assets/img/cat-hoodie.jpg"
+    },
+    {
+      "url": "/assets/img/p-sweat.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton Heavyweight Fleece 420 GSM",
+    "gsmWeight": 420,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 1.5% sau giặt máy",
+    "dimensions": "Boxy Drop-shoulder Fit",
+    "qcBatchCode": "LOT-HD26-210 · Khuy kim loại không chì"
+  },
+  "specComparison": [
+    {
+      "label": "Mũ trùm đầu",
+      "unlo": "2 lớp vải dày 420 GSM đứng phom",
+      "retail": "1 lớp mỏng xẹp lép méo mó"
+    },
+    {
+      "label": "Góc túi Kangaroo",
+      "unlo": "Đóng bọ Bar-tack 4 góc chống rách",
+      "retail": "Chỉ may đơn dễ bục chỉ"
+    },
+    {
+      "label": "Dây rút mũ",
+      "unlo": "Dệt dẹt đúc đầu kim loại mờ",
+      "retail": "Dây tròn bọc nhựa dễ vỡ"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 460000,
+    "traditionalRetailPrice": 1150000,
+    "materialCost": 220000,
+    "materialDesc": "Vải Fleece 420 GSM & phụ kiện kim loại mờ",
+    "manufacturingCost": 110000,
+    "manufacturingDesc": "May ghép mũ 2 lớp & túi Kangaroo",
+    "packagingShippingCost": 48000,
+    "packagingShippingDesc": "Bao bì kích thước lớn",
+    "platformQcCost": 82000,
+    "platformQcDesc": "Kiểm tra độ cân đối mũ và túi"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 64 kg",
+      "chest": "114 cm",
+      "length": "68 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m75",
+      "weight": "64 – 74 kg",
+      "chest": "120 cm",
+      "length": "71 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m74 – 1m82",
+      "weight": "74 – 84 kg",
+      "chest": "126 cm",
+      "length": "74 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m80 – 1m90",
+      "weight": "85 – 98 kg",
+      "chest": "132 cm",
+      "length": "77 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": true,
+    "allowMonogram": true,
+    "maxMonogramChars": 4,
+    "monogramFee": 35000,
+    "extraLeadDays": 2,
+    "defaultHeadline": "N.L",
+    "defaultSubline": "Thêu chỉ xám mép mũ",
+    "allowedThreadColors": [
+      {
+        "name": "Silver",
+        "hex": "#B8B8B8"
+      },
+      {
+        "name": "Navy",
+        "hex": "#15095D"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000001991",
+      "colorName": "Onyx Black",
+      "colorHex": "#1F1F1F",
+      "size": "S",
+      "stock": 40,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001992",
+      "colorName": "Onyx Black",
+      "colorHex": "#1F1F1F",
+      "size": "M",
+      "stock": 75,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001993",
+      "colorName": "Onyx Black",
+      "colorHex": "#1F1F1F",
+      "size": "L",
+      "stock": 60,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000001994",
+      "colorName": "Onyx Black",
+      "colorHex": "#1F1F1F",
+      "size": "XL",
+      "stock": 35,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000119",
+  "slug": "quan-kaki-chino-cotton-twill-co-gian",
+  "name": "Quần Kaki Chino Cotton Twill Co Giãn — Cạp Chun Ẩn Thoải Mái",
+  "categorySlug": "pants-bottoms",
+  "categoryName": "Quần Kaki & Quần Âu",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Cotton Twill",
+  "price": 395000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 310,
+  "soldCount": 1280,
+  "stock": 190,
+  "badge": {
+    "label": "SMART CHINO",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Chiếc quần Chino đa dụng cho cả ngày dài làm việc và di chuyển. Vải Cotton Twill dệt chéo 260 GSM pha 3% Spandex co giãn 4 chiều. Thiết kế cạp chun ẩn bên hông co giãn thông minh mà vẫn giữ trọn vẻ lịch lãm bên ngoài.",
+  "images": [
+    {
+      "url": "/assets/img/p-kaki.jpg"
+    },
+    {
+      "url": "/assets/img/ed-pants.jpg"
+    },
+    {
+      "url": "/assets/img/cat-quan.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "97% Cotton Twill, 3% Spandex 260 GSM",
+    "gsmWeight": 260,
+    "origin": "Xưởng Dệt May Số 07 Bắc Ninh",
+    "shrinkage": "< 1.5%",
+    "dimensions": "Slim-Straight Fit tôn chân",
+    "qcBatchCode": "LOT-CK26-145 · Khóa kéo YKK chính hãng"
+  },
+  "specComparison": [
+    {
+      "label": "Cạp quần",
+      "unlo": "Chun ẩn 2 bên hông co giãn 4cm",
+      "retail": "Cạp cứng bó chặt gây tức bụng"
+    },
+    {
+      "label": "Khóa kéo",
+      "unlo": "Khóa đồng YKK tự khóa đầu chốt",
+      "retail": "Khóa kéo mỏng dễ trôi tụt"
+    },
+    {
+      "label": "Túi quần",
+      "unlo": "Lót vải mộc 100% cotton sâu 22cm",
+      "retail": "Lót nylon mỏng dễ rách rơi đồ"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 395000,
+    "traditionalRetailPrice": 850000,
+    "materialCost": 170000,
+    "materialDesc": "Vải Cotton Twill Spandex & khóa YKK",
+    "manufacturingCost": 98000,
+    "manufacturingDesc": "May chi tiết cạp chun ẩn & túi sau viền",
+    "packagingShippingCost": 45000,
+    "packagingShippingDesc": "Đóng gói phẳng chống nhăn",
+    "platformQcCost": 82000,
+    "platformQcDesc": "Kiểm tra độ co giãn và đường may đáy"
+  },
+  "sizeChart": [
+    {
+      "size": "29",
+      "height": "1m60 – 1m68",
+      "weight": "50 – 58 kg",
+      "waist": "76 cm",
+      "length": "96 cm"
+    },
+    {
+      "size": "30",
+      "height": "1m65 – 1m72",
+      "weight": "58 – 65 kg",
+      "waist": "80 cm",
+      "length": "98 cm"
+    },
+    {
+      "size": "31",
+      "height": "1m70 – 1m76",
+      "weight": "65 – 72 kg",
+      "waist": "84 cm",
+      "length": "100 cm"
+    },
+    {
+      "size": "32",
+      "height": "1m74 – 1m80",
+      "weight": "72 – 78 kg",
+      "waist": "88 cm",
+      "length": "102 cm"
+    },
+    {
+      "size": "34",
+      "height": "1m78 – 1m86",
+      "weight": "79 – 88 kg",
+      "waist": "94 cm",
+      "length": "104 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002001",
+      "colorName": "Khaki Beige",
+      "colorHex": "#C5B396",
+      "size": "30",
+      "stock": 45,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002002",
+      "colorName": "Khaki Beige",
+      "colorHex": "#C5B396",
+      "size": "31",
+      "stock": 55,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002003",
+      "colorName": "Khaki Beige",
+      "colorHex": "#C5B396",
+      "size": "32",
+      "stock": 50,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002004",
+      "colorName": "Khaki Beige",
+      "colorHex": "#C5B396",
+      "size": "34",
+      "stock": 40,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000120",
+  "slug": "quan-jogger-ni-french-terry-the-thao",
+  "name": "Quần Jogger Nỉ French Terry Thể Thao — Gấu Bo Bản Rộng",
+  "categorySlug": "pants-bottoms",
+  "categoryName": "Quần Kaki & Quần Âu",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "French Terry",
+  "price": 360000,
+  "salePercent": 0,
+  "rate": 4.8,
+  "reviewCount": 198,
+  "soldCount": 840,
+  "stock": 145,
+  "badge": {
+    "label": "ACTIVE JOGGER",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Quần jogger nỉ thể thao dệt từ sợi bông French Terry 340 GSM thoáng khí. Cạp chun bản rộng 4.5cm kèm dây rút luồn trong chống cọ xát, 2 túi khóa kéo ẩn bên hông an toàn khi đựng điện thoại chìa khóa lúc chạy bộ.",
+  "images": [
+    {
+      "url": "/assets/img/p-jogger.jpg"
+    },
+    {
+      "url": "/assets/img/p-kaki.jpg"
+    },
+    {
+      "url": "/assets/img/cat-quan.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton French Terry 340 GSM",
+    "gsmWeight": 340,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 1.5%",
+    "dimensions": "Athletic Tapered Fit",
+    "qcBatchCode": "LOT-JG26-094 · Khóa kéo túi ẩn mượt mà"
+  },
+  "specComparison": [
+    {
+      "label": "Túi quần",
+      "unlo": "2 túi khóa kéo ẩn an toàn",
+      "retail": "Túi mở dễ rơi đồ khi ngồi"
+    },
+    {
+      "label": "Gấu bo chân",
+      "unlo": "Bo rib 5cm ôm vừa vặn mắt cá",
+      "retail": "Bo chun lỏng lẻo nhanh tuột"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 360000,
+    "traditionalRetailPrice": 780000,
+    "materialCost": 155000,
+    "materialDesc": "Vải French Terry 340 GSM & dây chun",
+    "manufacturingCost": 88000,
+    "manufacturingDesc": "May túi khóa ẩn & gấu bo",
+    "packagingShippingCost": 42000,
+    "packagingShippingDesc": "Bao bì M2C tiêu chuẩn",
+    "platformQcCost": 75000,
+    "platformQcDesc": "Kiểm tra độ đàn hồi cạp chun"
+  },
+  "sizeChart": [
+    {
+      "size": "M",
+      "height": "1m65 – 1m73",
+      "weight": "58 – 66 kg",
+      "waist": "76 – 82 cm",
+      "length": "95 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m72 – 1m78",
+      "weight": "67 – 76 kg",
+      "waist": "82 – 88 cm",
+      "length": "98 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m77 – 1m86",
+      "weight": "77 – 88 kg",
+      "waist": "88 – 96 cm",
+      "length": "101 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002011",
+      "colorName": "Dark Charcoal",
+      "colorHex": "#303236",
+      "size": "M",
+      "stock": 50,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002012",
+      "colorName": "Dark Charcoal",
+      "colorHex": "#303236",
+      "size": "L",
+      "stock": 60,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002013",
+      "colorName": "Dark Charcoal",
+      "colorHex": "#303236",
+      "size": "XL",
+      "stock": 35,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000121",
+  "slug": "quan-au-xep-ly-relaxed-trousers",
+  "name": "Quần Âu Xếp Ly Relaxed Trousers — Dệt Chéo Chống Nhăn",
+  "categorySlug": "pants-bottoms",
+  "categoryName": "Quần Kaki & Quần Âu",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Poly Rayon Twill",
+  "price": 480000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 176,
+  "soldCount": 690,
+  "stock": 125,
+  "badge": {
+    "label": "PLEATED TAILORING",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Thiết kế 1 ly trước (Single Pleat) tạo độ rủ thanh thoát và không gian thoải mái cho phần hông và đùi. Vải pha sợi Viscose tự nhiên và Rayon dệt chéo chống nhăn tuyệt đối, giữ nếp ly sắc nét sau cả ngày ngồi văn phòng.",
+  "images": [
+    {
+      "url": "/assets/img/ed-pants.jpg"
+    },
+    {
+      "url": "/assets/img/p-kaki.jpg"
+    },
+    {
+      "url": "/assets/img/ed-dark.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "68% Polyester, 28% Rayon Viscose, 4% Spandex",
+    "gsmWeight": 280,
+    "origin": "Xưởng Dệt May Số 07 Bắc Ninh",
+    "shrinkage": "0% (Chống nhăn & giữ ly vĩnh viễn)",
+    "dimensions": "Relaxed Straight Trousers",
+    "qcBatchCode": "LOT-TR26-077 · Ép nhiệt ly máy tự động"
+  },
+  "specComparison": [
+    {
+      "label": "Độ giữ ly",
+      "unlo": "Ép nhiệt chân không chống mất ly",
+      "retail": "Ly là tay nhanh mất nếp"
+    },
+    {
+      "label": "Độ thoải mái",
+      "unlo": "Ly trước mở rộng cử động hông",
+      "retail": "Ống bó chẽn khó ngồi xổm"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 480000,
+    "traditionalRetailPrice": 1050000,
+    "materialCost": 200000,
+    "materialDesc": "Vải Rayon dệt chéo cao cấp",
+    "manufacturingCost": 120000,
+    "manufacturingDesc": "May hoàn thiện & ép ly định hình",
+    "packagingShippingCost": 50000,
+    "packagingShippingDesc": "Đóng móc treo & bao nilon bảo vệ",
+    "platformQcCost": 110000,
+    "platformQcDesc": "Kiểm tra độ thẳng nếp ly 2 ống"
+  },
+  "sizeChart": [
+    {
+      "size": "S (29-30)",
+      "height": "1m62 – 1m70",
+      "weight": "52 – 62 kg",
+      "waist": "78 cm",
+      "length": "98 cm"
+    },
+    {
+      "size": "M (31-32)",
+      "height": "1m69 – 1m76",
+      "weight": "63 – 72 kg",
+      "waist": "84 cm",
+      "length": "101 cm"
+    },
+    {
+      "size": "L (33-34)",
+      "height": "1m75 – 1m83",
+      "weight": "73 – 84 kg",
+      "waist": "90 cm",
+      "length": "104 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002021",
+      "colorName": "Deep Charcoal",
+      "colorHex": "#2C2D30",
+      "size": "S",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002022",
+      "colorName": "Deep Charcoal",
+      "colorHex": "#2C2D30",
+      "size": "M",
+      "stock": 55,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002023",
+      "colorName": "Deep Charcoal",
+      "colorHex": "#2C2D30",
+      "size": "L",
+      "stock": 35,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000122",
+  "slug": "ao-len-merino-sieu-min-19-5-micron-dark-navy",
+  "name": "Áo Len Merino Siêu Mịn 19.5 Micron Cổ Tròn — Dark Navy",
+  "categorySlug": "wool-knitwear",
+  "categoryName": "Đồ Len & Áo Khoác",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Merino Wool",
+  "price": 560000,
+  "salePercent": 0,
+  "rate": 5,
+  "reviewCount": 224,
+  "soldCount": 780,
+  "stock": 90,
+  "badge": {
+    "label": "19.5 MICRON WOOL",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": true,
+  "factoryVideoCaption": "Dệt vi tính 14 Gauge nguyên khối không đường may nối sườn",
+  "descriptions": "Sợi len cừu Merino tinh khiết độ mảnh 19.5 Micron mềm êm tuyệt đối, không gây châm chích kể cả khi mặc tiếp xúc trực tiếp với làn da nhạy cảm. Công nghệ dệt dệt kim 14 Gauge tạo bề mặt mịn mượt và điều hòa thân nhiệt thông minh.",
+  "images": [
+    {
+      "url": "/assets/img/ed-dark.jpg"
+    },
+    {
+      "url": "/assets/img/x-ke-len.jpg"
+    },
+    {
+      "url": "/assets/img/ed-cream.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Extra-Fine Merino Wool 19.5 Micron",
+    "gsmWeight": 230,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên (Nhập sợi Úc chứng nhận Woolmark)",
+    "shrinkage": "Xử lý Total Easy Care chống co rút khi giặt",
+    "dimensions": "Regular Tailored Fit",
+    "qcBatchCode": "LOT-MW26-019 · Chứng nhận Woolmark Blend Test"
+  },
+  "specComparison": [
+    {
+      "label": "Độ mảnh sợi",
+      "unlo": "19.5 Micron (Mềm êm không ngứa)",
+      "retail": "24 Micron dễ dặm ngứa da"
+    },
+    {
+      "label": "Công nghệ dệt",
+      "unlo": "Dệt kim 14 Gauge nguyên khối",
+      "retail": "May ráp biên lộ cộm đường chỉ"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 560000,
+    "traditionalRetailPrice": 1450000,
+    "materialCost": 260000,
+    "materialDesc": "Sợi Merino Wool Úc nguyên bản",
+    "manufacturingCost": 135000,
+    "manufacturingDesc": "Dệt vi tính 14 Gauge công nghệ Đức",
+    "packagingShippingCost": 55000,
+    "packagingShippingDesc": "Túi vải không dệt & hộp carton",
+    "platformQcCost": 110000,
+    "platformQcDesc": "Kiểm tra độ đều sợi quang học"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "50 – 60 kg",
+      "chest": "100 cm",
+      "length": "66 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m74",
+      "weight": "61 – 70 kg",
+      "chest": "106 cm",
+      "length": "68 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m80",
+      "weight": "71 – 80 kg",
+      "chest": "112 cm",
+      "length": "71 cm"
+    },
+    {
+      "size": "XL",
+      "height": "1m78 – 1m86",
+      "weight": "81 – 90 kg",
+      "chest": "118 cm",
+      "length": "73 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002031",
+      "colorName": "Dark Navy",
+      "colorHex": "#121A28",
+      "size": "S",
+      "stock": 20,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002032",
+      "colorName": "Dark Navy",
+      "colorHex": "#121A28",
+      "size": "M",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002033",
+      "colorName": "Dark Navy",
+      "colorHex": "#121A28",
+      "size": "L",
+      "stock": 25,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002034",
+      "colorName": "Dark Navy",
+      "colorHex": "#121A28",
+      "size": "XL",
+      "stock": 10,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000123",
+  "slug": "ao-len-cashmere-blend-mau-kem-oat-cream",
+  "name": "Áo Len Dệt Sợi Cashmere Blend Màu Kem Oat Cream — Cổ Tròn Mềm Rủ",
+  "categorySlug": "wool-knitwear",
+  "categoryName": "Đồ Len & Áo Khoác",
+  "factorySlug": "xuong-det-kim-so-04-hung-yen",
+  "creatorName": "Xưởng Dệt Kim Số 04 · Hưng Yên",
+  "materialTag": "Cashmere Blend",
+  "price": 620000,
+  "salePercent": 0,
+  "rate": 5,
+  "reviewCount": 156,
+  "soldCount": 470,
+  "stock": 80,
+  "badge": {
+    "label": "LUXURY CASHMERE",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Sự kết hợp tinh túy giữa 15% lông dê Cashmere Mông Cổ và 85% Merino Wool siêu mịn tạo nên một chiếc áo ấm áp tựa mây trời. Tông màu Oat Cream sáng nhẹ, mang lại vẻ ngoài thanh lịch đậm chất Quiet Luxury.",
+  "images": [
+    {
+      "url": "/assets/img/ed-cream.jpg"
+    },
+    {
+      "url": "/assets/img/cut-cream.webp"
+    },
+    {
+      "url": "/assets/img/x-ke-len.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "15% Cashmere, 85% Merino Wool",
+    "gsmWeight": 240,
+    "origin": "Xưởng Dệt Kim Số 04 Hưng Yên",
+    "shrinkage": "< 1.5%",
+    "dimensions": "Classic Fit chuẩn mực",
+    "qcBatchCode": "LOT-CS26-008 · Kiểm tra độ mịn vi mô"
+  },
+  "specComparison": [
+    {
+      "label": "Chất liệu",
+      "unlo": "15% Cashmere tự nhiên + 85% Merino",
+      "retail": "100% sợi Acrylic nhân tạo"
+    },
+    {
+      "label": "Cảm giác chạm",
+      "unlo": "Ấm ngay sau 3 giây chạm da",
+      "retail": "Lạnh buốt và bí mồ hôi"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 620000,
+    "traditionalRetailPrice": 1650000,
+    "materialCost": 290000,
+    "materialDesc": "Sợi Cashmere & Merino tự nhiên",
+    "manufacturingCost": 150000,
+    "manufacturingDesc": "Dệt kim kỹ thuật cao",
+    "packagingShippingCost": 60000,
+    "packagingShippingDesc": "Hộp quà tặng & giấy lụa",
+    "platformQcCost": 120000,
+    "platformQcDesc": "Kiểm tra độ đều sợi"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m58 – 1m66",
+      "weight": "48 – 58 kg",
+      "chest": "98 cm",
+      "length": "64 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m65 – 1m72",
+      "weight": "58 – 68 kg",
+      "chest": "104 cm",
+      "length": "67 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m71 – 1m78",
+      "weight": "68 – 78 kg",
+      "chest": "110 cm",
+      "length": "70 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002041",
+      "colorName": "Oat Cream",
+      "colorHex": "#EAE5DB",
+      "size": "S",
+      "stock": 20,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002042",
+      "colorName": "Oat Cream",
+      "colorHex": "#EAE5DB",
+      "size": "M",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002043",
+      "colorName": "Oat Cream",
+      "colorHex": "#EAE5DB",
+      "size": "L",
+      "stock": 25,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000124",
+  "slug": "ao-khoac-trench-coat-dang-dai-toi-gian",
+  "name": "Áo Khoác Trench Coat Dáng Dài Tối Giản — Chống Thấm Nước DWR",
+  "categorySlug": "wool-knitwear",
+  "categoryName": "Đồ Len & Áo Khoác",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Technical Cotton",
+  "price": 890000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 84,
+  "soldCount": 310,
+  "stock": 65,
+  "badge": {
+    "label": "WATERPROOF COAT",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Chiếc áo khoác Trench Coat tinh tế được giản lược toàn bộ các chi tiết cầu vai và nắp súng rườm rà. Bề mặt vải Cotton pha sợi kỹ thuật xử lý phủ chống thấm DWR sinh học, chống mưa phùn và gió rét hiệu quả.",
+  "images": [
+    {
+      "url": "/assets/img/ed-trench.jpg"
+    },
+    {
+      "url": "/assets/img/ed-dark.jpg"
+    },
+    {
+      "url": "/assets/img/x-tho-may.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "65% Cotton, 35% Technical Nylon phủ DWR",
+    "gsmWeight": 310,
+    "origin": "Xưởng Dệt May Số 07 Bắc Ninh",
+    "shrinkage": "0%",
+    "dimensions": "Dáng dài qua gối sang trọng",
+    "qcBatchCode": "LOT-TC26-004 · Thử nghiệm xịt nước trượt lá sen"
+  },
+  "specComparison": [
+    {
+      "label": "Khả năng chống nước",
+      "unlo": "Phủ DWR nước trượt bề mặt",
+      "retail": "Thấm ướt sũng khi gặp mưa nhẹ"
+    },
+    {
+      "label": "Lớp lót",
+      "unlo": "Lót trong Viscose trơn mượt không dính",
+      "retail": "Lót nilon gây tĩnh điện bí rít"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 890000,
+    "traditionalRetailPrice": 2200000,
+    "materialCost": 410000,
+    "materialDesc": "Vải Technical Cotton & lớp lót Viscose",
+    "manufacturingCost": 240000,
+    "manufacturingDesc": "May áo khoác 2 lớp 48 công đoạn",
+    "packagingShippingCost": 70000,
+    "packagingShippingDesc": "Túi bọc vest chống bụi & móc gỗ",
+    "platformQcCost": 170000,
+    "platformQcDesc": "Kiểm tra 100% đường may chống ngấm"
+  },
+  "sizeChart": [
+    {
+      "size": "M",
+      "height": "1m65 – 1m74",
+      "weight": "55 – 68 kg",
+      "chest": "116 cm",
+      "length": "105 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m72 – 1m82",
+      "weight": "69 – 82 kg",
+      "chest": "122 cm",
+      "length": "108 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002051",
+      "colorName": "Khaki Tan",
+      "colorHex": "#B8A282",
+      "size": "M",
+      "stock": 35,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002052",
+      "colorName": "Khaki Tan",
+      "colorHex": "#B8A282",
+      "size": "L",
+      "stock": 30,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
+{
+  "_id": "690000000000000000000125",
+  "slug": "ao-khoac-denim-jacket-selvedge-khuy-kim-loai",
+  "name": "Áo Khoác Denim Jacket Khuy Kim Loại Mờ — Chỉ May Gia Cường Vàng Đồng",
+  "categorySlug": "wool-knitwear",
+  "categoryName": "Đồ Len & Áo Khoác",
+  "factorySlug": "xuong-det-may-linen-so-07-bac-ninh",
+  "creatorName": "Xưởng Dệt May Linen Số 07 · Bắc Ninh",
+  "materialTag": "Selvedge Denim",
+  "price": 580000,
+  "salePercent": 0,
+  "rate": 4.9,
+  "reviewCount": 164,
+  "soldCount": 520,
+  "stock": 95,
+  "badge": {
+    "label": "SELVEDGE DENIM",
+    "tone": "indigo"
+  },
+  "hasFactoryVideo": false,
+  "factoryVideoCaption": "",
+  "descriptions": "Vải Denim 12oz bền bỉ với đường dệt biên (Selvedge) chuẩn mực. Khuy cài kim loại dập mờ không logo lòe loẹt, đường may chập đè chỉ vàng hổ phách gia cường toàn bộ các điểm chịu lực nách và túi áo.",
+  "images": [
+    {
+      "url": "/assets/img/j-ao-xanh.jpg"
+    },
+    {
+      "url": "/assets/img/p-so-mi-denim.jpg"
+    },
+    {
+      "url": "/assets/img/j-chat-lieu.jpg"
+    }
+  ],
+  "specs": {
+    "fabricComposition": "100% Cotton Selvedge Denim 12oz",
+    "gsmWeight": 340,
+    "origin": "Xưởng Dệt May Số 07 Bắc Ninh",
+    "shrinkage": "< 1%",
+    "dimensions": "Boxy Trucker Fit",
+    "qcBatchCode": "LOT-DJ26-055 · Khuy tán đồng không rỉ"
+  },
+  "specComparison": [
+    {
+      "label": "Độ dày denim",
+      "unlo": "12oz dày dặn lên phom đứng",
+      "retail": "8oz mỏng ọp ẹp"
+    },
+    {
+      "label": "Khuy áo",
+      "unlo": "Khuy đồng đặc tán chân chịu lực",
+      "retail": "Khuy sắt mỏng dễ bung bật"
+    }
+  ],
+  "costBreakdown": {
+    "nullPrice": 580000,
+    "traditionalRetailPrice": 1350000,
+    "materialCost": 260000,
+    "materialDesc": "Vải Selvedge Denim & khuy tán đồng",
+    "manufacturingCost": 140000,
+    "manufacturingDesc": "May hoàn thiện & rửa wash rũ hồ",
+    "packagingShippingCost": 60000,
+    "packagingShippingDesc": "Đóng gói tiêu chuẩn M2C",
+    "platformQcCost": 120000,
+    "platformQcDesc": "Kiểm tra từng khuy bấm và đường chỉ đôi"
+  },
+  "sizeChart": [
+    {
+      "size": "S",
+      "height": "1m60 – 1m68",
+      "weight": "52 – 62 kg",
+      "chest": "106 cm",
+      "length": "63 cm"
+    },
+    {
+      "size": "M",
+      "height": "1m67 – 1m75",
+      "weight": "63 – 72 kg",
+      "chest": "112 cm",
+      "length": "65 cm"
+    },
+    {
+      "size": "L",
+      "height": "1m73 – 1m82",
+      "weight": "73 – 83 kg",
+      "chest": "118 cm",
+      "length": "68 cm"
+    }
+  ],
+  "personalizationConfig": {
+    "enabled": false
+  },
+  "variants": [
+    {
+      "_id": "690000000000000000002061",
+      "colorName": "Deep Indigo",
+      "colorHex": "#2E4765",
+      "size": "S",
+      "stock": 25,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002062",
+      "colorName": "Deep Indigo",
+      "colorHex": "#2E4765",
+      "size": "M",
+      "stock": 45,
+      "priceDelta": 0
+    },
+    {
+      "_id": "690000000000000000002063",
+      "colorName": "Deep Indigo",
+      "colorHex": "#2E4765",
+      "size": "L",
+      "stock": 25,
+      "priceDelta": 0
+    }
+  ],
+  "fitReviews": [],
+  "makerQa": []
+},
 ];
 
 export function findUnloProductBySlugOrId(slugOrId) {

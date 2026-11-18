@@ -52,10 +52,12 @@ const EDITORIAL_PROMOS = [
 
 const BESTSELLER_TABS = [
   { id: "all", label: "Tất Cả" },
-  { id: "cotton-basics", label: "Dệt Kim" },
+  { id: "cotton-basics", label: "Áo Thun" },
+  { id: "linen-tailoring", label: "Sơ Mi" },
+  { id: "sweat-hoodie", label: "Nỉ & Hoodie" },
+  { id: "pants-bottoms", label: "Quần" },
+  { id: "wool-knitwear", label: "Đồ Len" },
   { id: "leather-goods", label: "Đồ Da" },
-  { id: "linen-tailoring", label: "Linen" },
-  { id: "ceramics-home", label: "Gốm Sứ" },
   { id: "canvas-accessories", label: "Phụ Kiện" },
 ];
 
@@ -68,7 +70,7 @@ export default function NullHomeClient() {
       activeTab === "all"
         ? UNLO_PRODUCTS
         : UNLO_PRODUCTS.filter((p) => p.categorySlug === activeTab);
-    return filtered.slice(0, 5);
+    return filtered.slice(0, 10);
   }, [activeTab]);
 
   const demoProduct = UNLO_PRODUCTS[selectedDemoIdx] || UNLO_PRODUCTS[0];
