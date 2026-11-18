@@ -28,6 +28,10 @@ import TransparencyCostChart from "./TransparencyCostChart";
 import RealisticEmbroideryOverlay, {
   REALISTIC_PLACEMENTS,
 } from "./RealisticEmbroideryOverlay";
+import {
+  autoRemoveBackground,
+  EMBROIDERY_SAMPLE_LOGOS,
+} from "@/lib/embroideryUtils";
 import { useCart } from "@/app/context/CartContext";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
@@ -154,7 +158,9 @@ export default function NullHomeClient() {
     customType: "text", // "text" | "logo"
     monogramText: "H.L",
     logoUrl: "",
+    logoSvg: null,
     logoName: "",
+    logoMonochrome: false,
     font: "serif_minimal",
     threadColor: "#15095D",
     placement: "chest_pocket",
@@ -190,14 +196,17 @@ export default function NullHomeClient() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
+      const rawDataUrl = e.target?.result;
+      const cleanDataUrl = await autoRemoveBackground(rawDataUrl);
       setStudioState((prev) => ({
         ...prev,
         customType: "logo",
-        logoUrl: e.target?.result,
+        logoUrl: cleanDataUrl,
+        logoSvg: null,
         logoName: file.name,
       }));
-      toast.success(`Đã tải lên logo: ${file.name}`);
+      toast.success(`Đã xử lý & gắn logo lên áo: ${file.name}`);
     };
     reader.readAsDataURL(file);
   };
@@ -205,7 +214,9 @@ export default function NullHomeClient() {
   const handleOrderCustomShirt = () => {
     const supimaShirt = UNLO_PRODUCTS[0];
     if (!supimaShirt) return;
-    const isLogo = studioState.customType === "logo" && studioState.logoUrl;
+    const isLogo =
+      studioState.customType === "logo" &&
+      Boolean(studioState.logoUrl || studioState.logoSvg);
     const fee = isLogo ? 45000 : 35000;
 
     const customPayload = {
@@ -230,13 +241,19 @@ export default function NullHomeClient() {
         font: studioState.font,
         threadColor: studioState.threadColor,
         placement: studioState.placement,
-        innerLabelText: isLogo ? `Logo: ${studioState.logoName.slice(0, 20)}` : "",
+        innerLabelText: isLogo
+          ? `Logo: ${(studioState.logoName || "Custom").slice(0, 20)}`
+          : "",
         giftBoxType: "none",
         giftNote: isLogo
-          ? `[Thêu Logo: ${studioState.logoName}]`
-          : `Thêu tên ${studioState.monogramText}`,
+          ? `[Thêu Logo: ${studioState.logoName || "Custom"}]`
+          : `Thêu tên ${studioState.monogramText || "H.L"}`,
         ...(isLogo
-          ? { logoUrl: studioState.logoUrl, logoName: studioState.logoName }
+          ? {
+              logoUrl: studioState.logoUrl,
+              logoSvg: studioState.logoSvg,
+              logoName: studioState.logoName,
+            }
           : {}),
       },
     };
@@ -544,13 +561,17 @@ export default function NullHomeClient() {
                       />
                     )}
 
-                    {/* Realistic Live Embroidery / Logo (NO ugly label on shirt) */}
+                    {/* Realistic Live Embroidery / Logo with Direct Touchpoints on Shirt */}
                     <RealisticEmbroideryOverlay
                       customization={{
                         ...studioState,
                         enabled: true,
                       }}
                       garmentColorHex={activeGarment.hex}
+                      interactiveHotspots={true}
+                      onSelectPlacement={(placement) =>
+                        setStudioState((prev) => ({ ...prev, placement }))
+                      }
                     />
                   </div>
 
@@ -574,10 +595,16 @@ export default function NullHomeClient() {
                         </>
                       ) : (
                         <>
-                          <ZoomIn className="w-3.5 h-3.5" /> Cận cảnh hình thêu
+                          <ZoomIn className="w-3.5 h-3.5" /> Cận cảnh thớ chỉ
                         </>
                       )}
                     </button>
+                  </div>
+
+                  <div className="absolute bottom-16 inset-x-4 text-center pointer-events-none">
+                    <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/90 text-[#FCFDF1] text-[11px] backdrop-blur-xs shadow-sm">
+                      Chạm trực tiếp các điểm tròn trên áo để đổi vị trí thêu tức thì
+                    </p>
                   </div>
 
                   {/* Garment Color Swatches on bottom of preview */}
@@ -789,24 +816,39 @@ export default function NullHomeClient() {
                       )}
                     </div>
 
-                    {!studioState.logoUrl && (
-                      <div className="flex items-center gap-2 pt-1 text-xs text-[#4E567A]">
-                        <span>Dùng logo mẫu:</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setStudioState((prev) => ({
-                              ...prev,
-                              logoUrl: "/assets/logo.png",
-                              logoName: "Logo Seal UNLO",
-                            }))
-                          }
-                          className="px-3 py-1 rounded-full bg-[#EFF2F9] border border-[#BBC2DD] text-xs font-bold text-[#32259B] hover:bg-[#15095D] hover:text-white transition-colors cursor-pointer"
-                        >
-                          + Thử Logo Seal UNLO
-                        </button>
+                    {/* Preset Sample Logos */}
+                    <div className="pt-1 space-y-1.5">
+                      <span className="text-[10px] font-bold text-[#4E567A] uppercase tracking-wider">
+                        Hoặc thử nhanh logo mẫu xưởng:
+                      </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {EMBROIDERY_SAMPLE_LOGOS.map((sample) => {
+                          const active = studioState.logoSvg === sample.svg;
+                          return (
+                            <button
+                              key={sample.id}
+                              type="button"
+                              onClick={() =>
+                                setStudioState((prev) => ({
+                                  ...prev,
+                                  customType: "logo",
+                                  logoUrl: null,
+                                  logoSvg: sample.svg,
+                                  logoName: sample.label,
+                                }))
+                              }
+                              className={`px-3 py-1.5 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+                                active
+                                  ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                                  : "bg-[#EFF2F9] text-[#32259B] border-[#BBC2DD] hover:bg-[#15095D] hover:text-white hover:border-[#15095D]"
+                              }`}
+                            >
+                              + {sample.label}
+                            </button>
+                          );
+                        })}
                       </div>
-                    )}
+                    </div>
                   </div>
                 )}
 

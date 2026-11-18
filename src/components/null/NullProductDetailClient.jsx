@@ -93,6 +93,14 @@ export default function NullProductDetailClient({ initialProduct }) {
     giftNote: "",
   });
 
+  const handleCustomizationChange = (next) => {
+    setCustomization(next);
+    if (next?.enabled && selectedImageIdx !== 0) {
+      setSelectedImageIdx(0);
+      setShowFactoryVideo(false);
+    }
+  };
+
   const activeVariant = useMemo(
     () => variants.find((v) => v._id === selectedVariantId) || variants[0] || null,
     [variants, selectedVariantId],
@@ -318,6 +326,10 @@ export default function NullProductDetailClient({ initialProduct }) {
                     <RealisticEmbroideryOverlay
                       customization={customization}
                       garmentColorHex={activeVariant?.colorHex}
+                      interactiveHotspots={true}
+                      onSelectPlacement={(placement) =>
+                        setCustomization((prev) => ({ ...prev, placement }))
+                      }
                     />
                   )}
                 </div>
@@ -528,7 +540,7 @@ export default function NullProductDetailClient({ initialProduct }) {
           <PersonalizationStudio
             config={product.personalizationConfig}
             value={customization}
-            onChange={setCustomization}
+            onChange={handleCustomizationChange}
             garmentColorHex={activeVariant?.colorHex || "#15095D"}
           />
 

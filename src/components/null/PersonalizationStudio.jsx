@@ -17,6 +17,10 @@ import { formatVnd } from "@/app/services/api/nullCommerceService";
 import RealisticEmbroideryOverlay, {
   REALISTIC_PLACEMENTS,
 } from "./RealisticEmbroideryOverlay";
+import {
+  autoRemoveBackground,
+  EMBROIDERY_SAMPLE_LOGOS,
+} from "@/lib/embroideryUtils";
 
 export const EMBROIDERY_PLACEMENTS = [
   {
@@ -149,12 +153,15 @@ export default function PersonalizationStudio({
       return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result;
+    reader.onload = async (e) => {
+      const rawDataUrl = e.target?.result;
+      // Tách nền thông minh giúp logo thêu hòa quyện hoàn hảo vào thớ vải
+      const cleanDataUrl = await autoRemoveBackground(rawDataUrl);
       patch({
         enabled: true,
         customType: "logo",
-        logoUrl: dataUrl,
+        logoUrl: cleanDataUrl,
+        logoSvg: null,
         logoName: file.name,
         monogramText: "LOGO",
         innerLabelText: `Logo: ${file.name.slice(0, 20)}`,
@@ -177,6 +184,7 @@ export default function PersonalizationStudio({
     patch({
       customType: "text",
       logoUrl: "",
+      logoSvg: null,
       logoName: "",
       monogramText: config.defaultHeadline || "H.L",
       innerLabelText: "",
@@ -269,10 +277,12 @@ export default function PersonalizationStudio({
                     />
                   )}
 
-                  {/* Realistic Embroidery / Logo Overlay (NO ugly label badge on shirt) */}
+                  {/* Realistic Embroidery / Logo Overlay with Interactive Direct-on-Shirt Touchpoints */}
                   <RealisticEmbroideryOverlay
                     customization={value}
                     garmentColorHex={garmentColorHex}
+                    interactiveHotspots={true}
+                    onSelectPlacement={(placement) => patch({ placement })}
                   />
                 </div>
 
@@ -294,15 +304,15 @@ export default function PersonalizationStudio({
                       </>
                     ) : (
                       <>
-                        <ZoomIn className="w-3 h-3" /> Cận cảnh thêu
+                        <ZoomIn className="w-3 h-3" /> Cận cảnh thớ chỉ
                       </>
                     )}
                   </button>
                 </div>
 
-                <div className="absolute bottom-3 inset-x-3 text-center">
-                  <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/85 text-[#FCFDF1] text-[10px] backdrop-blur-xs">
-                    Mô phỏng đường thêu vi tính trực tiếp trên áo Supima Cotton
+                <div className="absolute bottom-3 inset-x-3 text-center pointer-events-none">
+                  <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/90 text-[#FCFDF1] text-[10px] backdrop-blur-xs shadow-sm">
+                    Chạm các điểm tròn trên áo để đổi vị trí · Phóng to xem sợi thêu
                   </p>
                 </div>
               </div>
@@ -486,27 +496,71 @@ export default function PersonalizationStudio({
                     )}
                   </div>
 
-                  {/* Sample Quick Logos */}
-                  {!value.logoUrl && (
-                    <div className="pt-1 flex items-center gap-2">
-                      <span className="text-[10px] text-[#4E567A]">Dùng thử:</span>
-                      {SAMPLE_LOGOS.map((s) => (
+                  {/* Preset Sample Logos */}
+                  <div className="pt-1 space-y-1.5">
+                    <span className="text-[10px] font-bold text-[#4E567A] uppercase tracking-wider">
+                      Hoặc chọn nhanh logo mẫu xưởng dệt:
+                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {EMBROIDERY_SAMPLE_LOGOS.map((sample) => {
+                        const active = value.logoSvg === sample.svg;
+                        return (
+                          <button
+                            key={sample.id}
+                            type="button"
+                            onClick={() =>
+                              patch({
+                                customType: "logo",
+                                logoUrl: null,
+                                logoSvg: sample.svg,
+                                logoName: sample.label,
+                                monogramText: "LOGO",
+                                innerLabelText: `Logo: ${sample.label}`,
+                              })
+                            }
+                            className={`px-3 py-1.5 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+                              active
+                                ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                                : "bg-[#EFF2F9] text-[#32259B] border-[#BBC2DD] hover:bg-[#15095D] hover:text-white hover:border-[#15095D]"
+                            }`}
+                          >
+                            + {sample.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Logo Thread Tone Switcher */}
+                  {(value.logoUrl || value.logoSvg) && (
+                    <div className="pt-2 flex items-center justify-between border-t border-[#DCE0E7] text-xs">
+                      <span className="font-bold text-[#15095D]">
+                        Kiểu màu thêu Logo:
+                      </span>
+                      <div className="flex items-center gap-2">
                         <button
-                          key={s.id}
                           type="button"
-                          onClick={() =>
-                            patch({
-                              customType: "logo",
-                              logoUrl: s.url,
-                              logoName: s.label,
-                              monogramText: "LOGO",
-                            })
-                          }
-                          className="px-2.5 py-1 rounded-full bg-[#EFF2F9] border border-[#BBC2DD] text-[10px] font-bold text-[#32259B] hover:bg-[#15095D] hover:text-white transition-colors cursor-pointer"
+                          onClick={() => patch({ logoMonochrome: false })}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+                            !value.logoMonochrome
+                              ? "bg-[#15095D] text-white border-[#15095D]"
+                              : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7]"
+                          }`}
                         >
-                          + {s.label}
+                          Màu gốc của ảnh
                         </button>
-                      ))}
+                        <button
+                          type="button"
+                          onClick={() => patch({ logoMonochrome: true })}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+                            value.logoMonochrome
+                              ? "bg-[#15095D] text-white border-[#15095D]"
+                              : "bg-[#F6F7FC] text-[#4E567A] border-[#DCE0E7]"
+                          }`}
+                        >
+                          Đồng màu chỉ thêu
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
