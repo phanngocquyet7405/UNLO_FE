@@ -267,11 +267,6 @@ export default function NullHomeClient() {
         <MagazineEditorialPosters />
 
         {/* ================================================================
-            4.2. TRUST BAR (.trust) — 4 Trụ Cột Thẩm Định & Minh Bạch
-            ================================================================ */}
-        <TrustBar />
-
-        {/* ================================================================
             5. DEDICATED SECTION: "THÊU TÊN CỦA BẠN LÊN ĐỒ CƠ BẢN" (ATELIER)
             ================================================================ */}
         <HomeEmbroideryStudio />
@@ -424,6 +419,12 @@ export default function NullHomeClient() {
             </div>
           </div>
         </section>
+        {/* ================================================================
+            10. TRUST BAR (.trust) — 4 Trụ Cột Thẩm Định & Minh Bạch
+            ================================================================ */}
+        <div className="pt-10">
+          <TrustBar />
+        </div>
       </main>
 
       <SupportChatbotDrawer />
