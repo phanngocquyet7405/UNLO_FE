@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -10,11 +10,23 @@ import {
   Factory,
   Layers,
   CheckCircle2,
+  Sparkles,
+  Upload,
+  X,
+  ZoomIn,
+  ZoomOut,
+  Shirt,
+  Type,
+  Image as ImageIcon,
+  ShoppingBag,
 } from "lucide-react";
+import { toast } from "sonner";
 import NullHeader from "./NullHeader";
 import NullFooter from "./NullFooter";
 import NullProductCard from "./NullProductCard";
 import TransparencyCostChart from "./TransparencyCostChart";
+import { useCart } from "@/app/context/CartContext";
+import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
 
@@ -22,6 +34,14 @@ const HERO_IMAGE =
   "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=85";
 
 const EDITORIAL_PROMOS = [
+  {
+    enTag: "ATELIER EMBROIDERY",
+    title: "Thêu Tên & Logo Riêng",
+    subtitle: "Cá nhân hóa kín đáo chữ viết tắt hoặc logo công ty trực tiếp tại xưởng không qua trung gian.",
+    href: "#studio-theu-ten",
+    image:
+      "/assets/tshirt-model.jpg",
+  },
   {
     enTag: "FACTORY PASSPORT",
     title: "Hộ Chiếu Nhà Máy",
@@ -37,14 +57,6 @@ const EDITORIAL_PROMOS = [
     href: "/bundles",
     image:
       "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=900&q=85",
-  },
-  {
-    enTag: "C2M GROUP-BUY",
-    title: "Gom Đơn Lô Nhỏ MOQ",
-    subtitle: "Đặt trước theo lô sản xuất 3–5 ngày để mở khóa giá gốc tại xưởng, không tồn kho.",
-    href: "/group-buy",
-    image:
-      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=85",
   },
 ];
 
@@ -80,9 +92,53 @@ const TRUST_FEATURES = [
   },
 ];
 
+const HOME_STUDIO_PLACEMENTS = [
+  { id: "chest_pocket", label: "Ngực trái", sublabel: "Kinh điển, tinh tế", coords: { top: "30%", left: "63%" } },
+  { id: "left_cuff", label: "Bo tay áo", sublabel: "Kín đáo khi cử động", coords: { top: "33%", left: "76%" } },
+  { id: "hem", label: "Góc tà áo", sublabel: "Tối giản vạt áo", coords: { top: "80%", left: "62%" } },
+  { id: "inner_neck", label: "Gáy cổ áo", sublabel: "Sau gáy cổ trong", coords: { top: "14%", left: "50%" } },
+];
+
+const HOME_STUDIO_FONTS = [
+  { id: "serif_minimal", label: "Cổ điển", fontName: "Bodoni", previewClass: "font-serif font-bold tracking-widest" },
+  { id: "italic_atelier", label: "Viết tay", fontName: "Italic", previewClass: "font-serif italic font-semibold tracking-wider" },
+  { id: "sans_architect", label: "Hiện đại", fontName: "Sans", previewClass: "font-sans font-bold uppercase tracking-widest text-[0.88em]" },
+];
+
+const HOME_STUDIO_THREADS = [
+  { name: "Chàm Indigo", hex: "#15095D" },
+  { name: "Trắng sữa", hex: "#FCFDF1" },
+  { name: "Vàng đồng", hex: "#C59B27" },
+  { name: "Xanh khói", hex: "#8D8DC7" },
+  { name: "Đỏ rượu", hex: "#8B1E2D" },
+  { name: "Đen tuyền", hex: "#1A1A1A" },
+];
+
+const HOME_GARMENT_COLORS = [
+  { id: "ivory", label: "Trắng sữa", hex: "#FCFDF1", textDark: true },
+  { id: "navy", label: "Xanh Chàm", hex: "#15095D", textDark: false },
+  { id: "black", label: "Đen than", hex: "#1A1A1A", textDark: false },
+  { id: "periwinkle", label: "Periwinkle", hex: "#8D8DC7", textDark: false },
+];
+
 export default function NullHomeClient() {
+  const { addToCart, setIsCartOpen } = useCart() || {};
   const [activeTab, setActiveTab] = useState("all");
   const [selectedDemoIdx, setSelectedDemoIdx] = useState(0);
+
+  // Home Atelier Studio interactive state
+  const [studioState, setStudioState] = useState({
+    customType: "text", // "text" | "logo"
+    monogramText: "H.L",
+    logoUrl: "",
+    logoName: "",
+    font: "serif_minimal",
+    threadColor: "#15095D",
+    placement: "chest_pocket",
+    garmentColor: "ivory",
+    zoom: false,
+  });
+  const fileInputRef = useRef(null);
 
   const displayedProducts = useMemo(() => {
     const filtered =
@@ -93,6 +149,81 @@ export default function NullHomeClient() {
   }, [activeTab]);
 
   const demoProduct = UNLO_PRODUCTS[selectedDemoIdx] || UNLO_PRODUCTS[0];
+
+  const currentPlacement =
+    HOME_STUDIO_PLACEMENTS.find((p) => p.id === studioState.placement) ||
+    HOME_STUDIO_PLACEMENTS[0];
+  const currentFont =
+    HOME_STUDIO_FONTS.find((f) => f.id === studioState.font) ||
+    HOME_STUDIO_FONTS[0];
+  const activeGarment =
+    HOME_GARMENT_COLORS.find((c) => c.id === studioState.garmentColor) ||
+    HOME_GARMENT_COLORS[0];
+
+  const handleHomeLogoUpload = (file) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File logo tối đa 5MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setStudioState((prev) => ({
+        ...prev,
+        customType: "logo",
+        logoUrl: e.target?.result,
+        logoName: file.name,
+      }));
+      toast.success(`Đã tải lên logo: ${file.name}`);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleOrderCustomShirt = () => {
+    const supimaShirt = UNLO_PRODUCTS[0];
+    if (!supimaShirt) return;
+    const isLogo = studioState.customType === "logo" && studioState.logoUrl;
+    const fee = isLogo ? 45000 : 35000;
+
+    const customPayload = {
+      ...supimaShirt,
+      _id: supimaShirt._id,
+      id: supimaShirt._id,
+      productId: supimaShirt._id,
+      itemType: "product",
+      price: supimaShirt.price + fee,
+      image: "/assets/tshirt-model.jpg",
+      variantSummary: {
+        size: "M",
+        colorName: activeGarment.label,
+        colorHex: activeGarment.hex,
+      },
+      customization: {
+        enabled: true,
+        customType: studioState.customType,
+        monogramText: (isLogo ? "LOGO" : studioState.monogramText || "H.L")
+          .slice(0, 5)
+          .toUpperCase(),
+        font: studioState.font,
+        threadColor: studioState.threadColor,
+        placement: studioState.placement,
+        innerLabelText: isLogo ? `Logo: ${studioState.logoName.slice(0, 20)}` : "",
+        giftBoxType: "none",
+        giftNote: isLogo
+          ? `[Thêu Logo: ${studioState.logoName}]`
+          : `Thêu tên ${studioState.monogramText}`,
+        ...(isLogo
+          ? { logoUrl: studioState.logoUrl, logoName: studioState.logoName }
+          : {}),
+      },
+    };
+
+    addToCart?.(customPayload, 1);
+    toast.success(
+      `Đã thêm "Áo thun Supima thêu ${isLogo ? "Logo" : studioState.monogramText}" vào giỏ hàng!`,
+    );
+    setIsCartOpen?.(true);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#15095D]">
@@ -136,13 +267,13 @@ export default function NullHomeClient() {
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </Link>
 
-                  <Link
-                    href="/factories"
+                  <a
+                    href="#studio-theu-ten"
                     className="inline-flex items-center gap-2 h-11 sm:h-12 px-6 rounded-full border border-[#BBC2DD]/55 bg-white/10 backdrop-blur-xs text-xs sm:text-[13px] font-semibold text-[#FCFDF1] hover:bg-white/20 transition-colors null-pressable"
                   >
-                    <Factory className="w-4 h-4 text-[#BBC2DD]" aria-hidden="true" />
-                    <span>Xem Hộ Chiếu Xưởng</span>
-                  </Link>
+                    <Sparkles className="w-4 h-4 text-[#BBC2DD]" aria-hidden="true" />
+                    <span>Thử Thêu Tên Lên Áo</span>
+                  </a>
                 </div>
               </div>
 
@@ -176,20 +307,20 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            2. CIRCULAR CATEGORY ROW — Moodboard 6-Circle Strip
+            2. CIRCULAR CATEGORY ROW — Including "Thêu Tên" & "Combo"
             ================================================================ */}
         <section
           aria-label="Danh mục ngành hàng xưởng"
           className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-12 pb-6"
         >
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-6 items-start">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-5 items-start">
             {UNLO_CATEGORIES.map((cat) => (
               <Link
                 key={cat.id}
                 href={cat.href}
                 className="group flex flex-col items-center text-center gap-2.5"
               >
-                <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden bg-[#EFF2F9] border-2 border-[#DCE0E7] group-hover:border-[#443EB1] transition-colors p-1">
+                <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 rounded-full overflow-hidden bg-[#EFF2F9] border-2 border-[#DCE0E7] group-hover:border-[#443EB1] transition-colors p-1">
                   <div className="w-full h-full rounded-full overflow-hidden">
                     <img
                       src={cat.image}
@@ -205,13 +336,33 @@ export default function NullHomeClient() {
               </Link>
             ))}
 
-            {/* 6th Signature Lilac Combo/Sale Circle */}
+            {/* 6th Signature Circle: THÊU TÊN (CÁ NHÂN HÓA) */}
+            <a
+              href="#studio-theu-ten"
+              className="group flex flex-col items-center text-center gap-2.5"
+            >
+              <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 rounded-full overflow-hidden bg-gradient-to-br from-[#EFF2F9] via-[#BBC2DD] to-[#8D8DC7] border-2 border-[#8D8DC7] group-hover:border-[#15095D] transition-colors p-1 grid place-items-center shadow-xs">
+                <div className="w-full h-full rounded-full bg-white flex flex-col items-center justify-center p-2 group-hover:scale-105 transition-transform">
+                  <span className="font-serif italic text-lg sm:text-xl font-bold text-[#15095D] leading-tight">
+                    Thêu tên
+                  </span>
+                  <span className="text-[9px] font-mono text-[#32259B] uppercase font-bold tracking-tight">
+                    Cá nhân hóa
+                  </span>
+                </div>
+              </div>
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.09em] text-[#32259B]">
+                Thêu Tên &amp; Logo
+              </span>
+            </a>
+
+            {/* 7th Signature Lilac Combo/Sale Circle */}
             <Link
               href="/bundles"
               className="group flex flex-col items-center text-center gap-2.5"
             >
-              <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-[#DCE0F4] via-[#BBC2DD] to-[#9EA1D2] border-2 border-[#BBC2DD] group-hover:border-[#32259B] transition-colors grid place-items-center shadow-xs">
-                <span className="font-serif italic text-2xl sm:text-3xl font-semibold text-[#15095D] group-hover:scale-105 transition-transform">
+              <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-[#DCE0F4] via-[#BBC2DD] to-[#9EA1D2] border-2 border-[#BBC2DD] group-hover:border-[#32259B] transition-colors grid place-items-center shadow-xs">
+                <span className="font-serif italic text-xl sm:text-2xl font-semibold text-[#15095D] group-hover:scale-105 transition-transform">
                   Combo
                 </span>
               </div>
@@ -319,7 +470,476 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            5. INTERACTIVE TRUST-TECH TRANSPARENT PRICING EXPLORER
+            5. DEDICATED SECTION: "THÊU TÊN CỦA BẠN LÊN ĐỒ CƠ BẢN" (ATELIER)
+            ================================================================ */}
+        <section
+          id="studio-theu-ten"
+          className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-16 space-y-8 scroll-mt-20"
+        >
+          {/* Section Header */}
+          <div className="space-y-2 text-center max-w-2xl mx-auto">
+            <p className="unlo-display-en text-[11px] sm:text-xs tracking-[0.16em] text-[#625FBC] uppercase">
+              UNLO · CÁ NHÂN HÓA TẠI XƯỞNG
+            </p>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-semibold text-[#15095D] leading-tight">
+              Thêu tên của bạn lên đồ cơ bản
+            </h2>
+            <p className="text-xs sm:text-sm text-[#4E567A] leading-relaxed">
+              Tùy biến chữ viết tắt (Monogram) hoặc tải logo công ty/nhóm thêu vi tính 14 mũi/inch trực tiếp lên áo Supima Cotton chất lượng cao — hoàn thành chỉ trong 1–2 ngày.
+            </p>
+          </div>
+
+          {/* Interactive Studio Frame */}
+          <div className="rounded-3xl border border-[#DCE0E7] bg-[#EFF2F9]/80 p-5 sm:p-8 lg:p-10 shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* LEFT: Live Interactive T-Shirt Preview Canvas */}
+              <div className="lg:col-span-6 space-y-4">
+                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border-2 border-[#BBC2DD] bg-white shadow-md select-none">
+                  {/* Zoom Container */}
+                  <div
+                    className="w-full h-full relative transition-transform duration-500 ease-out"
+                    style={
+                      studioState.zoom
+                        ? {
+                            transform: "scale(2.2)",
+                            transformOrigin: `${currentPlacement.coords.left} ${currentPlacement.coords.top}`,
+                          }
+                        : { transform: "scale(1)" }
+                    }
+                  >
+                    <img
+                      src="/assets/tshirt-model.jpg"
+                      alt="Áo thun cotton supima thêu tên và logo"
+                      className="w-full h-full object-cover object-top"
+                    />
+
+                    {/* Garment Color Tint */}
+                    {studioState.garmentColor !== "ivory" && (
+                      <div
+                        className="absolute inset-0 mix-blend-multiply opacity-80 pointer-events-none"
+                        style={{ backgroundColor: activeGarment.hex }}
+                      />
+                    )}
+
+                    {/* Target Embroidery / Logo Rendered Directly on Shirt */}
+                    <div
+                      className="absolute transition-all duration-300 pointer-events-none z-10"
+                      style={{
+                        top: currentPlacement.coords.top,
+                        left: currentPlacement.coords.left,
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    >
+                      {studioState.customType === "logo" && studioState.logoUrl ? (
+                        <div className="relative flex flex-col items-center">
+                          <img
+                            src={studioState.logoUrl}
+                            alt="Logo preview"
+                            className="max-h-12 max-w-16 sm:max-h-14 sm:max-w-20 object-contain filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)]"
+                          />
+                          <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/90 text-white shadow-xs">
+                            {currentPlacement.label}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="relative flex flex-col items-center text-center">
+                          <span
+                            className={`leading-none select-none ${currentFont.previewClass}`}
+                            style={{
+                              color: studioState.threadColor,
+                              fontSize: "clamp(16px, 2.5vw, 24px)",
+                              textShadow:
+                                studioState.garmentColor === "ivory"
+                                  ? "0 0.8px 0.8px rgba(0,0,0,0.5), 0 1.2px 2px rgba(21,9,93,0.3)"
+                                  : "0 0.8px 0.8px rgba(255,255,255,0.4), 0 1.2px 2px rgba(0,0,0,0.6)",
+                              letterSpacing: "0.14em",
+                            }}
+                          >
+                            {studioState.monogramText || "H.L"}
+                          </span>
+                          <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/85 text-white shadow-xs">
+                            {currentPlacement.label}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Overlaid Badges & Zoom Switcher */}
+                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-auto">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 text-[#15095D] text-xs font-bold shadow-xs border border-[#DCE0E7]">
+                      <Shirt className="w-3.5 h-3.5 text-[#32259B]" />
+                      Vị trí: {currentPlacement.label}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setStudioState((prev) => ({ ...prev, zoom: !prev.zoom }))
+                      }
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 hover:bg-white text-[#15095D] text-xs font-bold shadow-xs border border-[#DCE0E7] cursor-pointer transition-colors"
+                    >
+                      {studioState.zoom ? (
+                        <>
+                          <ZoomOut className="w-3.5 h-3.5" /> Toàn cảnh
+                        </>
+                      ) : (
+                        <>
+                          <ZoomIn className="w-3.5 h-3.5" /> Cận cảnh hình thêu
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Garment Color Swatches on bottom of preview */}
+                  <div className="absolute bottom-4 inset-x-4 flex items-center justify-between bg-white/92 backdrop-blur-md p-2.5 rounded-2xl border border-[#DCE0E7]">
+                    <span className="text-[11px] font-bold text-[#15095D]">
+                      Màu áo: <strong className="text-[#32259B]">{activeGarment.label}</strong>
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {HOME_GARMENT_COLORS.map((c) => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() =>
+                            setStudioState((prev) => ({ ...prev, garmentColor: c.id }))
+                          }
+                          className={`w-6 h-6 rounded-full border transition-transform cursor-pointer ${
+                            studioState.garmentColor === c.id
+                              ? "ring-2 ring-[#32259B] ring-offset-1 scale-110 border-[#15095D]"
+                              : "border-[#15095D]/20 hover:scale-105"
+                          }`}
+                          style={{ backgroundColor: c.hex }}
+                          title={c.label}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#4E567A] px-1">
+                  <span className="inline-flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#1D7A5F]" />
+                    Chỉ thêu chống phai màu khi giặt máy
+                  </span>
+                  <span>Hoàn thành trong 1–2 ngày</span>
+                </div>
+              </div>
+
+              {/* RIGHT: Studio Control Panel */}
+              <div className="lg:col-span-6 space-y-5">
+                {/* Mode Selector Tabs */}
+                <div className="grid grid-cols-2 p-1.5 bg-white rounded-2xl border border-[#BBC2DD]">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setStudioState((prev) => ({ ...prev, customType: "text" }))
+                    }
+                    className={`h-11 rounded-xl text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      studioState.customType === "text"
+                        ? "bg-[#15095D] text-white shadow-xs"
+                        : "text-[#4E567A] hover:text-[#15095D]"
+                    }`}
+                  >
+                    <Type className="w-4 h-4" />
+                    <span>Thêu Chữ / Monogram</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setStudioState((prev) => ({ ...prev, customType: "logo" }))
+                    }
+                    className={`h-11 rounded-xl text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      studioState.customType === "logo"
+                        ? "bg-[#15095D] text-white shadow-xs"
+                        : "text-[#4E567A] hover:text-[#15095D]"
+                    }`}
+                  >
+                    <ImageIcon className="w-4 h-4" />
+                    <span>Thêu / Tải Logo</span>
+                  </button>
+                </div>
+
+                {/* MODE A: TEXT MONOGRAM */}
+                {studioState.customType === "text" ? (
+                  <div className="space-y-4 bg-white p-5 rounded-2xl border border-[#DCE0E7]">
+                    <div>
+                      <label
+                        htmlFor="home-monogram-input"
+                        className="block text-xs font-bold text-[#15095D] mb-1.5"
+                      >
+                        NỘI DUNG THÊU
+                      </label>
+                      <input
+                        id="home-monogram-input"
+                        type="text"
+                        maxLength={5}
+                        value={studioState.monogramText}
+                        onChange={(e) =>
+                          setStudioState((prev) => ({
+                            ...prev,
+                            monogramText: e.target.value.slice(0, 5).toUpperCase(),
+                          }))
+                        }
+                        placeholder="VD: H.L hoặc NAM"
+                        className="w-full h-12 px-4 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-base font-bold text-[#15095D] tracking-wider placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] focus:bg-white"
+                      />
+                      <p className="text-[11px] text-[#4E567A] mt-1">
+                        Hiển thị ngay trên áo bên trái. Tối đa 5 ký tự viết tắt.
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="block text-xs font-bold text-[#15095D] mb-1.5">
+                        KIỂU CHỮ
+                      </span>
+                      <div className="grid grid-cols-3 gap-2">
+                        {HOME_STUDIO_FONTS.map((f) => {
+                          const active = studioState.font === f.id;
+                          return (
+                            <button
+                              key={f.id}
+                              type="button"
+                              onClick={() =>
+                                setStudioState((prev) => ({ ...prev, font: f.id }))
+                              }
+                              className={`h-12 px-3 rounded-xl border flex flex-col justify-center items-center transition-all cursor-pointer ${
+                                active
+                                  ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                                  : "bg-[#F6F7FC] text-[#15095D] border-[#DCE0E7] hover:border-[#625FBC]"
+                              }`}
+                            >
+                              <span className="text-xs font-bold">{f.label}</span>
+                              <span
+                                className={`text-[10px] ${
+                                  active ? "text-[#BBC2DD]" : "text-[#4E567A]"
+                                }`}
+                              >
+                                {f.fontName}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* MODE B: LOGO UPLOAD */
+                  <div className="space-y-4 bg-white p-5 rounded-2xl border border-[#DCE0E7]">
+                    <div>
+                      <span className="block text-xs font-bold text-[#15095D] mb-1.5">
+                        TẢI ẢNH LOGO LÊN ÁO (PNG NỀN TRONG SUỐT, SVG, JPG)
+                      </span>
+
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp"
+                        className="hidden"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) handleHomeLogoUpload(e.target.files[0]);
+                        }}
+                      />
+
+                      {studioState.logoUrl ? (
+                        <div className="flex items-center justify-between p-3.5 rounded-xl border border-[#32259B] bg-[#EFF2F9]">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={studioState.logoUrl}
+                              alt="Logo preview"
+                              className="w-12 h-12 object-contain rounded-lg bg-white border border-[#BBC2DD] p-1 shadow-xs"
+                            />
+                            <div>
+                              <p className="text-xs font-bold text-[#15095D] line-clamp-1">
+                                {studioState.logoName || "Logo đã tải lên"}
+                              </p>
+                              <p className="text-[10px] text-[#1D7A5F] font-semibold">
+                                ✓ Đang hiển thị trực tiếp trên ngực áo
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => fileInputRef.current?.click()}
+                              className="text-xs font-semibold text-[#32259B] hover:underline cursor-pointer"
+                            >
+                              Đổi logo
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setStudioState((prev) => ({
+                                  ...prev,
+                                  logoUrl: "",
+                                  logoName: "",
+                                }))
+                              }
+                              className="w-7 h-7 rounded-full bg-white text-[#8D8DC7] hover:text-[#A52735] grid place-items-center border border-[#DCE0E7] cursor-pointer"
+                              title="Xóa logo"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => fileInputRef.current?.click()}
+                          className="border-2 border-dashed border-[#BBC2DD] hover:border-[#32259B] bg-[#F6F7FC] rounded-2xl p-6 text-center cursor-pointer transition-colors"
+                        >
+                          <Upload className="w-7 h-7 text-[#32259B] mx-auto mb-2" />
+                          <p className="text-xs font-bold text-[#15095D]">
+                            Bấm vào đây để tải file logo từ máy
+                          </p>
+                          <p className="text-[10px] text-[#4E567A] mt-1">
+                            Hỗ trợ PNG trong suốt, JPG, SVG tối đa 5MB
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {!studioState.logoUrl && (
+                      <div className="flex items-center gap-2 pt-1 text-xs text-[#4E567A]">
+                        <span>Dùng logo mẫu:</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setStudioState((prev) => ({
+                              ...prev,
+                              logoUrl: "/assets/logo.png",
+                              logoName: "Logo Seal UNLO",
+                            }))
+                          }
+                          className="px-3 py-1 rounded-full bg-[#EFF2F9] border border-[#BBC2DD] text-xs font-bold text-[#32259B] hover:bg-[#15095D] hover:text-white transition-colors cursor-pointer"
+                        >
+                          + Thử Logo Seal UNLO
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Common Thread Colors */}
+                <div className="space-y-2 bg-white p-5 rounded-2xl border border-[#DCE0E7]">
+                  <span className="block text-xs font-bold text-[#15095D]">
+                    MÀU CHỈ THÊU
+                  </span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {HOME_STUDIO_THREADS.map((t) => {
+                      const active = studioState.threadColor === t.hex;
+                      return (
+                        <button
+                          key={t.name}
+                          type="button"
+                          onClick={() =>
+                            setStudioState((prev) => ({ ...prev, threadColor: t.hex }))
+                          }
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
+                            active
+                              ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                              : "bg-[#F6F7FC] text-[#15095D] border-[#DCE0E7] hover:border-[#BBC2DD]"
+                          }`}
+                        >
+                          <span
+                            className="w-3.5 h-3.5 rounded-full border border-black/10 shrink-0"
+                            style={{ backgroundColor: t.hex }}
+                          />
+                          <span>{t.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Common Placements */}
+                <div className="space-y-2 bg-white p-5 rounded-2xl border border-[#DCE0E7]">
+                  <span className="block text-xs font-bold text-[#15095D]">
+                    VỊ TRÍ THÊU
+                  </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {HOME_STUDIO_PLACEMENTS.map((p) => {
+                      const active = studioState.placement === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() =>
+                            setStudioState((prev) => ({ ...prev, placement: p.id }))
+                          }
+                          className={`h-11 px-2 rounded-xl text-xs font-bold border flex flex-col justify-center items-center transition-all cursor-pointer ${
+                            active
+                              ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                              : "bg-[#F6F7FC] text-[#15095D] border-[#DCE0E7] hover:border-[#625FBC]"
+                          }`}
+                        >
+                          <span>{p.label}</span>
+                          <span
+                            className={`text-[9px] font-normal line-clamp-1 ${
+                              active ? "text-[#BBC2DD]" : "text-[#4E567A]"
+                            }`}
+                          >
+                            {p.sublabel}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Pricing & Call to Action */}
+                <div className="rounded-2xl bg-[#FCFDF1] border border-[#BBC2DD] p-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-[#4E567A]">
+                        Áo Thun Supima Cotton 260 GSM + Thêu Riêng
+                      </p>
+                      <div className="flex items-baseline gap-2 mt-0.5">
+                        <span className="text-2xl font-bold text-[#15095D] tabular-nums">
+                          {formatVnd(245000 + (studioState.customType === "logo" ? 45000 : 35000))}
+                        </span>
+                        <span className="text-xs text-[#8D8DC7] line-through tabular-nums">
+                          690.000đ
+                        </span>
+                        <span className="text-[10px] font-bold text-[#1D7A5F] bg-[#1D7A5F]/10 px-2 py-0.5 rounded-full">
+                          Tiết kiệm -59%
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-xs text-[#4E567A]">
+                      Xưởng Dệt Kim Số 04
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={handleOrderCustomShirt}
+                      className="h-12 px-6 rounded-full unlo-pill-primary text-xs font-bold uppercase tracking-[0.1em] inline-flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:scale-[1.01] active:scale-[0.99] transition-transform"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>
+                        CHỌN ÁO ĐỂ THÊU NGAY
+                      </span>
+                    </button>
+
+                    <Link
+                      href="/products/ao-thun-cotton-supima-260gsm-det-kim-nguyen-khoi-690000000000000000000101#studio"
+                      className="h-12 px-5 rounded-full border border-[#15095D] text-[#15095D] hover:bg-[#15095D] hover:text-white text-xs font-bold uppercase tracking-[0.08em] inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      <span>Xem Bảng Size Chi Tiết</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================
+            6. INTERACTIVE TRUST-TECH TRANSPARENT PRICING EXPLORER
             ================================================================ */}
         <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6 space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -365,7 +985,7 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            6. SHOP BY FACTORY PREVIEW STRIP (4 VERIFIED FACTORIES)
+            7. SHOP BY FACTORY PREVIEW STRIP (4 VERIFIED FACTORIES)
             ================================================================ */}
         <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -420,7 +1040,7 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            7. 4-COLUMN ZERO-RISK GUARANTEE STRIP
+            8. 4-COLUMN ZERO-RISK GUARANTEE STRIP
             ================================================================ */}
         <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 py-7 px-6 sm:px-8 rounded-2xl bg-[#FCFDF1] border border-[#DCE0E7]">
@@ -446,7 +1066,7 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            8. CLOSING EDITORIAL BANNER
+            9. CLOSING EDITORIAL BANNER
             ================================================================ */}
         <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-4">
           <div className="relative overflow-hidden rounded-3xl min-h-[270px] sm:min-h-[320px] bg-[#0B2056] flex items-center justify-end">

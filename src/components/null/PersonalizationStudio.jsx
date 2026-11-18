@@ -1,42 +1,103 @@
 "use client";
 
-import { useState } from "react";
-import { Sparkles, Package, Clock, Palette } from "lucide-react";
+import { useState, useRef } from "react";
+import {
+  Sparkles,
+  Package,
+  Clock,
+  Palette,
+  Upload,
+  X,
+  Check,
+  ZoomIn,
+  ZoomOut,
+  Shirt,
+  Image as ImageIcon,
+  Type,
+} from "lucide-react";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 
-// Keys strictly match cartLine.mjs allowed values while UI labels reflect UNLO custom print studio
-const PLACEMENTS = [
-  { id: "left_cuff", label: "Chính giữa mặt trước" },
-  { id: "hem", label: "Góc dưới tinh tế" },
-  { id: "inner_neck", label: "Mặt trong lời chúc" },
-  { id: "chest_pocket", label: "Mặt sau / Phong bì" },
+export const EMBROIDERY_PLACEMENTS = [
+  {
+    id: "chest_pocket",
+    label: "Ngực trái",
+    sublabel: "Vị trí kinh điển, tinh tế",
+    coords: { top: "30%", left: "63%" },
+  },
+  {
+    id: "left_cuff",
+    label: "Bo tay áo trái",
+    sublabel: "Chi tiết kín đáo khi cử động",
+    coords: { top: "33%", left: "76%" },
+  },
+  {
+    id: "hem",
+    label: "Góc tà áo",
+    sublabel: "Điểm nhấn tối giản vạt áo",
+    coords: { top: "80%", left: "62%" },
+  },
+  {
+    id: "inner_neck",
+    label: "Gáy cổ áo",
+    sublabel: "Nhãn thêu kín sau gáy",
+    coords: { top: "14%", left: "50%" },
+  },
 ];
 
-const FONTS = [
-  { id: "serif_minimal", label: "Libre Bodoni", previewClass: "font-serif font-bold tracking-tight" },
-  { id: "italic_atelier", label: "Bodoni Italic", previewClass: "font-serif italic font-semibold" },
-  { id: "sans_architect", label: "Climate Display", previewClass: "unlo-display-en tracking-wide" },
+export const EMBROIDERY_FONTS = [
+  {
+    id: "serif_minimal",
+    label: "Cổ điển",
+    sublabel: "Libre Bodoni",
+    previewClass: "font-serif font-bold tracking-widest",
+  },
+  {
+    id: "italic_atelier",
+    label: "Viết tay",
+    sublabel: "Bodoni Italic",
+    previewClass: "font-serif italic font-semibold tracking-wider",
+  },
+  {
+    id: "sans_architect",
+    label: "Hiện đại",
+    sublabel: "Climate Sans",
+    previewClass: "font-sans font-bold uppercase tracking-widest text-[0.88em]",
+  },
 ];
 
-const DEFAULT_INKS = [
-  { name: "Midnight Indigo", hex: "#15095D" },
-  { name: "Milky Ivory", hex: "#FCFDF1" },
-  { name: "Royal Iris", hex: "#443EB1" },
-  { name: "Periwinkle Mist", hex: "#9EA1D2" },
-  { name: "Planetary Blue", hex: "#334EAB" },
+export const DEFAULT_INKS = [
+  { name: "Chàm Midnight Indigo", hex: "#15095D" },
+  { name: "Trắng sữa Milky Ivory", hex: "#FCFDF1" },
+  { name: "Vàng đồng Amber Gold", hex: "#C59B27" },
+  { name: "Xanh khói Periwinkle", hex: "#8D8DC7" },
+  { name: "Đỏ rượu Burgundy", hex: "#8B1E2D" },
+  { name: "Đen tuyền Carbon", hex: "#1A1A1A" },
 ];
 
-const GIFT_BOXES = [
-  { id: "none", label: "Bao bì tiêu chuẩn UNLO (Kèm phong bì)", fee: 0 },
-  { id: "minimal_kraft", label: "Hộp quà Periwinkle & ruy băng lụa", fee: 29000 },
+export const GIFT_BOXES = [
+  { id: "none", label: "Túi vải/giấy sinh học xưởng (Tiêu chuẩn)", fee: 0 },
+  { id: "minimal_kraft", label: "Hộp quà Periwinkle & nơ lụa", fee: 29000 },
   { id: "atelier_linen", label: "Hộp cứng Midnight Foil cao cấp", fee: 59000 },
+];
+
+const SAMPLE_LOGOS = [
+  {
+    id: "sample_unlo",
+    label: "Seal Xưởng UNLO",
+    url: "/assets/logo.png",
+  },
 ];
 
 export function computePersonalizationFee(value, config = {}) {
   if (!value?.enabled) return 0;
   let total = 0;
-  if (value.monogramText?.trim()) total += config?.monogramFee ?? 35000;
-  if (value.innerLabelText?.trim()) total += config?.innerLabelFee ?? 25000;
+  const isLogo = value?.customType === "logo" && Boolean(value?.logoUrl);
+  if (isLogo) {
+    total += config?.logoFee ?? 45000;
+  } else if (value.monogramText?.trim()) {
+    total += config?.monogramFee ?? 35000;
+  }
+  if (value.innerLabelText?.trim()) total += config?.innerLabelFee ?? 20000;
   const box = GIFT_BOXES.find((b) => b.id === value.giftBoxType);
   if (box) total += box.fee;
   return total;
@@ -44,59 +105,110 @@ export function computePersonalizationFee(value, config = {}) {
 
 export default function PersonalizationStudio({
   config = {},
-  value,
+  value = {},
   onChange,
-  garmentColorHex = "#15095D",
+  garmentColorHex = "#FCFDF1",
 }) {
-  const [morphing, setMorphing] = useState(false);
+  const [zoomCloseUp, setZoomCloseUp] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
 
-  if (!config?.enabled) return null;
+  if (!config?.enabled && config?.enabled !== undefined) return null;
 
   const inks =
     Array.isArray(config.allowedThreadColors) && config.allowedThreadColors.length
       ? config.allowedThreadColors
       : DEFAULT_INKS;
   const maxChars = Math.min(config.maxMonogramChars || 18, 24);
-  const currentFont = FONTS.find((f) => f.id === value.font) || FONTS[0];
-  const currentPlacement = PLACEMENTS.find((p) => p.id === value.placement) || PLACEMENTS[0];
+  const currentFont =
+    EMBROIDERY_FONTS.find((f) => f.id === value.font) || EMBROIDERY_FONTS[0];
+  const currentPlacement =
+    EMBROIDERY_PLACEMENTS.find((p) => p.id === value.placement) ||
+    EMBROIDERY_PLACEMENTS[0];
   const currentFee = computePersonalizationFee(value, config);
 
-  const isLightSurface =
+  const isLightGarment =
     garmentColorHex?.toLowerCase() === "#fcfdf1" ||
     garmentColorHex?.toLowerCase() === "#eff2f9" ||
     garmentColorHex?.toLowerCase() === "#dce0e7" ||
     garmentColorHex?.toLowerCase() === "#bbc2dd" ||
-    garmentColorHex?.toLowerCase() === "#d4e4f7" ||
-    garmentColorHex?.toLowerCase() === "#c2d9f0";
+    garmentColorHex?.toLowerCase() === "#ffffff";
 
-  const previewInk =
-    value.threadColor || (isLightSurface ? "#15095D" : "#FCFDF1");
+  const previewThreadColor =
+    value.threadColor || (isLightGarment ? "#15095D" : "#FCFDF1");
 
-  const patch = (next, animatePreview = false) => {
-    if (animatePreview) {
-      setMorphing(true);
-      setTimeout(() => setMorphing(false), 140);
-    }
+  const isLogoMode = value.customType === "logo";
+  const displayText = (value.monogramText || config.defaultHeadline || "H.L")
+    .trim()
+    .slice(0, maxChars);
+
+  const patch = (next) => {
     onChange({ ...value, ...next });
+  };
+
+  const handleFileUpload = (file) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Dung lượng file tối đa là 5MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result;
+      patch({
+        enabled: true,
+        customType: "logo",
+        logoUrl: dataUrl,
+        logoName: file.name,
+        monogramText: "LOGO",
+        innerLabelText: `Logo: ${file.name.slice(0, 20)}`,
+        threadColor: previewThreadColor,
+        placement: value.placement || "chest_pocket",
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    if (e.dataTransfer?.files?.[0]) {
+      handleFileUpload(e.dataTransfer.files[0]);
+    }
+  };
+
+  const clearLogo = () => {
+    patch({
+      customType: "text",
+      logoUrl: "",
+      logoName: "",
+      monogramText: config.defaultHeadline || "H.L",
+      innerLabelText: "",
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
     <div
       id="studio"
-      className="rounded-3xl bg-[#EFF2F9] border border-[#DCE0E7] p-5 sm:p-6 space-y-4 scroll-mt-24"
+      className="rounded-3xl bg-[#EFF2F9] border border-[#DCE0E7] p-5 sm:p-6 space-y-5 scroll-mt-24 shadow-sm"
     >
-      <div className="flex items-start justify-between gap-4">
+      {/* Header Banner & Switch */}
+      <div className="flex items-start justify-between gap-4 pb-1">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Palette className="w-4 h-4 text-[#32259B]" aria-hidden="true" />
-            <h3 className="font-serif text-base font-semibold text-[#15095D]">
-              Tùy Biến Cá Nhân Hóa Không Logo (Subtle Customization)
+            <span className="w-6 h-6 rounded-full bg-[#15095D] text-white grid place-items-center shrink-0">
+              <Sparkles className="w-3.5 h-3.5 text-[#BBC2DD]" aria-hidden="true" />
+            </span>
+            <h3 className="font-serif text-base sm:text-lg font-semibold text-[#15095D]">
+              Xưởng Cá Nhân Hóa — Thêu Tên &amp; Logo Lên Áo
             </h3>
           </div>
-          <p className="text-xs text-[#4E567A]">
-            Thêu chữ viết tắt kín đáo, dập chìm trên đồ da hoặc chọn ghi chú độ dài ống ngay tại xưởng với chi phí tối thiểu.
+          <p className="text-xs text-[#4E567A] leading-relaxed max-w-xl">
+            Thêu chữ viết tắt (Monogram) hoặc tải logo công ty/nhóm thêu vi tính 14 mũi/inch trực tiếp tại xưởng dệt may, không qua trung gian.
           </p>
         </div>
+
         <button
           type="button"
           role="switch"
@@ -104,15 +216,19 @@ export default function PersonalizationStudio({
           onClick={() =>
             patch({
               enabled: !value.enabled,
-              placement: value.placement === "none" ? "left_cuff" : value.placement,
-              threadColor:
-                value.threadColor || (isLightSurface ? "#15095D" : "#FCFDF1"),
+              customType: value.customType || "text",
+              placement:
+                !value.placement || value.placement === "none"
+                  ? "chest_pocket"
+                  : value.placement,
+              threadColor: previewThreadColor,
+              monogramText: value.monogramText || config.defaultHeadline || "H.L",
             })
           }
           className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors cursor-pointer ${
             value.enabled ? "bg-[#32259B]" : "bg-[#BBC2DD]"
           }`}
-          aria-label="Bật tắt studio cá nhân hóa"
+          aria-label="Bật tắt xưởng cá nhân hóa"
         >
           <span
             className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-xs transition-transform ${
@@ -123,213 +239,437 @@ export default function PersonalizationStudio({
       </div>
 
       {value.enabled && (
-        <div className="pt-4 border-t border-[#DCE0E7] space-y-5 animate-fade-in">
-          {/* Live Card / Product Print Preview */}
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-center bg-white rounded-2xl p-4 border border-[#DCE0E7]">
-            <div
-              className="sm:col-span-2 aspect-[4/3] rounded-xl flex flex-col items-center justify-center p-4 text-center relative border border-[#DCE0E7] transition-[background-color] duration-200"
-              style={{ backgroundColor: garmentColorHex || "#15095D" }}
-            >
-              <span className="absolute top-2 left-2.5 text-[10px] px-2.5 py-0.5 rounded-full bg-white/92 text-[#15095D] font-semibold shadow-xs">
-                {currentPlacement.label}
-              </span>
-              <span
-                className={`text-lg sm:text-xl leading-tight select-none null-morph-text break-words max-w-full ${currentFont.previewClass}`}
-                style={{
-                  color: previewInk,
-                  filter: morphing ? "blur(1.5px)" : "blur(0px)",
-                  opacity: morphing ? 0.65 : 1,
-                }}
-              >
-                {value.monogramText?.trim() || config.defaultHeadline || "UNLO STUDIO"}
-              </span>
-              {(value.innerLabelText?.trim() || config.defaultSubline) && (
-                <span
-                  className="mt-2 font-serif italic text-[11px] leading-snug opacity-90"
-                  style={{ color: previewInk }}
+        <div className="pt-4 border-t border-[#DCE0E7] space-y-6 animate-fade-in">
+          {/* Main 2-Column: Live Shirt Preview on Left, Controls on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* ============================================================
+                LEFT: Interactive T-Shirt Preview Canvas
+                ============================================================ */}
+            <div className="lg:col-span-5 space-y-2">
+              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-[#BBC2DD] bg-[#F6F7FC] shadow-inner select-none">
+                {/* T-Shirt Base Photo */}
+                <div
+                  className="w-full h-full relative transition-transform duration-500 ease-out"
+                  style={
+                    zoomCloseUp
+                      ? {
+                          transform: "scale(2.2)",
+                          transformOrigin: `${currentPlacement.coords.left} ${currentPlacement.coords.top}`,
+                        }
+                      : { transform: "scale(1)" }
+                  }
                 >
-                  {value.innerLabelText?.trim() || config.defaultSubline}
-                </span>
-              )}
-            </div>
+                  <img
+                    src="/assets/tshirt-model.jpg"
+                    alt="Xem trước hình thêu trên áo thun cơ bản"
+                    className="w-full h-full object-cover object-top"
+                  />
 
-            <div className="sm:col-span-3 space-y-2 text-sm">
-              <p className="font-semibold text-[#15095D] inline-flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-[#443EB1]" aria-hidden="true" />
-                Xem trước bản in cá nhân hóa
-              </p>
-              <p className="text-xs text-[#4E567A] leading-relaxed">
-                Đội ngũ thiết kế UNLO sẽ cân chỉnh bố cục chuẩn in ấn trước khi xuất xưởng. Cam kết in lại 100% miễn phí nếu sai nội dung duyệt.
-              </p>
-              <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-[#4E567A]">
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-[#443EB1]" aria-hidden="true" />
-                  Thời gian in: +{config.extraLeadDays ?? 2} ngày
-                </span>
-                <span className="font-mono font-semibold text-[#32259B] tabular-nums">
-                  Phụ phí tùy chỉnh: +{formatVnd(currentFee)}
-                </span>
-              </div>
-            </div>
-          </div>
+                  {/* Garment Color Tint (if not default ivory) */}
+                  {!isLightGarment && (
+                    <div
+                      className="absolute inset-0 mix-blend-multiply opacity-75 pointer-events-none"
+                      style={{ backgroundColor: garmentColorHex }}
+                    />
+                  )}
 
-          {/* Headline + Font Picker */}
-          {config.allowMonogram !== false && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="pdp-monogram-text"
-                  className="block text-xs font-semibold text-[#15095D] mb-1.5"
-                >
-                  Tiêu đề / Chữ in chính (+{formatVnd(config.monogramFee ?? 35000)})
-                </label>
-                <input
-                  id="pdp-monogram-text"
-                  type="text"
-                  maxLength={maxChars}
-                  value={value.monogramText || ""}
-                  onChange={(e) => patch({ monogramText: e.target.value.slice(0, maxChars) })}
-                  placeholder={config.defaultHeadline || "VD: MERRY CHRISTMAS"}
-                  className="w-full h-11 px-4 rounded-xl border border-[#BBC2DD] bg-white text-sm text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B]"
-                />
-              </div>
+                  {/* Embroidery / Logo Target Overlay */}
+                  <div
+                    className="absolute transition-all duration-300 pointer-events-none"
+                    style={{
+                      top: currentPlacement.coords.top,
+                      left: currentPlacement.coords.left,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  >
+                    {isLogoMode && value.logoUrl ? (
+                      <div className="relative flex flex-col items-center">
+                        <img
+                          src={value.logoUrl}
+                          alt="Logo thêu"
+                          className="max-h-12 max-w-16 object-contain filter drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]"
+                        />
+                        <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/90 text-white shadow-xs">
+                          {currentPlacement.label}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="relative flex flex-col items-center text-center">
+                        <span
+                          className={`leading-none select-none ${currentFont.previewClass}`}
+                          style={{
+                            color: previewThreadColor,
+                            fontSize: "clamp(15px, 2.4vw, 22px)",
+                            textShadow: isLightGarment
+                              ? "0 0.8px 0.8px rgba(0,0,0,0.5), 0 1.2px 2px rgba(21,9,93,0.3)"
+                              : "0 0.8px 0.8px rgba(255,255,255,0.4), 0 1.2px 2px rgba(0,0,0,0.6)",
+                            letterSpacing: "0.12em",
+                          }}
+                        >
+                          {displayText || "H.L"}
+                        </span>
+                        <span className="mt-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-[#15095D]/85 text-white shadow-xs">
+                          {currentPlacement.label}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-              <div>
-                <span className="block text-xs font-semibold text-[#15095D] mb-1.5">
-                  Kiểu chữ hiển thị
-                </span>
-                <div className="grid grid-cols-3 gap-2">
-                  {FONTS.map((f) => {
-                    const active = value.font === f.id;
-                    return (
-                      <button
-                        key={f.id}
-                        type="button"
-                        onClick={() => patch({ font: f.id }, true)}
-                        className={`h-11 px-2 rounded-xl text-[11px] font-semibold border transition-colors cursor-pointer ${
-                          active
-                            ? "bg-[#15095D] text-[#FCFDF1] border-[#15095D]"
-                            : "bg-white text-[#15095D] border-[#DCE0E7] hover:border-[#625FBC]"
-                        }`}
-                      >
-                        {f.label}
-                      </button>
-                    );
-                  })}
+                {/* Viewport Zoom Controls & Badge Overlay */}
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-auto">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7]">
+                    <Shirt className="w-3 h-3 text-[#32259B]" />
+                    {currentPlacement.label}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => setZoomCloseUp(!zoomCloseUp)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 hover:bg-white text-[#15095D] text-[10px] font-bold shadow-xs border border-[#DCE0E7] cursor-pointer transition-colors"
+                  >
+                    {zoomCloseUp ? (
+                      <>
+                        <ZoomOut className="w-3 h-3" /> Toàn cảnh
+                      </>
+                    ) : (
+                      <>
+                        <ZoomIn className="w-3 h-3" /> Cận cảnh thêu
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="absolute bottom-3 inset-x-3 text-center">
+                  <p className="inline-block px-3 py-1 rounded-full bg-[#15095D]/85 text-[#FCFDF1] text-[10px] backdrop-blur-xs">
+                    Mô phỏng đường thêu vi tính thực tế trên áo Supima Cotton
+                  </p>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Ink / Foil Color + Placement */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <span className="block text-xs font-semibold text-[#15095D] mb-2">
-                Màu mực in / Ép kim Foil
-              </span>
-              <div className="flex flex-wrap items-center gap-2.5">
-                {inks.map((ink) => {
-                  const active = (value.threadColor || previewInk) === ink.hex;
-                  return (
-                    <button
-                      key={ink.name}
-                      type="button"
-                      title={ink.name}
-                      aria-label={`Màu mực ${ink.name}`}
-                      data-active={active ? "true" : "false"}
-                      onClick={() => patch({ threadColor: ink.hex }, true)}
-                      className="null-swatch w-7 h-7 border border-[#15095D]/25 cursor-pointer"
-                      style={{ backgroundColor: ink.hex }}
-                    />
-                  );
-                })}
+              <div className="flex items-center justify-between text-[11px] text-[#4E567A] px-1">
+                <span>Thời gian thêu: +{config.extraLeadDays ?? 1}–2 ngày</span>
+                <span className="font-semibold text-[#32259B]">
+                  Phụ phí: +{formatVnd(currentFee)}
+                </span>
               </div>
             </div>
 
-            <div>
-              <label
-                htmlFor="pdp-placement"
-                className="block text-xs font-semibold text-[#15095D] mb-1.5"
-              >
-                Vị trí in ấn
-              </label>
-              <select
-                id="pdp-placement"
-                value={value.placement || "left_cuff"}
-                onChange={(e) => patch({ placement: e.target.value })}
-                className="w-full h-11 px-3.5 rounded-xl border border-[#BBC2DD] bg-white text-xs font-semibold text-[#15095D] outline-none focus:border-[#32259B]"
-              >
-                {PLACEMENTS.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+            {/* ============================================================
+                RIGHT: Tab Switcher (Monogram / Logo) & Configurations
+                ============================================================ */}
+            <div className="lg:col-span-7 space-y-4">
+              {/* Mode Switcher Tabs */}
+              <div className="grid grid-cols-2 p-1 bg-white rounded-2xl border border-[#BBC2DD]">
+                <button
+                  type="button"
+                  onClick={() => patch({ customType: "text" })}
+                  className={`h-10 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    !isLogoMode
+                      ? "bg-[#15095D] text-white shadow-xs"
+                      : "text-[#4E567A] hover:text-[#15095D]"
+                  }`}
+                >
+                  <Type className="w-4 h-4" />
+                  <span>1. Thêu Tên / Monogram</span>
+                </button>
 
-          {/* Subline / Recipient Name + Gift Packaging */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="pdp-inner-label"
-                className="block text-xs font-semibold text-[#15095D] mb-1.5"
-              >
-                Tên người nhận / Ngày sự kiện (+{formatVnd(config.innerLabelFee ?? 25000)})
-              </label>
-              <input
-                id="pdp-inner-label"
-                type="text"
-                maxLength={30}
-                value={value.innerLabelText || ""}
-                onChange={(e) => patch({ innerLabelText: e.target.value.slice(0, 30) })}
-                placeholder={config.defaultSubline || "VD: Minh & Lan · 2026"}
-                className="w-full h-11 px-4 rounded-xl border border-[#BBC2DD] bg-white text-sm text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B]"
-              />
-            </div>
+                <button
+                  type="button"
+                  onClick={() => patch({ customType: "logo" })}
+                  className={`h-10 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    isLogoMode
+                      ? "bg-[#15095D] text-white shadow-xs"
+                      : "text-[#4E567A] hover:text-[#15095D]"
+                  }`}
+                >
+                  <ImageIcon className="w-4 h-4" />
+                  <span>2. Thêu / Tải Logo</span>
+                </button>
+              </div>
 
-            <div>
-              <label
-                htmlFor="pdp-gift-box"
-                className="block text-xs font-semibold text-[#15095D] mb-1.5"
-              >
-                <span className="inline-flex items-center gap-1">
-                  <Package className="w-3.5 h-3.5 text-[#443EB1]" aria-hidden="true" />
-                  Đóng gói quà tặng
-                </span>
-              </label>
-              <select
-                id="pdp-gift-box"
-                value={value.giftBoxType || "none"}
-                onChange={(e) => patch({ giftBoxType: e.target.value })}
-                className="w-full h-11 px-3.5 rounded-xl border border-[#BBC2DD] bg-white text-xs font-semibold text-[#15095D] outline-none focus:border-[#32259B]"
-              >
-                {GIFT_BOXES.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.label} {b.fee > 0 ? `(+${formatVnd(b.fee)})` : "(Miễn phí)"}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+              {/* MODE A: TEXT MONOGRAM */}
+              {!isLogoMode ? (
+                <div className="space-y-4 bg-white p-4 rounded-2xl border border-[#DCE0E7]">
+                  <div>
+                    <label
+                      htmlFor="pdp-monogram-text"
+                      className="block text-xs font-bold text-[#15095D] mb-1.5"
+                    >
+                      Nội dung thêu (Tên / Chữ cái viết tắt)
+                    </label>
+                    <input
+                      id="pdp-monogram-text"
+                      type="text"
+                      maxLength={maxChars}
+                      value={value.monogramText || ""}
+                      onChange={(e) =>
+                        patch({ monogramText: e.target.value.slice(0, maxChars) })
+                      }
+                      placeholder={config.defaultHeadline || "VD: H.L hoặc MINH"}
+                      className="w-full h-11 px-4 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-sm font-semibold text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] focus:bg-white"
+                    />
+                    <p className="text-[10px] text-[#4E567A] mt-1">
+                      Tối đa {maxChars} ký tự. Gợi ý: Chữ cái đầu họ tên (VD: H.L, N.Q, NAM)
+                    </p>
+                  </div>
 
-          {/* Personal Note */}
-          <div>
-            <label
-              htmlFor="pdp-gift-note"
-              className="block text-xs font-semibold text-[#15095D] mb-1.5"
-            >
-              Ghi chú thiết kế / Lời chúc đính kèm (miễn phí)
-            </label>
-            <textarea
-              id="pdp-gift-note"
-              rows={2}
-              maxLength={200}
-              value={value.giftNote || ""}
-              onChange={(e) => patch({ giftNote: e.target.value.slice(0, 200) })}
-              placeholder="Ghi chú thêm về bố cục, hình ảnh muốn gửi hoặc lời chúc viết tay kèm hộp quà..."
-              className="w-full px-4 py-2.5 rounded-xl border border-[#BBC2DD] bg-white text-sm text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] resize-none"
-            />
+                  <div>
+                    <span className="block text-xs font-bold text-[#15095D] mb-1.5">
+                      Kiểu font chữ thêu
+                    </span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {EMBROIDERY_FONTS.map((f) => {
+                        const active = (value.font || "serif_minimal") === f.id;
+                        return (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => patch({ font: f.id })}
+                            className={`h-12 px-2 rounded-xl text-left border flex flex-col justify-center transition-all cursor-pointer ${
+                              active
+                                ? "bg-[#15095D] text-white border-[#15095D] shadow-xs"
+                                : "bg-[#F6F7FC] text-[#15095D] border-[#DCE0E7] hover:border-[#625FBC]"
+                            }`}
+                          >
+                            <span className="text-xs font-bold">{f.label}</span>
+                            <span
+                              className={`text-[10px] opacity-80 line-clamp-1 ${
+                                active ? "text-[#BBC2DD]" : "text-[#4E567A]"
+                              }`}
+                            >
+                              {f.sublabel}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* MODE B: LOGO UPLOAD */
+                <div className="space-y-3 bg-white p-4 rounded-2xl border border-[#DCE0E7]">
+                  <div>
+                    <span className="block text-xs font-bold text-[#15095D] mb-1.5">
+                      Tải file Logo để thêu (PNG trong suốt, JPG, SVG)
+                    </span>
+
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/png, image/jpeg, image/jpg, image/svg+xml, image/webp"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) handleFileUpload(e.target.files[0]);
+                      }}
+                    />
+
+                    {value.logoUrl ? (
+                      <div className="flex items-center justify-between p-3 rounded-xl border border-[#32259B] bg-[#EFF2F9]/70">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={value.logoUrl}
+                            alt="Logo preview"
+                            className="w-10 h-10 object-contain rounded-lg bg-white border border-[#BBC2DD] p-1"
+                          />
+                          <div>
+                            <p className="text-xs font-bold text-[#15095D] line-clamp-1">
+                              {value.logoName || "Logo đã tải lên"}
+                            </p>
+                            <p className="text-[10px] text-[#1D7A5F] font-semibold">
+                              ✓ Đã ghép lên áo phông xem trước
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="text-xs font-semibold text-[#32259B] hover:underline"
+                          >
+                            Đổi logo
+                          </button>
+                          <button
+                            type="button"
+                            onClick={clearLogo}
+                            className="w-7 h-7 rounded-full bg-white text-[#8D8DC7] hover:text-[#A52735] grid place-items-center border border-[#DCE0E7]"
+                            title="Xóa logo"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          setDragActive(true);
+                        }}
+                        onDragLeave={() => setDragActive(false)}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-colors ${
+                          dragActive
+                            ? "border-[#32259B] bg-[#EFF2F9]"
+                            : "border-[#BBC2DD] hover:border-[#32259B] bg-[#F6F7FC]"
+                        }`}
+                      >
+                        <Upload className="w-6 h-6 text-[#32259B] mx-auto mb-1.5" />
+                        <p className="text-xs font-bold text-[#15095D]">
+                          Kéo thả hoặc click để chọn ảnh Logo
+                        </p>
+                        <p className="text-[10px] text-[#4E567A] mt-0.5">
+                          Khuyên dùng ảnh PNG nền trong suốt để thêu sắc nét nhất (Max 5MB)
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Sample Quick Logos */}
+                  {!value.logoUrl && (
+                    <div className="pt-1 flex items-center gap-2">
+                      <span className="text-[10px] text-[#4E567A]">Dùng thử:</span>
+                      {SAMPLE_LOGOS.map((s) => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() =>
+                            patch({
+                              customType: "logo",
+                              logoUrl: s.url,
+                              logoName: s.label,
+                              monogramText: "LOGO",
+                            })
+                          }
+                          className="px-2.5 py-1 rounded-full bg-[#EFF2F9] border border-[#BBC2DD] text-[10px] font-bold text-[#32259B] hover:bg-[#15095D] hover:text-white transition-colors"
+                        >
+                          + {s.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Thread Color & Placement (Common Controls) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-4 rounded-2xl border border-[#DCE0E7]">
+                {/* Thread Colors */}
+                <div>
+                  <span className="block text-xs font-bold text-[#15095D] mb-2">
+                    Màu chỉ thêu
+                  </span>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {inks.map((ink) => {
+                      const active = (value.threadColor || previewThreadColor) === ink.hex;
+                      return (
+                        <button
+                          key={ink.name}
+                          type="button"
+                          title={ink.name}
+                          aria-label={`Màu chỉ ${ink.name}`}
+                          onClick={() => patch({ threadColor: ink.hex })}
+                          className={`w-7 h-7 rounded-full border transition-transform cursor-pointer ${
+                            active
+                              ? "ring-2 ring-[#15095D] ring-offset-2 scale-110 border-[#15095D]"
+                              : "border-[#15095D]/20 hover:scale-105"
+                          }`}
+                          style={{ backgroundColor: ink.hex }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Placements */}
+                <div>
+                  <label
+                    htmlFor="pdp-placement"
+                    className="block text-xs font-bold text-[#15095D] mb-1.5"
+                  >
+                    Vị trí thêu trên áo
+                  </label>
+                  <select
+                    id="pdp-placement"
+                    value={value.placement || "chest_pocket"}
+                    onChange={(e) => patch({ placement: e.target.value })}
+                    className="w-full h-10 px-3 rounded-xl border border-[#BBC2DD] bg-[#F6F7FC] text-xs font-bold text-[#15095D] outline-none focus:border-[#32259B]"
+                  >
+                    {EMBROIDERY_PLACEMENTS.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label} — {p.sublabel}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Inner Collar Label & Gift Box Packaging */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label
+                    htmlFor="pdp-inner-label"
+                    className="block text-xs font-bold text-[#15095D] mb-1"
+                  >
+                    Thêu nhãn trong / Gáy áo (+20.000đ)
+                  </label>
+                  <input
+                    id="pdp-inner-label"
+                    type="text"
+                    maxLength={30}
+                    value={value.innerLabelText || ""}
+                    onChange={(e) =>
+                      patch({ innerLabelText: e.target.value.slice(0, 30) })
+                    }
+                    placeholder="VD: Minh & Lan · 2026"
+                    className="w-full h-10 px-3 rounded-xl border border-[#BBC2DD] bg-white text-xs text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B]"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="pdp-gift-box"
+                    className="block text-xs font-bold text-[#15095D] mb-1"
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      <Package className="w-3.5 h-3.5 text-[#443EB1]" />
+                      Đóng gói hộp quà
+                    </span>
+                  </label>
+                  <select
+                    id="pdp-gift-box"
+                    value={value.giftBoxType || "none"}
+                    onChange={(e) => patch({ giftBoxType: e.target.value })}
+                    className="w-full h-10 px-3 rounded-xl border border-[#BBC2DD] bg-white text-xs font-semibold text-[#15095D] outline-none focus:border-[#32259B]"
+                  >
+                    {GIFT_BOXES.map((b) => (
+                      <option key={b.id} value={b.id}>
+                        {b.label} {b.fee > 0 ? `(+${formatVnd(b.fee)})` : "(Miễn phí)"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Note */}
+              <div>
+                <label
+                  htmlFor="pdp-gift-note"
+                  className="block text-xs font-bold text-[#15095D] mb-1"
+                >
+                  Ghi chú cho thợ thêu tại xưởng (miễn phí)
+                </label>
+                <textarea
+                  id="pdp-gift-note"
+                  rows={2}
+                  maxLength={200}
+                  value={value.giftNote || ""}
+                  onChange={(e) => patch({ giftNote: e.target.value.slice(0, 200) })}
+                  placeholder="Ghi chú thêm về kích thước hình thêu, canh lề ngực áo hoặc lời chúc..."
+                  className="w-full px-3 py-2 rounded-xl border border-[#BBC2DD] bg-white text-xs text-[#15095D] placeholder:text-[#8D8DC7] outline-none focus:border-[#32259B] resize-none"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}

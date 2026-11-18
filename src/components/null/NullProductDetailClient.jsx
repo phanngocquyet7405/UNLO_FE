@@ -77,10 +77,13 @@ export default function NullProductDetailClient({ initialProduct }) {
 
   const [customization, setCustomization] = useState({
     enabled: false,
-    monogramText: product?.personalizationConfig?.defaultHeadline || "",
+    customType: "text",
+    monogramText: product?.personalizationConfig?.defaultHeadline || "H.L",
+    logoUrl: "",
+    logoName: "",
     font: "serif_minimal",
     threadColor: "",
-    placement: "left_cuff",
+    placement: "chest_pocket",
     innerLabelText: "",
     giftBoxType: "none",
     giftNote: "",
@@ -173,10 +176,20 @@ export default function NullProductDetailClient({ initialProduct }) {
       ? {
           customization: {
             ...customization,
-            monogramText: String(customization.monogramText || "").slice(0, 5),
+            monogramText: String(
+              customization.customType === "logo"
+                ? (customization.monogramText || "LOGO")
+                : (customization.monogramText || "")
+            ).trim().slice(0, 5),
             innerLabelText: String(
-              customization.monogramText?.trim() || customization.innerLabelText || "",
+              customization.innerLabelText ||
+              (customization.logoName ? `Logo: ${customization.logoName}` : "")
             ).slice(0, 30),
+            giftNote: String(
+              customization.logoName
+                ? `[Thêu Logo: ${customization.logoName}] ${customization.giftNote || ""}`
+                : (customization.giftNote || "")
+            ).slice(0, 250),
           },
         }
       : {}),

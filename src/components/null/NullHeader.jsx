@@ -27,6 +27,7 @@ import { UnloLogo, UnloAppIcon } from "./UnloLogo";
 
 const NAV_LINKS = [
   { href: "/products", label: "Sản Phẩm" },
+  { href: "/#studio-theu-ten", label: "Cá Nhân Hóa", badge: "Thêu Tên", sparkle: true },
   { href: "/factories", label: "Hồ Sơ Nhà Máy", highlight: true },
   { href: "/bundles", label: "Tự Tạo Combo" },
   { href: "/group-buy", label: "Gom Đơn MOQ" },
@@ -180,13 +181,21 @@ export default function NullHeader() {
                   className={`relative text-[13px] font-medium whitespace-nowrap py-1.5 transition-colors ${
                     item.highlight
                       ? "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EFF2F9] text-[#32259B] hover:bg-[#32259B] hover:text-white font-semibold"
-                      : active
-                        ? "text-[#32259B] font-bold"
-                        : "text-[#15095D]/80 hover:text-[#32259B]"
+                      : item.sparkle
+                        ? "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#EFF2F9] text-[#15095D] hover:bg-[#32259B] hover:text-white font-semibold"
+                        : active
+                          ? "text-[#32259B] font-bold"
+                          : "text-[#15095D]/80 hover:text-[#32259B]"
                   }`}
                 >
                   {item.highlight && <Factory className="w-3.5 h-3.5" aria-hidden="true" />}
+                  {item.sparkle && <Sparkles className="w-3.5 h-3.5 text-[#32259B]" aria-hidden="true" />}
                   {item.label}
+                  {item.badge && (
+                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-[#15095D] text-white">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}

@@ -69,7 +69,7 @@ export default function CartItem({ product, lineTotal }) {
           {monogram && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#EFF2F9] text-[11px] font-semibold text-[#32259B]">
               <Sparkles className="w-3 h-3" aria-hidden="true" />
-              In: {monogram}
+              {product.customization?.customType === "logo" ? "Thêu Logo" : `Thêu: ${monogram}`}
             </span>
           )}
           {giftBox && (
