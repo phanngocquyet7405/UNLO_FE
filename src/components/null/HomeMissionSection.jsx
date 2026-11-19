@@ -55,7 +55,7 @@ export default function HomeMissionSection() {
 
             <div className="pt-2">
               <Link
-                href="/pages/about"
+                href="/pages/about-us"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#15095D] text-white text-xs sm:text-sm font-bold tracking-wide hover:bg-[#32259B] transition-colors shadow-sm"
               >
                 <span>Đọc câu chuyện người thợ</span>
@@ -64,14 +64,14 @@ export default function HomeMissionSection() {
             </div>
           </div>
 
-          <div className="relative rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-[0_20px_50px_rgba(21,9,93,0.08)] bg-[#EFF2F9] group">
+          <div className="relative rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-[0_12px_36px_rgba(21,9,93,0.06)] bg-[#EFF2F9] group">
             <img
-              src="/assets/img/about-image1.png"
+              src="/assets/img/quince-craft-1.jpg"
               alt="Người thợ may tỉ mỉ khâu từng đường kim mũi chỉ tại xưởng đối tác UNLO"
               loading="lazy"
               className="w-full h-80 sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#15095D]/70 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#15095D]/60 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#EB6D48]">
                 XƯỞNG DỆT KIM HƯNG YÊN
@@ -83,16 +83,19 @@ export default function HomeMissionSection() {
           </div>
         </div>
 
+        {/* Quince-style subtle separator line */}
+        <div className="w-full border-t border-[#DCE0E7]/80 my-2" />
+
         {/* Sứ mệnh 02 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-          <div className="relative rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-[0_20px_50px_rgba(21,9,93,0.08)] bg-[#EFF2F9] order-last lg:order-first group">
+          <div className="relative rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-[0_12px_36px_rgba(21,9,93,0.06)] bg-[#EFF2F9] order-last lg:order-first group">
             <img
-              src="/assets/img/x-tho-may.jpg"
-              alt="Quy trình nghiệm thu 12 bước AQL 2.5 tại chuyền may"
+              src="/assets/img/quince-craft-2.jpg"
+              alt="Đôi tay người thợ may tỉ mỉ khâu từng thớ vải"
               loading="lazy"
               className="w-full h-80 sm:h-[420px] object-cover group-hover:scale-105 transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#15095D]/70 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#15095D]/60 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#32259B] bg-white/90 px-2 py-0.5 rounded-full inline-block">
                 TIÊU CHUẨN AQL 2.5
@@ -134,7 +137,7 @@ export default function HomeMissionSection() {
 
             <div className="pt-2">
               <Link
-                href="/pages/about#price-chart"
+                href="/pages/about-us#price-chart"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#15095D] text-[#15095D] text-xs sm:text-sm font-bold tracking-wide hover:bg-[#15095D] hover:text-white transition-colors"
               >
                 <span>Xem biểu đồ so sánh giá</span>

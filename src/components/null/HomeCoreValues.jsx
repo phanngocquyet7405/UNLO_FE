@@ -47,7 +47,7 @@ export default function HomeCoreValues() {
         </div>
 
         <Link
-          href="/pages/about#values"
+          href="/pages/about-us#values"
           className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#32259B] hover:text-[#15095D] transition-colors shrink-0 group"
         >
           <span>Tìm hiểu triết lý hoàn chỉnh</span>

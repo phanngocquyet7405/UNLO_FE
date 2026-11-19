@@ -28,7 +28,7 @@ async function testSitemapIsr() {
     const body = await res.text();
     console.log('Body length:', body.length);
     console.log('Contains <urlset:', body.includes('<urlset'));
-    console.log('Contains static routes:', body.includes('/pages/about'));
+    console.log('Contains static routes:', body.includes('/pages/about-us'));
     console.log('Contains dynamic routes:', body.includes('/products/'));
 
     const result = {
@@ -36,7 +36,7 @@ async function testSitemapIsr() {
       contentType: res.headers.get('content-type'),
       bodyLength: body.length,
       hasUrlset: body.includes('<urlset'),
-      hasStaticRoutes: body.includes('/pages/about'),
+      hasStaticRoutes: body.includes('/pages/about-us'),
       hasDynamicRoutes: body.includes('/products/'),
       backendLive: false,
       behavior: res.status === 200 ? 'STALE_CACHE_SERVED_200' : 'ERROR_RETURNED',

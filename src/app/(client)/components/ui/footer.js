@@ -6,7 +6,7 @@ import Link from "next/link";
 // Các mục chưa có page → giữ href="#" để dễ cập nhật sau
 
 const INFORMATION_LINKS = [
-  { label: "About Us", href: "/pages/about" },
+  { label: "About Us", href: "/pages/about-us" },
   { label: "Today's Offers", href: "/pages/offers-discounts-coupons" },
   { label: "Refer a Friend", href: "#" },
   { label: "Corporate Gifts", href: "#" },

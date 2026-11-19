@@ -32,8 +32,8 @@ export default function BrandManifestoSection() {
 
           {/* Big Idea Headline */}
           <div className="space-y-2">
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#15095D] tracking-tight leading-tight">
-              Giá Trị Không Cần Gọi Tên
+            <h2 className="font-unlo-title font-bold text-3xl sm:text-5xl lg:text-6xl text-[#15095D] tracking-tight leading-[1.1]">
+              Giá Trị <span className="text-[#EB6D48]">Không Cần Gọi Tên</span>
             </h2>
           </div>
 
@@ -93,7 +93,7 @@ export default function BrandManifestoSection() {
           {/* CTAs */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <Link
-              href="/pages/about"
+              href="/pages/about-us"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#15095D] text-white text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#1F0C85] transition-colors"
             >
               <span>Về câu chuyện UNLO (About Us)</span>
@@ -101,7 +101,7 @@ export default function BrandManifestoSection() {
             </Link>
 
             <Link
-              href="/pages/about#price-chart"
+              href="/pages/about-us#price-chart"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#15095D] text-[#15095D] bg-white text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#15095D] hover:text-white transition-colors"
             >
               <span>Xem biểu đồ so sánh giá mục tiêu</span>

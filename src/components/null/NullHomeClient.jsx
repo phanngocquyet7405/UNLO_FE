@@ -2,55 +2,16 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowRight, Layers, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Layers, Sparkles } from "lucide-react";
 import NullHeader from "./NullHeader";
 import NullFooter from "./NullFooter";
 import NullProductCard from "./NullProductCard";
-import HomeIndustryPriceDonutChart from "./HomeIndustryPriceDonutChart";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
 import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
-import LiveStatCounterBanner from "./LiveStatCounterBanner";
-import AudienceGateways from "./AudienceGateways";
-import BrandManifestoSection from "./BrandManifestoSection";
-import HomeCoreValues from "./HomeCoreValues";
-import HomeMissionSection from "./HomeMissionSection";
-import MagazineEditorialPosters from "./MagazineEditorialPosters";
-import BlackFridayCountdown from "./BlackFridayCountdown";
 import SupportChatbotDrawer from "./SupportChatbotDrawer";
 import TrustBar from "./TrustBar";
 import HomeEmbroideryStudio from "./HomeEmbroideryStudio";
-import PosterConfidence from "./PosterConfidence";
-
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=85";
-
-const EDITORIAL_PROMOS = [
-  {
-    enTag: "ATELIER EMBROIDERY",
-    title: "Thêu Tên & Logo Riêng",
-    subtitle: "Cá nhân hóa kín đáo chữ viết tắt hoặc logo công ty trực tiếp tại xưởng không qua trung gian.",
-    href: "#studio-theu-ten",
-    image:
-      "/assets/tshirt-model.jpg",
-  },
-  {
-    enTag: "FACTORY PASSPORT",
-    title: "Hộ Chiếu Nhà Máy",
-    subtitle: "Khám phá 4 xưởng Tier-1 OEM xuất Nhật, Đức, Bắc Âu cùng chứng chỉ LWG & OEKO-TEX.",
-    href: "/factories",
-    image:
-      "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=900&q=85",
-  },
-  {
-    enTag: "BUILD YOUR BUNDLE",
-    title: "Tự Tạo Combo -20%",
-    subtitle: "Tự phối 3–5 món thiết yếu cùng xưởng để nhận chiết khấu bậc thang & Freeship.",
-    href: "/bundles",
-    image:
-      "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=900&q=85",
-  },
-];
 
 const BESTSELLER_TABS = [
   { id: "all", label: "Tất Cả" },
@@ -65,7 +26,7 @@ const BESTSELLER_TABS = [
 
 export default function NullHomeClient() {
   const [activeTab, setActiveTab] = useState("all");
-  const [activeSeason, setActiveSeason] = useState(null);
+  const [, setActiveSeason] = useState(null);
 
   const displayedProducts = useMemo(() => {
     const filtered =
@@ -81,50 +42,43 @@ export default function NullHomeClient() {
 
       <main className="flex-1">
         {/* ================================================================
-            1. SEASONAL HERO VIDEO CAROUSEL (5 SLIDES: XUÂN, HẠ, THU, ĐÔNG, TRIẾT LÝ)
+            1. HERO CAROUSEL THEO MÙA (4 MÙA THỜI TRANG: XUÂN, HẠ, THU, ĐÔNG)
             ================================================================ */}
         <SeasonalHeroVideoCarousel onSeasonChange={setActiveSeason} />
 
         {/* ================================================================
-            1.1. LIVE STAT COUNTER BANNER (1.280+ PRE-ORDERS, 864 QC ORDERS)
-            ================================================================ */}
-        <LiveStatCounterBanner season={activeSeason} />
-
-        {/* ================================================================
-            1.2. AUDIENCE GATEWAYS ("BẠN LÀ AI? CHỌN ĐÚNG Ô, UNLO DẪN ĐƯỜNG")
-            ================================================================ */}
-        <AudienceGateways />
-
-        {/* ================================================================
-            1.3. BRAND MANIFESTO & GIỚI THIỆU CHUNG ("GIÁ TRỊ KHÔNG CẦN GỌI TÊN")
-            ================================================================ */}
-        <BrandManifestoSection />
-
-        {/* ================================================================
-            1.4. GIÁ TRỊ CỐT LÕI (CORE VALUES) — TỪ TRANG ABOUT SANG TRANG CHỦ
-            ================================================================ */}
-        <HomeCoreValues />
-
-        {/* ================================================================
-            1.5. SỨ MỆNH (MISSION) — TỪ TRANG ABOUT SANG TRANG CHỦ
-            ================================================================ */}
-        <HomeMissionSection />
-
-        {/* ================================================================
-            2. CIRCULAR CATEGORY ROW — Including "Thêu Tên" & "Combo"
+            2. SHOP BY CATEGORY — DANH MỤC NHANH (NGAY DƯỚI HERO)
             ================================================================ */}
         <section
           aria-label="Danh mục ngành hàng xưởng"
-          className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-12 pb-6"
+          className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-14 pb-6"
         >
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-5 items-start">
-            {UNLO_CATEGORIES.map((cat) => (
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <p className="unlo-display-en text-[11px] tracking-[0.16em] text-[#625FBC] uppercase font-bold">
+                FACTORY ESSENTIALS
+              </p>
+              <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#15095D]">
+                Danh Mục Đồ Cơ Bản Từ Xưởng
+              </h2>
+            </div>
+            <Link
+              href="/products"
+              className="text-xs font-bold text-[#32259B] hover:underline inline-flex items-center gap-1"
+            >
+              <span>Xem tất cả</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-4 sm:gap-5 items-start">
+            {UNLO_CATEGORIES.slice(0, 8).map((cat) => (
               <Link
                 key={cat.id}
                 href={cat.href}
                 className="group flex flex-col items-center text-center gap-2.5"
               >
-                <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 rounded-full overflow-hidden bg-[#EFF2F9] border-2 border-[#DCE0E7] group-hover:border-[#443EB1] transition-colors p-1">
+                <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-26 md:h-26 rounded-full overflow-hidden bg-[#EFF2F9] border-2 border-[#DCE0E7] group-hover:border-[#443EB1] transition-all p-1 group-hover:scale-105 shadow-xs">
                   <div className="w-full h-full rounded-full overflow-hidden">
                     <img
                       src={cat.image}
@@ -134,100 +88,21 @@ export default function NullHomeClient() {
                     />
                   </div>
                 </div>
-                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.09em] text-[#15095D] group-hover:text-[#32259B] transition-colors">
+                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.08em] text-[#15095D] group-hover:text-[#32259B] transition-colors line-clamp-1">
                   {cat.shortLabel}
                 </span>
               </Link>
             ))}
-
-            {/* 6th Signature Circle: THÊU TÊN (CÁ NHÂN HÓA) */}
-            <a
-              href="#studio-theu-ten"
-              className="group flex flex-col items-center text-center gap-2.5"
-            >
-              <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 rounded-full overflow-hidden bg-gradient-to-br from-[#EFF2F9] via-[#BBC2DD] to-[#8D8DC7] border-2 border-[#8D8DC7] group-hover:border-[#15095D] transition-colors p-1 grid place-items-center shadow-xs">
-                <div className="w-full h-full rounded-full bg-white flex flex-col items-center justify-center p-2 group-hover:scale-105 transition-transform">
-                  <span className="font-serif italic text-lg sm:text-xl font-bold text-[#15095D] leading-tight">
-                    Thêu tên
-                  </span>
-                  <span className="text-[9px] font-mono text-[#32259B] uppercase font-bold tracking-tight">
-                    Cá nhân hóa
-                  </span>
-                </div>
-              </div>
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.09em] text-[#32259B]">
-                Thêu Tên &amp; Logo
-              </span>
-            </a>
-
-            {/* 7th Signature Lilac Combo/Sale Circle */}
-            <Link
-              href="/bundles"
-              className="group flex flex-col items-center text-center gap-2.5"
-            >
-              <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-[#DCE0F4] via-[#BBC2DD] to-[#9EA1D2] border-2 border-[#BBC2DD] group-hover:border-[#32259B] transition-colors grid place-items-center shadow-xs">
-                <span className="font-serif italic text-xl sm:text-2xl font-semibold text-[#15095D] group-hover:scale-105 transition-transform">
-                  Combo
-                </span>
-              </div>
-              <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.09em] text-[#32259B]">
-                Giảm Đến -20%
-              </span>
-            </Link>
           </div>
         </section>
 
         {/* ================================================================
-            3. 3-COLUMN M2C PILLAR PROMO CARDS
-            ================================================================ */}
-        <section
-          aria-label="Trụ cột mô hình M2C"
-          className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-            {EDITORIAL_PROMOS.map((card) => (
-              <Link
-                key={card.title}
-                href={card.href}
-                className="group relative overflow-hidden rounded-2xl min-h-[235px] sm:min-h-[260px] bg-[#EFF2F9] border border-[#DCE0E7] flex items-end"
-              >
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover null-card-img"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-r from-[#EFF2F9]/96 via-[#EFF2F9]/80 to-[#15095D]/15"
-                />
-                <div className="relative z-10 p-6 sm:p-7 max-w-[80%] space-y-2.5">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#443EB1]">
-                    {card.enTag}
-                  </p>
-                  <h2 className="font-serif text-2xl sm:text-[26px] font-medium leading-tight text-[#15095D]">
-                    {card.title}
-                  </h2>
-                  <p className="text-xs sm:text-[13px] text-[#4E567A] leading-relaxed">
-                    {card.subtitle}
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 mt-1 px-4 py-1.5 rounded-full bg-white/95 border border-[#BBC2DD] text-[11px] font-bold uppercase tracking-[0.08em] text-[#15095D] group-hover:bg-[#15095D] group-hover:text-white group-hover:border-[#15095D] transition-colors">
-                    Khám phá
-                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ================================================================
-            4. BEST SELLERS 5-COLUMN PRODUCT GRID
+            3. BEST SELLERS PRODUCT GRID (KHỐI CHUYỂN ĐỔI CHỦ LỰC)
             ================================================================ */}
         <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-14 space-y-7">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="space-y-1">
-              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC]">
+              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC] uppercase font-bold">
                 FACTORY DIRECT BEST SELLERS
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#15095D]">
@@ -262,10 +137,10 @@ export default function NullHomeClient() {
             ))}
           </div>
 
-          <div className="text-center pt-2">
+          <div className="text-center pt-4">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 h-11 px-7 rounded-full unlo-pill-outline text-xs font-bold uppercase tracking-[0.12em]"
+              className="inline-flex items-center gap-2 h-11 px-8 rounded-full unlo-pill-outline text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#15095D] hover:text-white transition-colors"
             >
               <span>Xem Toàn Bộ {UNLO_PRODUCTS.length} Sản Phẩm M2C</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -274,39 +149,56 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            4.1. MAGAZINE EDITORIAL POSTERS (THE DREAM, Daily EDIT, MONOGRAM U)
+            4. THE M2C DIFFERENCE — TUYÊN NGÔN GIÁ TRỊ TINH GIẢN (1 KHỐI SANG TRỌNG)
             ================================================================ */}
-        <MagazineEditorialPosters />
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
+          <div className="relative overflow-hidden rounded-3xl bg-[#FCFDF1] border border-[#DCE0E7] p-8 sm:p-12 lg:p-16 shadow-[0_4px_30px_rgba(21,9,93,0.03)]">
+            <div className="relative z-10 max-w-3xl space-y-5">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#BBC2DD] text-[#32259B] text-[11px] font-bold uppercase tracking-[0.16em]">
+                <Sparkles className="w-3.5 h-3.5 text-[#EB6D48]" />
+                <span>TRIẾT LÝ M2C · KHÔNG LOGO MARKUP</span>
+              </div>
+
+              <h2 className="font-unlo-title font-bold text-3xl sm:text-4xl lg:text-5xl text-[#15095D] leading-[1.15]">
+                Giá Trị <span className="text-[#EB6D48]">Không Cần Gọi Tên</span>
+              </h2>
+
+              <p className="text-sm sm:text-base text-[#4E567A] leading-relaxed sm:leading-8">
+                UNLO kết nối trực tiếp các xưởng dệt may đạt chuẩn OEKO-TEX Standard 100 tới tay bạn. Chúng tôi gỡ bỏ logo hào nhoáng và chi phí trung gian đắt đỏ để tập trung vào chất lượng sợi dài, form dáng chuẩn và mức giá xuất xưởng thực chất.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <Link
+                  href="/pages/about-us"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#15095D] text-white text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#1F0C85] transition-colors shadow-sm"
+                >
+                  <span>Khám phá câu chuyện UNLO</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+
+                <Link
+                  href="/factories"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#15095D] text-[#15095D] text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#15095D] hover:text-white transition-colors"
+                >
+                  <span>Hồ sơ 4 xưởng đối tác</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ================================================================
-            5. DEDICATED SECTION: "THÊU TÊN CỦA BẠN LÊN ĐỒ CƠ BẢN" (ATELIER)
+            5. DEDICATED ATELIER: "THÊU TÊN CỦA BẠN LÊN ĐỒ CƠ BẢN"
             ================================================================ */}
         <HomeEmbroideryStudio />
 
         {/* ================================================================
-            5.1. MAGAZINE EDITORIAL POSTER: built in CONFIDENCE
+            6. SHOP BY FACTORY STRIP (4 VERIFIED FACTORIES)
             ================================================================ */}
-        <PosterConfidence />
-
-        {/* ================================================================
-            5.1. BLACK FRIDAY FLASH SALE & COUNTDOWN TIMER (-50% DEALS)
-            ================================================================ */}
-        <BlackFridayCountdown />
-
-        {/* ================================================================
-            6. M2C BENCHMARK PRICING: BIỂU ĐỒ TRÒN & BẢNG ĐỐI CHIẾU 7 NGÀNH HÀNG
-            ================================================================ */}
-        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6">
-          <HomeIndustryPriceDonutChart />
-        </section>
-
-        {/* ================================================================
-            7. SHOP BY FACTORY PREVIEW STRIP (4 VERIFIED FACTORIES)
-            ================================================================ */}
-        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-6">
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-14 space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="space-y-1">
-              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC]">
+              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC] uppercase font-bold">
                 VERIFIED FACTORIES
               </p>
               <h2 className="font-serif text-3xl font-medium text-[#15095D]">
@@ -317,7 +209,8 @@ export default function NullHomeClient() {
               href="/factories"
               className="text-xs font-bold text-[#32259B] hover:underline inline-flex items-center gap-1"
             >
-              Xem tất cả Hồ Sơ Nhà Máy <ArrowRight className="w-3.5 h-3.5" />
+              <span>Xem tất cả Hồ Sơ Nhà Máy</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -326,7 +219,7 @@ export default function NullHomeClient() {
               <Link
                 key={fac._id}
                 href={`/factories/${fac.slug}`}
-                className="group rounded-2xl border border-[#DCE0E7] bg-white p-5 space-y-3 hover:border-[#443EB1] transition-colors"
+                className="group rounded-2xl border border-[#DCE0E7] bg-white p-5 space-y-3 hover:border-[#443EB1] transition-all hover:shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-[#32259B] bg-[#EFF2F9] px-2.5 py-1 rounded-full">
@@ -356,9 +249,9 @@ export default function NullHomeClient() {
         </section>
 
         {/* ================================================================
-            9. CLOSING EDITORIAL BANNER
+            7. CLOSING EDITORIAL BANNER (TỰ PHỐI COMBO)
             ================================================================ */}
-        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-4">
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6">
           <div className="relative overflow-hidden rounded-3xl min-h-[270px] sm:min-h-[320px] bg-[#0B2056] flex items-center justify-end">
             <img
               src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1600&q=85"
@@ -371,7 +264,7 @@ export default function NullHomeClient() {
               className="absolute inset-0 bg-gradient-to-r from-[#0B2056]/40 via-[#15095D]/75 to-[#15095D]/95"
             />
             <div className="relative z-10 max-w-xl px-6 py-10 sm:px-12 lg:px-16 text-left sm:text-right space-y-4">
-              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#BBC2DD]">
+              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#BBC2DD] uppercase font-bold">
                 NO LOGO MARKUP
               </p>
               <h2 className="font-serif text-3xl sm:text-4xl font-medium text-[#FCFDF1] leading-tight">
@@ -392,10 +285,11 @@ export default function NullHomeClient() {
             </div>
           </div>
         </section>
+
         {/* ================================================================
-            10. TRUST BAR (.trust) — 4 Trụ Cột Thẩm Định & Minh Bạch
+            8. TRUST BAR — 4 TRỤ CỘT THẨM ĐỊNH & MINH BẠCH
             ================================================================ */}
-        <div className="pt-10">
+        <div className="pt-6 pb-2">
           <TrustBar />
         </div>
       </main>

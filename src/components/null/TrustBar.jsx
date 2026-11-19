@@ -1,111 +1,109 @@
 "use client";
 
+import {
+  ShieldCheck,
+  RotateCcw,
+  Receipt,
+  Lock,
+  ArrowRight,
+} from "lucide-react";
+
 /**
- * TrustBar (.trust) — 4 Trụ Cột Niềm Tin M2C Chuẩn từ prototype index.html
- * 1. Xưởng thật, đã thẩm định
- * 2. Thanh toán giữ tạm
- * 3. Đổi trả 7 ngày
- * 4. Minh bạch thông số
+ * TrustBar — 4 Trụ Cột Cam Kết Vàng M2C Chuẩn UNLO
+ * 1. QC Tiêu chuẩn xuất khẩu
+ * 2. Minh bạch giá thực tại xưởng
+ * 3. Đổi trả 30 ngày miễn phí
+ * 4. Thanh toán an toàn giữ tạm
  */
+export const TRUST_PILLARS = [
+  {
+    icon: ShieldCheck,
+    tag: "TIÊU CHUẨN XUẤT KHẨU",
+    title: "QC Chuẩn Quốc Tế",
+    desc: "Xưởng Tier-1 đạt chuẩn OEKO-TEX Standard 100, kiểm định 12 bước AQL 2.5 trước khi xuất kho.",
+    accent: "#32259B",
+  },
+  {
+    icon: Receipt,
+    tag: "GIÁ THỰC TẠI XƯỞNG",
+    title: "Minh Bạch Chi Phí",
+    desc: "Không đội giá thương hiệu. Bóc tách 4 tầng chi phí xuất xưởng từ nguyên liệu tới công may.",
+    accent: "#EB6D48",
+  },
+  {
+    icon: RotateCcw,
+    tag: "AN TÂM TUYỆT ĐỐI",
+    title: "Đổi Trả Miễn Phí 30 Ngày",
+    desc: "Tự đổi trả tận nơi miễn phí nếu không hài lòng chất lượng, form dáng hay kích cỡ.",
+    accent: "#1D7A5F",
+  },
+  {
+    icon: Lock,
+    tag: "BẢO VỆ NGƯỜI TIÊU DÙNG",
+    title: "Thanh Toán Giữ Tạm",
+    desc: "Xưởng chỉ nhận tiền khi bạn đã nhận hàng và ưng ý. Cam kết bảo hành đường may trọn đời.",
+    accent: "#15095D",
+  },
+];
+
 export default function TrustBar() {
   return (
-    <section className="w-full bg-[#EAEBF2] border-y border-[#DDE0EC]">
-      <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-7">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-0 sm:divide-x divide-[#BBC2DD]">
-          {/* 1. Xưởng thật */}
-          <div className="flex items-center gap-3.5 px-2 sm:px-6">
-            <svg
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-8 h-8 sm:w-9 sm:h-9 text-[#15095D] shrink-0"
-              aria-hidden="true"
-            >
-              <path d="M5 34V18l9 5v-5l9 5v-5l9 5v11z" />
-              <path d="M28 13V6h4v9" />
-              <path d="M11 29h4m6 0h4" />
-            </svg>
-            <div className="min-w-0">
-              <b className="font-serif text-[15px] sm:text-base font-medium text-[#15095D] block leading-snug">
-                Xưởng thật, đã thẩm định
-              </b>
-              <span className="text-xs text-[#5E607E] block mt-0.5">
-                Kiểm tra pháp lý và năng lực tại xưởng
-              </span>
-            </div>
-          </div>
+    <section
+      aria-label="Cam kết chất lượng & Niềm tin M2C UNLO"
+      className="w-full bg-[#FCFDF1] border-y border-[#DCE0E7] py-12 sm:py-16"
+    >
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 space-y-8">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#625FBC]">
+            UNLO GUARANTEE · 4 CAM KẾT VÀNG
+          </span>
+          <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-[#15095D]">
+            Mua Sắm An Tâm Trực Tiếp Từ Xưởng
+          </h2>
+          <p className="text-xs sm:text-sm text-[#4E567A]">
+            Bảo vệ quyền lợi tối đa cho người tiêu dùng với quy trình minh bạch từ xưởng tới tay bạn.
+          </p>
+        </div>
 
-          {/* 2. Thanh toán giữ tạm */}
-          <div className="flex items-center gap-3.5 px-2 sm:px-6">
-            <svg
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-8 h-8 sm:w-9 sm:h-9 text-[#15095D] shrink-0"
-              aria-hidden="true"
-            >
-              <rect x="9" y="17" width="22" height="16" rx="2" />
-              <path d="M14 17v-4a6 6 0 0 1 12 0v4" />
-              <circle cx="20" cy="25" r="2" />
-            </svg>
-            <div className="min-w-0">
-              <b className="font-serif text-[15px] sm:text-base font-medium text-[#15095D] block leading-snug">
-                Thanh toán giữ tạm
-              </b>
-              <span className="text-xs text-[#5E607E] block mt-0.5">
-                Xưởng nhận tiền khi bạn nhận hàng
-              </span>
-            </div>
-          </div>
+        {/* 4 Trust Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+          {TRUST_PILLARS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.title}
+                className="group relative rounded-2xl bg-white border border-[#DCE0E7] p-6 space-y-3.5 hover:border-[#32259B] transition-all hover:shadow-[0_12px_32px_rgba(21,9,93,0.06)] hover:-translate-y-0.5"
+              >
+                <div className="flex items-center justify-between">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs"
+                    style={{ backgroundColor: `${item.accent}12` }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: item.accent }} />
+                  </div>
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-[0.16em] px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: `${item.accent}10`,
+                      color: item.accent,
+                    }}
+                  >
+                    {item.tag}
+                  </span>
+                </div>
 
-          {/* 3. Đổi trả 7 ngày */}
-          <div className="flex items-center gap-3.5 px-2 sm:px-6">
-            <svg
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-8 h-8 sm:w-9 sm:h-9 text-[#15095D] shrink-0"
-              aria-hidden="true"
-            >
-              <path d="M20 5l13 7v16l-13 7-13-7V12z" />
-              <path d="M7 12l13 7 13-7M20 19v16" />
-            </svg>
-            <div className="min-w-0">
-              <b className="font-serif text-[15px] sm:text-base font-medium text-[#15095D] block leading-snug">
-                Đổi trả 7 ngày
-              </b>
-              <span className="text-xs text-[#5E607E] block mt-0.5">
-                Đối chiếu ảnh QC, hoàn tiền nhanh
-              </span>
-            </div>
-          </div>
-
-          {/* 4. Minh bạch thông số */}
-          <div className="flex items-center gap-3.5 px-2 sm:px-6">
-            <svg
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-8 h-8 sm:w-9 sm:h-9 text-[#15095D] shrink-0"
-              aria-hidden="true"
-            >
-              <path d="M6 20V7h13l15 15-13 13z" />
-              <circle cx="13" cy="13" r="2" />
-              <path d="M17 23h8M17 27h5" />
-            </svg>
-            <div className="min-w-0">
-              <b className="font-serif text-[15px] sm:text-base font-medium text-[#15095D] block leading-snug">
-                Minh bạch thông số
-              </b>
-              <span className="text-xs text-[#5E607E] block mt-0.5">
-                Sợi, gsm, size đo thật ở xưởng
-              </span>
-            </div>
-          </div>
+                <div className="space-y-1">
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-[#15095D] leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-[#4E567A] leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

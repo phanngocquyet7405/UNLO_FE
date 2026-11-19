@@ -29,9 +29,9 @@ export default function AboutPage() {
           <div className="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-[#EB6D48]/10 blur-3xl pointer-events-none" />
 
           <div className="relative max-w-5xl mx-auto px-5 sm:px-8 text-center space-y-6 sm:space-y-8">
-            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] text-white">
-              Giá Trị Không Cần <br />
-              <span className="italic font-normal text-[#E2E6FF]">Gọi Tên</span>
+            <h1 className="font-unlo-title font-bold text-4xl sm:text-6xl lg:text-7xl leading-[1.08] text-white">
+              Giá Trị <br className="sm:hidden" />
+              <span className="text-[#EB6D48]">Không Cần Gọi Tên</span>
             </h1>
 
             <div className="max-w-3xl mx-auto pt-4 border-t border-white/20">
@@ -167,8 +167,8 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          <div className="space-y-12">
-            {/* Block 1: KIẾN TẠO GIÁ TRỊ TỪ SỰ TỬ TẾ */}
+          <div className="space-y-12 lg:space-y-16">
+            {/* Block 1: KIẾN TẠO GIÁ TRỊ TỪ SỰ TỬ TẾ (Text Trái - Ảnh Quince 1 Phải) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
               <div className="space-y-4">
                 <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#EB6D48]">
@@ -187,21 +187,24 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-lg bg-[#EFF2F9]">
+              <div className="rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-sm bg-[#EFF2F9]">
                 <img
-                  src="/assets/img/about-image1.png"
+                  src="/assets/img/quince-sustainability.jpg"
                   alt="Người thợ may cẩn thận may từng đường kim mũi chỉ tại xưởng đối tác"
                   className="w-full h-72 sm:h-96 object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
             </div>
 
-            {/* Block 2: MINH BẠCH TRONG TỪNG GIÁ TRỊ */}
+            {/* Quince-style subtle separator line */}
+            <div className="w-full border-t border-[#DCE0E7]/80" />
+
+            {/* Block 2: MINH BẠCH TRONG TỪNG GIÁ TRỊ (Ảnh Quince 2 Trái - Text Phải - So Le Chuẩn Quince) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-              <div className="rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-lg bg-[#EFF2F9] order-last lg:order-first">
+              <div className="rounded-3xl overflow-hidden border border-[#DCE0E7] shadow-sm bg-[#EFF2F9] order-last lg:order-first">
                 <img
-                  src="/assets/img/x-tho-may.jpg"
-                  alt="Kiểm tra chi tiết từng đường may mũi chỉ theo tiêu chuẩn AQL 2.5"
+                  src="/assets/img/quince-transparency.jpg"
+                  alt="Đôi tay người thợ may tỉ mỉ khâu từng thớ vải"
                   className="w-full h-72 sm:h-96 object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>

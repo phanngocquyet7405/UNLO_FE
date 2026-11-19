@@ -78,22 +78,6 @@ export const SEASONS = [
     b2bLink: "/b2b",
     picks: ["p-hoodie", "p-sweat", "p-sweat-hong", "p-kaki"],
   },
-  {
-    key: "about",
-    name: "Triết lý",
-    icon: Sparkles,
-    accent: "#EB6D48",
-    badge: "BIG IDEA · VỀ UNLO",
-    headlinePart1: "Giá trị",
-    headlinePart2: "không cần gọi tên",
-    lead: "Với UNLO, giá trị không nằm ở cái tên mà hiện diện trong từng thớ vải, từng đường kim mũi chỉ và trong mỗi lựa chọn xứng đáng mỗi ngày.",
-    video: "/assets/video/hero-dong.mp4",
-    poster: "/assets/img/about-image1.png",
-    ctaLink: "/pages/about",
-    ctaText: "Khám phá câu chuyện",
-    b2bLink: "/b2b",
-    picks: ["p-tee-250", "p-oxford", "p-kaki", "p-hoodie"],
-  },
 ];
 
 export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
@@ -166,34 +150,6 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Top Floating Season Tabs Pill */}
-      <div className="absolute z-30 top-5 sm:top-7 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-full bg-[#15095D]/65 backdrop-blur-md border border-white/20 shadow-lg">
-        {SEASONS.map((s, idx) => {
-          const Icon = s.icon;
-          const active = idx === currentIdx;
-          return (
-            <button
-              key={s.key}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => handleSelectSeason(idx)}
-              className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                active
-                  ? "bg-white text-[#15095D] shadow-sm scale-105"
-                  : "text-white/80 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <Icon
-                className="w-3.5 h-3.5"
-                style={{ color: active ? "#15095D" : s.accent }}
-              />
-              <span>{s.name}</span>
-            </button>
-          );
-        })}
-      </div>
-
       {/* Slide Track */}
       <div
         className="flex transition-transform duration-700 ease-[cubic-bezier(0.77,0,0.18,1)] will-change-transform"
@@ -204,7 +160,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
           return (
             <div
               key={s.key}
-              className="relative shrink-0 w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[760px] flex items-end"
+              className="relative shrink-0 w-full min-h-[600px] sm:min-h-[660px] lg:min-h-[780px] flex items-end"
               aria-hidden={!isActive}
             >
               {/* Video with fallback poster image */}
@@ -224,14 +180,42 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    "linear-gradient(90deg, rgba(21, 9, 93, 0.88) 0%, rgba(21, 9, 93, 0.58) 42%, rgba(21, 9, 93, 0.15) 75%), linear-gradient(0deg, rgba(21, 9, 93, 0.92) 0%, rgba(21, 9, 93, 0) 42%)",
+                    "linear-gradient(90deg, rgba(21, 9, 93, 0.90) 0%, rgba(21, 9, 93, 0.62) 46%, rgba(21, 9, 93, 0.18) 78%), linear-gradient(0deg, rgba(21, 9, 93, 0.94) 0%, rgba(21, 9, 93, 0) 48%)",
                 }}
               />
 
-              {/* Content Panel */}
-              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-28 space-y-5">
+              {/* Content Panel (Editorial Minimalist Layout) */}
+              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-20 space-y-4 sm:space-y-5">
+                {/* 4-Season Editorial Switcher (Clean, does not block model's face) */}
+                <div className="inline-flex items-center gap-1 p-1 rounded-full bg-[#15095D]/60 backdrop-blur-md border border-white/20 shadow-md">
+                  {SEASONS.map((seasonItem, seasonIdx) => {
+                    const Icon = seasonItem.icon;
+                    const active = seasonIdx === currentIdx;
+                    return (
+                      <button
+                        key={seasonItem.key}
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => handleSelectSeason(seasonIdx)}
+                        className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                          active
+                            ? "bg-white text-[#15095D] shadow-sm scale-105"
+                            : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
+                      >
+                        <Icon
+                          className="w-3.5 h-3.5"
+                          style={{ color: active ? "#15095D" : seasonItem.accent }}
+                        />
+                        <span>{seasonItem.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
                 {/* Season Tag */}
-                <div className="inline-flex items-center gap-2.5 text-xs font-bold tracking-[0.22em] uppercase text-white/95">
+                <div className="flex items-center gap-2.5 text-xs font-bold tracking-[0.22em] uppercase text-white/95 pt-1">
                   <span
                     className="inline-block w-7 h-0.5"
                     style={{ backgroundColor: s.accent }}
@@ -250,7 +234,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
                   {s.lead}
                 </p>
 
-                {/* CTAs */}
+                {/* CTAs (Refined Visual Hierarchy) */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
                   <Link
                     href={s.ctaLink || "#cua-hang"}
@@ -262,7 +246,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
 
                   <Link
                     href="/b2b"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/60 bg-white/10 hover:bg-white hover:text-[#15095D] text-white text-xs sm:text-sm font-bold tracking-wide backdrop-blur-md transition-all active:scale-95"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/40 bg-white/5 hover:bg-white/20 text-white/90 hover:text-white text-xs font-semibold tracking-wide backdrop-blur-sm transition-all active:scale-95"
                   >
                     <span>Đặt số lượng cho CLB</span>
                   </Link>
@@ -273,8 +257,24 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
         })}
       </div>
 
-      {/* Navigation Controls & Season Counter (Bottom Right) */}
-      <div className="absolute z-20 bottom-8 sm:bottom-12 right-5 sm:right-8 lg:right-12 flex items-center gap-2">
+      {/* 4-Season Progress Timeline (Bottom Edge) */}
+      <div className="absolute z-20 bottom-0 left-0 right-0 h-1 bg-white/15 grid grid-cols-4">
+        {SEASONS.map((s, idx) => (
+          <button
+            key={s.key}
+            type="button"
+            onClick={() => handleSelectSeason(idx)}
+            aria-label={`Chuyển sang mùa ${s.name}`}
+            className="h-full w-full transition-all duration-500 cursor-pointer"
+            style={{
+              backgroundColor: idx === currentIdx ? s.accent : "transparent",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Navigation Controls & Season Counter (Lifted to bottom-24 on mobile to prevent overlapping Chatbot) */}
+      <div className="absolute z-20 bottom-24 sm:bottom-12 right-5 sm:right-8 lg:right-12 flex items-center gap-2">
         <span className="font-serif text-sm sm:text-base font-bold text-white/90 mr-2 tracking-widest tabular-nums select-none">
           0{currentIdx + 1} / 0{SEASONS.length}
         </span>

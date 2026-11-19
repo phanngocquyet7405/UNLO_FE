@@ -166,18 +166,18 @@ export const NAV_GROUPS = [
     children: [
       {
         label: "Câu chuyện thương hiệu (About Us)",
-        href: "/pages/about",
+        href: "/pages/about-us",
         desc: "Triết lý 'Giá trị không cần gọi tên' & Hành trình M2C",
         badge: "Story",
       },
       {
         label: "Giá trị cốt lõi & Sứ mệnh",
-        href: "/pages/about#values",
+        href: "/pages/about-us#values",
         desc: "Chất lượng, Minh bạch & Kiến tạo giá trị từ sự tử tế",
       },
       {
         label: "Minh bạch giá thành (Price Chart)",
-        href: "/pages/about#price-chart",
+        href: "/pages/about-us#price-chart",
         desc: "Biểu đồ so sánh giá mục tiêu UNLO vs Hàng trôi nổi & Bán lẻ",
       },
       {

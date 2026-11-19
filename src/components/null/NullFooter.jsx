@@ -19,12 +19,12 @@ const PRODUCTS_LINKS = [
 ];
 
 const UNLO_LINKS = [
-  { label: "Về UNLO (About Us)", href: "/pages/about" },
-  { label: "Mô hình M2C từ xưởng", href: "/pages/about#m2c-model" },
+  { label: "Về UNLO (About Us)", href: "/pages/about-us" },
+  { label: "Mô hình M2C từ xưởng", href: "/pages/about-us#m2c-model" },
   { label: "Giá trị cốt lõi (Our Values)", href: "/#brand-manifesto" },
   { label: "Hồ sơ 4 nhà máy (Our Factories)", href: "/factories" },
   { label: "Minh bạch chi phí 4 tầng", href: "/products" },
-  { label: "Bền vững & Xanh (Sustainability)", href: "/pages/about#sustainability" },
+  { label: "Bền vững & Xanh (Sustainability)", href: "/pages/about-us#sustainability" },
   { label: "Tiêu chuẩn kiểm định QC 12 bước", href: "/factories" },
   { label: "Kiến thức vải sợi (Fabrics 101)", href: "/products" },
 ];
@@ -63,7 +63,7 @@ export default function NullFooter() {
       <div className="max-w-[1760px] mx-auto px-5 sm:px-8 lg:px-12 pt-14 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-[#2B303C]/70">
           {/* Column 1: Newsletter Signup (Quince Style - No QR Code) */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-4 space-y-4">
             <h3 className="text-sm font-semibold text-white tracking-wide">
               Offers, new arrivals, restocks and more.
             </h3>
@@ -91,7 +91,8 @@ export default function NullFooter() {
             </form>
           </div>
 
-          {/* Column 2: PRODUCTS */}
+          {/* Column 2: PRODUCTS (Đã ẩn theo yêu cầu) */}
+          {/* 
           <div className="lg:col-span-2 space-y-3.5">
             <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-white">
               PRODUCTS
@@ -106,8 +107,9 @@ export default function NullFooter() {
               ))}
             </ul>
           </div>
+          */}
 
-          {/* Column 3: UNLO */}
+          {/* Column 2: UNLO */}
           <div className="lg:col-span-2 space-y-3.5">
             <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-white">
               UNLO
@@ -123,8 +125,8 @@ export default function NullFooter() {
             </ul>
           </div>
 
-          {/* Column 4: CUSTOMER SERVICE */}
-          <div className="lg:col-span-2 space-y-3.5">
+          {/* Column 3: CUSTOMER SERVICE */}
+          <div className="lg:col-span-3 space-y-3.5">
             <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-white">
               CUSTOMER SERVICE
             </h4>
@@ -139,7 +141,7 @@ export default function NullFooter() {
             </ul>
           </div>
 
-          {/* Column 5: UNLO BUSINESS & REGION / FOLLOW */}
+          {/* Column 4: UNLO BUSINESS & REGION / FOLLOW */}
           <div className="lg:col-span-3 space-y-7">
             {/* Business Links */}
             <div className="space-y-3.5">

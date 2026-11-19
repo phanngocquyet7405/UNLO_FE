@@ -52,7 +52,7 @@ const aboutMega = {
     {
       label: "Câu chuyện thương hiệu",
       desc: "Tầm nhìn, sứ mệnh và giá trị cốt lõi",
-      href: "/pages/about",
+      href: "/pages/about-us",
     },
     {
       label: "Nghệ nhân & Làng nghề",
