@@ -36,7 +36,7 @@ export const STATS_DATA = [
   },
 ];
 
-export default function LiveStatCounterBanner() {
+export default function LiveStatCounterBanner({ season }) {
   const [counts, setCounts] = useState(() => STATS_DATA.map((s) => s.target));
   const containerRef = useRef(null);
   const animatedRef = useRef(false);
@@ -96,6 +96,12 @@ export default function LiveStatCounterBanner() {
           {STATS_DATA.map((s, idx) => {
             const Icon = s.icon;
             const currentVal = counts[idx] ?? s.target;
+            const displayLabel =
+              idx === 0
+                ? season?.key === "about"
+                  ? "Lượt đặt trước (pre-order) cho dòng sản phẩm xưởng M2C"
+                  : `Lượt đặt trước (pre-order) cho bộ sưu tập ${season?.name || "Đông"}`
+                : s.label;
             return (
               <div
                 key={idx}
@@ -112,7 +118,7 @@ export default function LiveStatCounterBanner() {
                     </span>
                   </div>
                   <p className="text-xs text-[#4E567A] leading-relaxed line-clamp-2">
-                    {s.label}
+                    {displayLabel}
                   </p>
                 </div>
               </div>
@@ -121,7 +127,7 @@ export default function LiveStatCounterBanner() {
         </div>
       </div>
       <p className="text-[11px] text-[#8D8DC7] text-right mt-2 mr-2">
-        Số liệu thực tế cập nhật từ hệ thống quản lý đơn hàng UNLO M2C
+        Số liệu thực tế cập nhật từ hệ thống quản lý đơn hàng UNLO M2C{season?.name ? ` · Bộ sưu tập ${season.name}` : ""}
       </p>
     </div>
   );

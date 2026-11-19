@@ -66,6 +66,7 @@ const BESTSELLER_TABS = [
 export default function NullHomeClient() {
   const [activeTab, setActiveTab] = useState("all");
   const [selectedDemoIdx, setSelectedDemoIdx] = useState(0);
+  const [activeSeason, setActiveSeason] = useState(null);
 
   const displayedProducts = useMemo(() => {
     const filtered =
@@ -83,14 +84,14 @@ export default function NullHomeClient() {
 
       <main className="flex-1">
         {/* ================================================================
-            1. SEASONAL HERO VIDEO CAROUSEL (4 MÙA: XUÂN, HẠ, THU, ĐÔNG)
+            1. SEASONAL HERO VIDEO CAROUSEL (5 SLIDES: XUÂN, HẠ, THU, ĐÔNG, TRIẾT LÝ)
             ================================================================ */}
-        <SeasonalHeroVideoCarousel />
+        <SeasonalHeroVideoCarousel onSeasonChange={setActiveSeason} />
 
         {/* ================================================================
             1.1. LIVE STAT COUNTER BANNER (1.280+ PRE-ORDERS, 864 QC ORDERS)
             ================================================================ */}
-        <LiveStatCounterBanner />
+        <LiveStatCounterBanner season={activeSeason} />
 
         {/* ================================================================
             1.2. AUDIENCE GATEWAYS ("BẠN LÀ AI? CHỌN ĐÚNG Ô, UNLO DẪN ĐƯỜNG")

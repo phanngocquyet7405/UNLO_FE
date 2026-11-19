@@ -69,9 +69,9 @@ export const SEASONS = [
     icon: Snowflake,
     accent: "#C6C9F1",
     badge: "Bộ sưu tập Đông 2026",
-    headlinePart1: "Giá trị",
-    headlinePart2: "không cần gọi tên",
-    lead: "Với UNLO, giá trị không nằm ở cái tên mà hiện diện trong từng thớ vải, từng đường kim mũi chỉ và trong mỗi lựa chọn xứng đáng mỗi ngày.",
+    headlinePart1: "Ấm êm",
+    headlinePart2: "ngày đông lạnh",
+    lead: "Heavyweight Hoodie 420gsm, áo nỉ bông French Terry và áo len Merino dày dặn, giữ ấm tối ưu cho những ngày gió lạnh.",
     video: "/assets/video/hero-dong.mp4",
     poster: "/assets/img/poster-dong.jpg",
     ctaLink: "/products?season=dong",
@@ -84,9 +84,9 @@ export const SEASONS = [
     icon: Sparkles,
     accent: "#EB6D48",
     badge: "BIG IDEA · VỀ UNLO",
-    headlinePart1: "Đôi tay",
-    headlinePart2: "người thợ Việt",
-    lead: "Có những giá trị chẳng cần gọi tên vẫn luôn được trân trọng: đôi tay mẹ khâu lại chiếc cúc áo, hay những đường kim mũi chỉ của người thợ vô danh tại xưởng.",
+    headlinePart1: "Giá trị",
+    headlinePart2: "không cần gọi tên",
+    lead: "Với UNLO, giá trị không nằm ở cái tên mà hiện diện trong từng thớ vải, từng đường kim mũi chỉ và trong mỗi lựa chọn xứng đáng mỗi ngày.",
     video: "/assets/video/hero-dong.mp4",
     poster: "/assets/img/about-image1.png",
     ctaLink: "/pages/about",
@@ -111,6 +111,10 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
     setCurrentIdx(nextIdx);
     onSeasonChange?.(SEASONS[nextIdx]);
   };
+
+  useEffect(() => {
+    onSeasonChange?.(SEASONS[currentIdx]);
+  }, []);
 
   // Play active video, pause others
   useEffect(() => {
