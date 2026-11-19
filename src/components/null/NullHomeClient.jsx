@@ -6,7 +6,7 @@ import { ArrowRight, Layers, CheckCircle2 } from "lucide-react";
 import NullHeader from "./NullHeader";
 import NullFooter from "./NullFooter";
 import NullProductCard from "./NullProductCard";
-import TransparencyCostChart from "./TransparencyCostChart";
+import HomeIndustryPriceDonutChart from "./HomeIndustryPriceDonutChart";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
 import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
@@ -65,7 +65,6 @@ const BESTSELLER_TABS = [
 
 export default function NullHomeClient() {
   const [activeTab, setActiveTab] = useState("all");
-  const [selectedDemoIdx, setSelectedDemoIdx] = useState(0);
   const [activeSeason, setActiveSeason] = useState(null);
 
   const displayedProducts = useMemo(() => {
@@ -75,8 +74,6 @@ export default function NullHomeClient() {
         : UNLO_PRODUCTS.filter((p) => p.categorySlug === activeTab);
     return filtered.slice(0, 10);
   }, [activeTab]);
-
-  const demoProduct = UNLO_PRODUCTS[selectedDemoIdx] || UNLO_PRODUCTS[0];
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#15095D]">
@@ -297,49 +294,10 @@ export default function NullHomeClient() {
         <BlackFridayCountdown />
 
         {/* ================================================================
-            6. INTERACTIVE TRUST-TECH TRANSPARENT PRICING EXPLORER
+            6. M2C BENCHMARK PRICING: BIỂU ĐỒ TRÒN & BẢNG ĐỐI CHIẾU 7 NGÀNH HÀNG
             ================================================================ */}
-        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6 space-y-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#4E567A]">
-              Chọn 1 sản phẩm để xem bóc tách giá thành thực tế tại xưởng:
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {UNLO_PRODUCTS.slice(0, 4).map((p, idx) => (
-                <button
-                  key={p._id}
-                  type="button"
-                  onClick={() => setSelectedDemoIdx(idx)}
-                  className={`h-9 px-4 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
-                    selectedDemoIdx === idx
-                      ? "bg-[#32259B] text-white"
-                      : "bg-[#EFF2F9] text-[#15095D] hover:bg-[#DCE0E7]"
-                  }`}
-                >
-                  {p.name.split("—")[0].trim()}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <TransparencyCostChart product={demoProduct} />
-
-          <div className="flex flex-wrap items-center justify-between gap-4 px-2">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[#4E567A]">
-              <CheckCircle2 className="w-4 h-4 text-[#32259B]" />
-              <span>
-                Đang hiển thị cấu thành giá của{" "}
-                <strong className="text-[#15095D]">{demoProduct.name}</strong> ({demoProduct.creatorName})
-              </span>
-            </div>
-            <Link
-              href={`/products/${demoProduct.slug}-${demoProduct._id}`}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#32259B] hover:underline"
-            >
-              Xem trang chi tiết 7 khối minh bạch của sản phẩm này
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-6">
+          <HomeIndustryPriceDonutChart />
         </section>
 
         {/* ================================================================
