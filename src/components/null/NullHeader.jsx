@@ -405,7 +405,7 @@ export default function NullHeader() {
       >
         {/* ROW 1: Main Brand Bar */}
         <div className="relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 border-b border-[#F0F2F7]">
-          {/* Left: Mobile/Tablet Menu Trigger (dưới lg) + Brand Logo */}
+          {/* Left: Mobile/Tablet Menu Trigger (dưới lg) + Tagline M2C (trên lg) */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Nút Menu cho Tablet & Mobile (<1024px) */}
             <button
@@ -420,40 +420,27 @@ export default function NullHeader() {
               <span className="hidden md:inline font-semibold text-xs tracking-wider uppercase">Menu</span>
             </button>
 
-            {/* Logo UNLO: Căn giữa tuyệt đối ở <1024px, về luồng static phía trái ở >=1024px */}
-            <Link
-              href="/"
-              className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg"
-            >
-              <img
-                src="/assets/logo/unlo-header.png"
-                alt="UNLO — Brandless M2C"
-                className="h-7 sm:h-8 lg:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-              />
-            </Link>
+            {/* Định vị M2C thanh lịch cho Desktop (>=1024px) theo phong cách Noam */}
+            <div className="hidden lg:flex items-center gap-2 text-[11px] font-semibold tracking-wider text-[#68708C] uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#EB6D48]" />
+              <span>M2C DIRECT · GIÁ THỰC TẠI XƯỞNG</span>
+            </div>
           </div>
 
-          {/* Right: Search Box + Đăng nhập + Wishlist + Cart */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-            {/* Desktop Search Input with Coral Search Button (>=1024px) */}
-            <form onSubmit={handleSearchSubmit} className="relative hidden lg:flex items-center">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm kiếm"
-                aria-label="Tìm kiếm sản phẩm, chất liệu, xưởng"
-                className="lg:w-64 xl:w-80 h-9 pl-3.5 pr-10 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
-              />
-              <button
-                type="submit"
-                aria-label="Tìm kiếm"
-                className="absolute right-1 w-7 h-7 rounded-full bg-[#EB6D48] hover:bg-[#D95F3B] text-white grid place-items-center transition-colors cursor-pointer"
-              >
-                <Search className="w-3.5 h-3.5" aria-hidden="true" />
-              </button>
-            </form>
+          {/* Center: Logo UNLO căn chính giữa tuyệt đối trên cả Desktop và Mobile/Tablet */}
+          <Link
+            href="/"
+            className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg"
+          >
+            <img
+              src="/assets/logo/unlo-header.png"
+              alt="UNLO — Brandless M2C"
+              className="h-7 sm:h-8 lg:h-9.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            />
+          </Link>
 
+          {/* Right: Tablet/Mobile Search Icon + Đăng nhập + Wishlist + Cart */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Tablet & Mobile Search Icon Button (<1024px - Mở Search Overlay) */}
             <button
               type="button"
@@ -575,15 +562,16 @@ export default function NullHeader() {
           </div>
         </div>
 
-        {/* ROW 2: Hierarchical Category & Pages Subnavigation (Chỉ hiện trên desktop >=1024px) */}
+        {/* ROW 2: Hierarchical Category & Search Bar (Phong cách Noam trên Desktop >=1024px) */}
         <div
           className="hidden lg:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible"
           onMouseLeave={handleNavMouseLeave}
         >
-          <nav
-            aria-label="Danh mục chính UNLO"
-            className="flex items-center gap-7 lg:gap-9 text-[13px] font-medium"
-          >
+          <div className="flex items-center justify-between gap-4">
+            <nav
+              aria-label="Danh mục chính UNLO"
+              className="flex items-center gap-3.5 xl:gap-7 text-[12.5px] xl:text-[13px] font-medium shrink-0"
+            >
             {NAV_GROUPS.map((group) => {
               if (group.type === "link") {
                 const active = isItemActive(group);
@@ -591,7 +579,7 @@ export default function NullHeader() {
                   <Link
                     key={group.label}
                     href={group.href}
-                    className={`relative py-1 transition-colors flex items-center gap-1.5 ${
+                    className={`relative py-1 transition-colors flex items-center gap-1.5 whitespace-nowrap ${
                       active
                         ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
                         : "text-[#2B2D38] hover:text-[#15095D]"
@@ -620,7 +608,7 @@ export default function NullHeader() {
                     onClick={() =>
                       setOpenNavDropdown((cur) => (cur === group.id ? null : group.id))
                     }
-                    className={`relative py-1 flex items-center gap-1 transition-colors cursor-pointer ${
+                    className={`relative py-1 flex items-center gap-1 transition-colors cursor-pointer whitespace-nowrap ${
                       groupActive || isGroupOpen
                         ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
                         : "text-[#2B2D38] hover:text-[#15095D]"
@@ -682,7 +670,27 @@ export default function NullHeader() {
               );
             })}
           </nav>
+
+          {/* Desktop Search Input with Coral Search Button (Tầng 2 bên phải theo Noam) */}
+          <form onSubmit={handleSearchSubmit} className="relative flex items-center shrink-0">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Tìm sản phẩm, xưởng..."
+              aria-label="Tìm kiếm sản phẩm, chất liệu, xưởng"
+              className="w-40 lg:w-48 xl:w-72 h-[34px] pl-3.5 pr-9 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
+            />
+            <button
+              type="submit"
+              aria-label="Tìm kiếm"
+              className="absolute right-1 w-[26px] h-[26px] rounded-full bg-[#EB6D48] hover:bg-[#D95F3B] text-white grid place-items-center transition-colors cursor-pointer"
+            >
+              <Search className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
+          </form>
         </div>
+      </div>
       </header>
 
       {/* ================================================================
