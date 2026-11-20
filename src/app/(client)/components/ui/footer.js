@@ -80,8 +80,8 @@ export default function Footer() {
             >
               <div className="flex items-center gap-2 mb-6">
                 <Image
-                  src="/assets/logo.png"
-                  alt="TotMart Logo"
+                  src="/assets/logo/unlo-footer.png"
+                  alt="UNLO Logo"
                   width={180}
                   height={180}
                   className="object-contain"
