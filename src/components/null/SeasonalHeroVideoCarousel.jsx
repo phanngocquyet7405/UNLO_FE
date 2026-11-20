@@ -7,11 +7,11 @@ import {
   Sun,
   Leaf,
   Snowflake,
-  Sparkles,
   ChevronLeft,
   ChevronRight,
   ArrowRight,
 } from "lucide-react";
+import { useLanguage } from "@/i18n/useLanguage";
 
 export const SEASONS = [
   {
@@ -97,6 +97,7 @@ export default function SeasonalHeroVideoCarousel({
   // Tự động target mùa theo tháng hiện tại, sau đó luân chuyển tiếp tục
   const [internalIdx, setInternalIdx] = useState(() => getSeasonIndexByCurrentMonth());
   const currentIdx = controlledIdx !== undefined ? controlledIdx : internalIdx;
+  const { lang, t } = useLanguage();
   const videoRefs = useRef([]);
   const containerRef = useRef(null);
   const touchStartRef = useRef(null);
@@ -224,8 +225,8 @@ export default function SeasonalHeroVideoCarousel({
                   <span>{s.badge}</span>
                 </div>
 
-                {/* Big Editorial Headline (Đồng nhất font Climate Crisis theo yêu cầu DOCX) */}
-                <h1 className="font-display uppercase tracking-tight text-3xl sm:text-5xl lg:text-6xl leading-[1.12] max-w-3xl drop-shadow-md">
+                {/* Big Editorial Headline (Font display hỗ trợ tiếng Việt trọn vẹn, không vỡ glyph) */}
+                <h1 className="font-display font-black uppercase tracking-tight text-3xl sm:text-5xl lg:text-6xl leading-[1.12] max-w-3xl drop-shadow-md">
                   {s.headlinePart1}{" "}
                   <span style={{ color: s.accent }}>{s.headlinePart2}</span>
                 </h1>
@@ -235,29 +236,21 @@ export default function SeasonalHeroVideoCarousel({
                   {s.lead}
                 </p>
 
-                {/* CTAs theo yêu cầu DOCX: Shop All / Shop Flashsale / Discover Now */}
+                {/* CTAs theo yêu cầu DOCX: Chỉ giữ Shop All và Discover Now (bỏ Shop Flashsale, bỏ Sparkles) */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
                   <Link
                     href="/products"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#15095D] text-xs sm:text-sm font-bold tracking-wider uppercase shadow-md hover:bg-[#FCFDF1] transition-transform hover:scale-105 active:scale-95"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#15095D] text-xs sm:text-sm font-extrabold tracking-wider uppercase shadow-md hover:bg-[#FCFDF1] transition-transform hover:scale-105 active:scale-95"
                   >
-                    <span>Shop All</span>
+                    <span>{t("Xem Tất Cả Sản Phẩm", "Shop All")}</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
                   <Link
-                    href="#black-friday"
-                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-[#EB6D48] text-white text-xs sm:text-sm font-bold tracking-wider uppercase shadow-md hover:bg-[#D95F3B] transition-transform hover:scale-105 active:scale-95"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    <span>Shop Flashsale</span>
-                  </Link>
-
-                  <Link
                     href="/pages/about-us"
-                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-white/50 bg-black/25 hover:bg-white hover:text-[#15095D] text-white text-xs sm:text-sm font-bold tracking-wider uppercase backdrop-blur-sm transition-all active:scale-95"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/70 bg-black/30 hover:bg-white hover:text-[#15095D] text-white text-xs sm:text-sm font-extrabold tracking-wider uppercase backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
                   >
-                    <span>Discover Now</span>
+                    <span>{t("Khám Phá Ngay", "Discover Now")}</span>
                   </Link>
                 </div>
               </div>

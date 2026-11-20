@@ -34,6 +34,7 @@ import RealisticEmbroideryOverlay, {
 import TransparencyCostChart from "@/components/null/TransparencyCostChart";
 import VerifiedFitReviews from "@/components/null/VerifiedFitReviews";
 import NullProductCard from "@/components/null/NullProductCard";
+import ProductPurchasePolicies from "@/components/null/ProductPurchasePolicies";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_PRODUCTS, getProductsByFactorySlug } from "@/lib/unloCatalog";
 import { findFactoryBySlug, UNLO_FACTORIES } from "@/lib/unloFactories";
@@ -761,6 +762,9 @@ export default function NullProductDetailClient({ initialProduct }) {
               </button>
             </div>
           )}
+
+          {/* Khối Chính sách mua hàng (Theo Image 5: 4 cam kết bo góc viền mảnh) */}
+          <ProductPurchasePolicies />
         </div>
       </section>
 

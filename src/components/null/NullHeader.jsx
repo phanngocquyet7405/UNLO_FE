@@ -7,17 +7,16 @@ import {
   Heart,
   LogOut,
   LayoutDashboard,
-  Sparkles,
   ChevronRight,
   ChevronDown,
   RotateCcw,
   Search,
   User,
-  ShoppingBag,
   Menu,
   X,
   PhoneCall,
 } from "lucide-react";
+import { setLocale } from "@/app/actions/setLocale";
 import { AppContext } from "@/app/context/AppContext";
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
@@ -27,13 +26,35 @@ import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_PRODUCTS, filterUnloProducts } from "@/lib/unloCatalog";
 
 /**
+ * Icon giỏ hàng line trắng tối giản chuẩn thiết kế M2C (theo yêu cầu DOC-01)
+ */
+function CartLineBagIcon({ className = "w-[19px] h-[19px]", stroke = "currentColor" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+    </svg>
+  );
+}
+
+/**
  * CẤU TRÚC ĐIỀU HƯỚNG PHÂN TẦNG TIẾT KIỆM KHÔNG GIAN (UNLO HIERARCHICAL NAVIGATION)
  * Gom các mục con vào 7 mục cha tinh gọn, tích hợp toàn bộ các mục Pages (About, FAQ, Contact Us, Factories).
+ * Hỗ trợ song ngữ 100% thuần Tiếng Việt (khi chọn VN) hoặc Tiếng Anh (khi chọn EN).
  */
 export const NAV_GROUPS = [
   {
     type: "link",
     label: "Tất cả sản phẩm",
+    labelEn: "Shop All",
     href: "/products",
     categoryKey: "all",
   },
@@ -41,48 +62,67 @@ export const NAV_GROUPS = [
     type: "dropdown",
     id: "collections",
     label: "Bộ sưu tập",
+    labelEn: "Collections",
     children: [
       {
         label: "Hàng mới về",
+        labelEn: "New Arrivals",
         href: "/products?sort=newest",
         sortKey: "newest",
         desc: "Thiết kế đồ cơ bản xuất xưởng mới nhất",
+        descEn: "Latest factory-direct basic essentials",
         badge: "Mới",
+        badgeEn: "New",
       },
       {
         label: "Bán chạy nhất",
+        labelEn: "Best Sellers",
         href: "/products?sort=bestselling",
         sortKey: "bestselling",
         desc: "Sản phẩm được cộng đồng M2C tin chọn",
+        descEn: "Most loved pieces by M2C community",
       },
       {
         label: "Săn giá xưởng",
+        labelEn: "Factory Direct Deals",
         href: "/products?sort=price_asc",
         sortKey: "price_asc",
         desc: "Mức giá gốc trực tiếp từ chuyền may",
+        descEn: "Direct transparent prices from assembly line",
       },
       {
         label: "Tự tạo Combo -20%",
+        labelEn: "Build Your Combo -20%",
         href: "/bundles",
         desc: "Tự phối 3–5 món để nhận chiết khấu bậc thang",
+        descEn: "Mix 3-5 essentials for tiered discounts",
         badge: "-20%",
+        badgeEn: "-20%",
       },
       {
         label: "Mua chung xưởng",
+        labelEn: "Factory Group Buy",
         href: "/group-buy",
         desc: "Gom đơn chung cắt giảm chi phí sản xuất",
+        descEn: "Group orders to optimize batch manufacturing",
         badge: "M2C",
+        badgeEn: "M2C",
       },
       {
         label: "Gói hội viên định kỳ",
+        labelEn: "Season Subscription",
         href: "/subscription",
         desc: "Đăng ký nhận hộp quà thiết yếu theo mùa",
+        descEn: "Seasonal curated essential subscription",
       },
       {
         label: "Ưu đãi & Voucher",
+        labelEn: "Promotions & Vouchers",
         href: "/pages/offers-discounts-coupons",
         desc: "Các mã giảm giá & ưu đãi xưởng đang kích hoạt",
+        descEn: "Active factory discount coupons and offers",
         badge: "Hot",
+        badgeEn: "Hot",
       },
     ],
   },
@@ -90,36 +130,47 @@ export const NAV_GROUPS = [
     type: "dropdown",
     id: "apparel",
     label: "Trang phục",
+    labelEn: "Apparel",
     children: [
       {
         label: "Áo thun & Dệt kim",
+        labelEn: "T-Shirts & Polos",
         href: "/products?category=cotton-basics",
         categoryKey: "cotton-basics",
         desc: "Cotton Supima 260 GSM, Pima & Polo Tencel",
+        descEn: "Supima Cotton 260 GSM, Pima & Breathable Polo",
       },
       {
         label: "Sơ mi Linen & Oxford",
+        labelEn: "Linen & Oxford Shirts",
         href: "/products?category=linen-tailoring",
         categoryKey: "linen-tailoring",
         desc: "100% European Linen 185 GSM & Royal Oxford",
+        descEn: "100% European Flax Linen & Classic Oxford",
       },
       {
         label: "Áo nỉ & Hoodie",
+        labelEn: "Sweatshirts & Hoodies",
         href: "/products?category=sweat-hoodie",
         categoryKey: "sweat-hoodie",
         desc: "French Terry 380 GSM & Heavyweight Hoodie 420 GSM",
+        descEn: "French Terry 380 GSM & Heavyweight Fleece",
       },
       {
         label: "Quần Kaki & Quần Âu",
+        labelEn: "Chinos & Trousers",
         href: "/products?category=pants-bottoms",
         categoryKey: "pants-bottoms",
         desc: "Chino cạp chun ẩn & Trousers xếp ly relaxed",
+        descEn: "Elastic flex chinos & relaxed pleat trousers",
       },
       {
         label: "Đồ len & Áo khoác",
+        labelEn: "Knitwear & Outerwear",
         href: "/products?category=wool-knitwear",
         categoryKey: "wool-knitwear",
         desc: "Merino Wool 19.5 Micron & Trench Coat DWR",
+        descEn: "Fine Merino Wool & Wind-resistant jackets",
       },
     ],
   },
@@ -127,36 +178,45 @@ export const NAV_GROUPS = [
     type: "dropdown",
     id: "lifestyle",
     label: "Phụ kiện & Đời sống",
+    labelEn: "Accessories & Living",
     children: [
       {
         label: "Đồ da nguyên tấm Ý",
+        labelEn: "Italian Full-Grain Leather",
         href: "/products?category=leather-goods",
         categoryKey: "leather-goods",
         desc: "Ví da bò Full-grain & Túi công sở laptop",
+        descEn: "Full-grain leather wallets & everyday bags",
       },
       {
         label: "Túi Canvas 16oz",
+        labelEn: "Heavy Canvas 16oz",
         href: "/products?category=canvas-accessories",
         categoryKey: "canvas-accessories",
         desc: "Vải bố hạng nặng quai da bò mộc Nam Định",
+        descEn: "Heavy-duty canvas totes with raw leather trims",
       },
       {
         label: "Gốm sứ Bát Tràng",
+        labelEn: "Artisan Ceramic Ware",
         href: "/products?category=ceramics-home",
         categoryKey: "ceramics-home",
         desc: "Bộ cốc men lì nung 1.280°C chuẩn an toàn LFGB",
+        descEn: "Matte ceramic mugs fired at 1,280°C LFGB safe",
       },
     ],
   },
   {
     type: "link",
     label: "Cá nhân hóa",
-    href: "/#studio-theu-ten",
+    labelEn: "Custom Studio",
+    href: "/custom",
     special: "personalize",
   },
   {
     type: "link",
-    label: "Doanh nghiệp",
+    label: "Doanh nghiệp / CLB",
+    labelEn: "Corporate / Clubs",
     href: "/b2b",
     routePrefix: "/b2b",
   },
@@ -164,53 +224,74 @@ export const NAV_GROUPS = [
     type: "dropdown",
     id: "pages",
     label: "Về UNLO",
+    labelEn: "About UNLO",
     children: [
       {
         label: "Câu chuyện thương hiệu",
+        labelEn: "Our Story",
         href: "/pages/about-us",
         desc: "Triết lý 'Giá trị không cần gọi tên' & Hành trình M2C",
+        descEn: "The 'Values Beyond Brand' philosophy & M2C journey",
         badge: "Câu chuyện",
+        badgeEn: "Story",
       },
       {
         label: "Giá trị cốt lõi & Sứ mệnh",
+        labelEn: "Values & Mission",
         href: "/pages/about-us#values",
         desc: "Chất lượng, Minh bạch & Kiến tạo giá trị từ sự tử tế",
+        descEn: "Quality, transparency and value creation",
       },
       {
         label: "Minh bạch giá thành",
+        labelEn: "Price Transparency",
         href: "/pages/about-us#price-chart",
         desc: "Biểu đồ so sánh giá mục tiêu UNLO vs Hàng trôi nổi & Bán lẻ",
+        descEn: "Transparent cost breakdown vs traditional retail",
       },
       {
         label: "Hồ sơ 4 nhà máy đối tác",
+        labelEn: "4 Verified Factories",
         href: "/factories",
         desc: "Khám phá các xưởng OEM Tier-1 tại Hưng Yên, Bắc Ninh, Bình Dương",
+        descEn: "Explore Tier-1 OEM partner factories in Vietnam",
         badge: "4 Xưởng",
+        badgeEn: "4 Mills",
       },
       {
         label: "Nghệ nhân & Thợ may xưởng",
+        labelEn: "Artisans & Tailors",
         href: "/pages/our-makers",
         desc: "Tôn vinh đôi bàn tay lành nghề và làng nghề truyền thống",
+        descEn: "Honoring craftspeople and generational factories",
       },
       {
         label: "Tin tức & Nhật ký xưởng",
+        labelEn: "Factory Journal",
         href: "/pages/news",
         desc: "Cập nhật tiến độ chuyền may và kiến thức chọn vải cơ bản",
+        descEn: "Production updates and fabric education",
       },
       {
         label: "Câu hỏi thường gặp",
+        labelEn: "FAQs",
         href: "/pages/faq",
         desc: "Giải đáp về quy trình đặt hàng, kiểm định và tự đổi trả 30 ngày",
+        descEn: "Answers on orders, QA standards and 30-day returns",
       },
       {
-        label: "Chính sách vận chuyển & Giao nhận",
+        label: "Chính sách vận chuyển",
+        labelEn: "Shipping Policy",
         href: "/pages/information",
         desc: "Phạm vi giao hàng 63 tỉnh thành, phí ship và bảo mật thông tin",
+        descEn: "Nationwide delivery and order security guidelines",
       },
       {
         label: "Cổng tự đổi trả trong 30 ngày",
+        labelEn: "30-Day Returns Portal",
         href: "/returns",
         desc: "Chính sách bảo hành và đổi trả miễn phí tận nơi",
+        descEn: "Doorstep easy returns and warranty portal",
       },
     ],
   },
@@ -218,6 +299,7 @@ export const NAV_GROUPS = [
     type: "link",
     id: "contact",
     label: "Liên hệ",
+    labelEn: "Contact",
     href: "/pages/contact-us",
     routePrefix: "/pages/contact-us",
   },
@@ -235,43 +317,66 @@ const SEARCH_SUGGESTIONS = [
 const PROMO_MESSAGES = [
   {
     id: "black-friday",
-    content: (
+    contentVi: (
       <span className="inline-flex items-center gap-1.5 sm:gap-2">
-        <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
+        <span className="text-[#9EA1D2] font-semibold">·</span>
         <Link
           href="/#black-friday"
-          className="underline underline-offset-4 hover:text-white transition-colors"
+          className="hover:text-white transition-colors"
         >
           Black Friday 27.11 · Giảm đến 50%
+        </Link>
+      </span>
+    ),
+    contentEn: (
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span className="text-[#9EA1D2] font-semibold">·</span>
+        <Link
+          href="/#black-friday"
+          className="hover:text-white transition-colors"
+        >
+          Black Friday Nov 27 · Up to 50% Off
         </Link>
       </span>
     ),
   },
   {
     id: "free-shipping",
-    content: (
+    contentVi: (
       <span className="inline-flex items-center gap-1.5 sm:gap-2">
-        <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
+        <span className="text-[#9EA1D2] font-semibold">·</span>
         <span>Miễn phí giao hàng cho kiện từ 499.000đ</span>
+      </span>
+    ),
+    contentEn: (
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span className="text-[#9EA1D2] font-semibold">·</span>
+        <span>Free nationwide delivery on orders from 499,000₫</span>
       </span>
     ),
   },
   {
     id: "volume-discount",
-    content: (
+    contentVi: (
       <span className="inline-flex items-center gap-1.5 sm:gap-2">
-        <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
+        <span className="text-[#9EA1D2] font-semibold">·</span>
         <span>Giá xưởng giảm theo số lượng từ 10 sản phẩm</span>
+      </span>
+    ),
+    contentEn: (
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span className="text-[#9EA1D2] font-semibold">·</span>
+        <span>Factory bulk volume discount applied for 10+ items</span>
       </span>
     ),
   },
 ];
 
 const SEASONS_NAV = [
-  { id: "xuan", label: "Xuân", idx: 0 },
-  { id: "ha", label: "Hạ", idx: 1 },
-  { id: "thu", label: "Thu", idx: 2 },
-  { id: "dong", label: "Đông", idx: 3 },
+  { id: "xuan", labelVi: "Xuân", labelEn: "Spring", idx: 0 },
+  { id: "ha", labelVi: "Hạ", labelEn: "Summer", idx: 1 },
+  { id: "thu", labelVi: "Thu", labelEn: "Autumn", idx: 2 },
+  { id: "dong", labelVi: "Đông", labelEn: "Winter", idx: 3 },
 ];
 
 export default function NullHeader({
@@ -303,18 +408,26 @@ export default function NullHeader({
     const timer = setTimeout(() => {
       try {
         const saved = localStorage.getItem("unlo_language");
-        if (saved && saved !== "vi") setCurrentLang(saved);
+        if (saved && (saved === "vi" || saved === "en")) setCurrentLang(saved);
       } catch {}
     }, 0);
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleLanguage = () => {
-    const next = currentLang === "vi" ? "en" : "vi";
+  const toggleLanguage = async (targetLang) => {
+    const next = targetLang || (currentLang === "vi" ? "en" : "vi");
     setCurrentLang(next);
     try {
       localStorage.setItem("unlo_language", next);
     } catch {}
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("unlo:language-changed", { detail: next }));
+    }
+    try {
+      await setLocale(next);
+    } catch (err) {
+      // In case server action is running client-only
+    }
   };
 
   const headerRef = useRef(null);
@@ -568,38 +681,18 @@ export default function NullHeader({
     <>
       {/* ================================================================
           1. TOP PROMO BAR (.promo)
+          Luân phiên chạy từng khối một theo thời gian cố định (4s),
+          không gạch chân Black Friday theo yêu cầu.
           ================================================================ */}
       <div className="bg-[#15095D] text-[#E8E9FA] text-[11px] sm:text-xs tracking-[0.14em] uppercase font-medium border-b border-[#1F0C85]">
-        {/* Desktop (lg:): Hiển thị đầy đủ 3 thông điệp */}
-        <div className="hidden lg:flex max-w-[1760px] mx-auto px-4 items-center justify-center gap-6 py-2.5 whitespace-nowrap overflow-hidden text-center">
-          <span className="inline-flex items-center gap-2">
-            <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
-            <Link
-              href="/#black-friday"
-              className="underline underline-offset-4 hover:text-white transition-colors"
-            >
-              Black Friday 27.11 · Giảm đến 50%
-            </Link>
-          </span>
-
-          <span className="inline-flex items-center gap-2">
-            <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
-            <span>Miễn phí giao hàng cho kiện từ 499.000đ</span>
-          </span>
-
-          <span className="inline-flex items-center gap-2">
-            <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
-            <span>Giá xưởng giảm theo số lượng từ 10 sản phẩm</span>
-          </span>
-        </div>
-
-        {/* Mobile & Tablet (<1024px): Luân phiên 1 thông điệp mỗi 4s, không cắt chữ */}
-        <div className="lg:hidden px-3 py-2 flex items-center justify-center min-h-[36px] text-center">
+        <div className="max-w-[1760px] mx-auto px-4 py-2 sm:py-2.5 flex items-center justify-center min-h-[34px] sm:min-h-[36px] text-center overflow-hidden">
           <div
             key={promoIdx}
-            className="animate-in fade-in duration-300 px-2 line-clamp-2 leading-tight"
+            className="animate-in fade-in slide-in-from-bottom-1 duration-500 px-2 line-clamp-1 leading-tight flex items-center justify-center gap-2"
           >
-            {PROMO_MESSAGES[promoIdx]?.content}
+            {currentLang === "en"
+              ? PROMO_MESSAGES[promoIdx]?.contentEn
+              : PROMO_MESSAGES[promoIdx]?.contentVi}
           </div>
         </div>
       </div>
@@ -625,9 +718,9 @@ export default function NullHeader({
           />
         )}
 
-        {/* ROW 1: Main Brand Bar */}
+        {/* ROW 1: Main Brand Bar — Cân lại khoảng cách: Tăng padding để logo có khoảng thở, không bị sát thanh trên */}
         <div
-          className={`relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 min-h-[58px] sm:min-h-[64px] lg:min-h-[70px] py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 transition-colors ${
+          className={`relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 min-h-[66px] sm:min-h-[74px] lg:min-h-[82px] py-2.5 sm:py-3 lg:py-3.5 flex items-center justify-between gap-2 sm:gap-4 transition-colors ${
             isTransparent
               ? "border-b border-white/15"
               : "border-b border-[#F0F2F7]"
@@ -639,7 +732,7 @@ export default function NullHeader({
               ref={menuButtonRef}
               type="button"
               onClick={() => setMobileOpen(true)}
-              aria-label="Mở công cụ và danh mục"
+              aria-label={currentLang === "en" ? "Open Menu" : "Mở công cụ và danh mục"}
               aria-expanded={mobileOpen}
               aria-controls="site-menu-drawer"
               className={`lg:hidden w-8 h-8 sm:w-9 sm:h-9 -ml-1 rounded-full grid place-items-center transition-colors focus:outline-none focus-visible:ring-2 cursor-pointer ${
@@ -655,16 +748,16 @@ export default function NullHeader({
             </button>
           </div>
 
-          {/* Center: Logo UNLO + PHẦN XUÂN HẠ THU ĐÔNG PHÍA DƯỚI LOGO (Theo Opts 2 trong DOCX) */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center shrink-0">
+          {/* Center: Logo UNLO + PHẦN XUÂN HẠ THU ĐÔNG PHÍA DƯỚI LOGO (Cân đối khoảng cách, không sát thanh trên) */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center shrink-0 pt-1.5 sm:pt-2">
             <Link
               href="/"
-              className="flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg py-0.5"
+              className="flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg py-1"
             >
               <img
                 src="/assets/logo/unlo-header.png"
                 alt="UNLO — Brandless M2C"
-                className={`h-6 sm:h-7 lg:h-8.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105 ${
+                className={`h-6 sm:h-7.5 lg:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105 ${
                   isTransparent ? "brightness-0 invert" : ""
                 }`}
               />
@@ -674,10 +767,11 @@ export default function NullHeader({
             {showSeasonNav && (
               <nav
                 aria-label="Chọn bộ sưu tập 4 mùa"
-                className="flex items-center gap-2.5 sm:gap-4 lg:gap-6 pt-0.5 select-none"
+                className="flex items-center gap-2.5 sm:gap-4 lg:gap-6 pt-1 select-none"
               >
                 {SEASONS_NAV.map((s) => {
                   const isActive = currentSeasonIdx === s.idx;
+                  const label = currentLang === "en" ? s.labelEn : s.labelVi;
                   return (
                     <button
                       key={s.id}
@@ -695,7 +789,7 @@ export default function NullHeader({
                             : "text-[#625FBC] hover:text-[#15095D]"
                       }`}
                     >
-                      <span>{s.label}</span>
+                      <span>{label}</span>
                     </button>
                   );
                 })}
@@ -705,13 +799,13 @@ export default function NullHeader({
 
           {/* Right: Language switch (ENG/VN) + Tìm kiếm + Tài khoản + Wishlist + Giỏ hàng */}
           <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 shrink-0 ml-auto">
-            {/* 1. Chuyển đổi ngôn ngữ VN -> ENG (Opts 1) */}
+            {/* 1. Chuyển đổi ngôn ngữ VN ⇄ ENG (Nút tròn chuẩn nhận diện UNLO) */}
             <button
               type="button"
-              onClick={toggleLanguage}
+              onClick={() => toggleLanguage()}
               aria-label={`Chuyển ngôn ngữ sang ${currentLang === "vi" ? "English" : "Tiếng Việt"}`}
               title={currentLang === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
-              className={`inline-flex items-center justify-center h-8 px-2.5 rounded-full text-[11px] font-bold tracking-wider uppercase transition-colors cursor-pointer border ${
+              className={`w-8 h-8 rounded-full border grid place-items-center text-[11px] font-bold tracking-wider uppercase transition-colors cursor-pointer ${
                 isTransparent
                   ? "border-white/30 text-white hover:bg-white/15"
                   : "border-[#DDE0EC] text-[#15095D] hover:bg-[#F4F5FB]"
@@ -724,7 +818,7 @@ export default function NullHeader({
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              aria-label="Tìm kiếm"
+              aria-label={currentLang === "en" ? "Search" : "Tìm kiếm"}
               className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
@@ -737,7 +831,7 @@ export default function NullHeader({
               />
             </button>
 
-            {/* 3. Đăng nhập / Account Dropdown (Hiện từ tablet md: trở lên, trên mobile đã có thanh Tab đáy) */}
+            {/* 3. Đăng nhập / Account Dropdown */}
             <div ref={accountRef} className="relative hidden md:block">
               <button
                 type="button"
@@ -856,22 +950,20 @@ export default function NullHeader({
               )}
             </Link>
 
-            {/* 5. Rỏ hàng / Giỏ hàng (Hiện từ tablet md: trở lên, trên mobile đã có thanh Tab đáy) */}
+            {/* 5. Giỏ hàng (Icon line trắng tối giản theo yêu cầu DOC-01) */}
             <button
               type="button"
               onClick={() => setIsCartOpen?.(true)}
-              aria-label={`Giỏ hàng (${cartCount || 0} sản phẩm)`}
+              aria-label={currentLang === "en" ? `Cart (${cartCount || 0} items)` : `Giỏ hàng (${cartCount || 0} sản phẩm)`}
               className={`relative hidden md:grid w-8 h-8 sm:w-9 sm:h-9 rounded-full place-items-center transition-colors cursor-pointer ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
               }`}
             >
-              <ShoppingBag
-                className={`w-[19px] h-[19px] stroke-[1.6] ${
-                  isTransparent ? "stroke-white" : ""
-                }`}
-                aria-hidden="true"
+              <CartLineBagIcon
+                className="w-5 h-5"
+                stroke={isTransparent ? "#FFFFFF" : "#15095D"}
               />
               {cartCount > 0 && (
                 <span className="absolute top-0.5 right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EB6D48] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums shadow-xs">
@@ -897,6 +989,7 @@ export default function NullHeader({
               className="flex items-center gap-3.5 xl:gap-7 text-[12.5px] xl:text-[13px] font-medium shrink-0"
             >
             {NAV_GROUPS.map((group) => {
+              const label = currentLang === "en" ? (group.labelEn || group.label) : group.label;
               if (group.type === "link") {
                 const active = isItemActive(group);
                 return (
@@ -913,10 +1006,7 @@ export default function NullHeader({
                         : "text-[#2B2D38] hover:text-[#15095D]"
                     }`}
                   >
-                    {group.special === "personalize" && (
-                      <Sparkles className={`w-3.5 h-3.5 ${isTransparent ? "text-white" : "text-[#443EB1]"}`} />
-                    )}
-                    <span>{group.label}</span>
+                    <span>{label}</span>
                   </Link>
                 );
               }
@@ -946,7 +1036,7 @@ export default function NullHeader({
                         : "text-[#2B2D38] hover:text-[#15095D]"
                     }`}
                   >
-                    <span>{group.label}</span>
+                    <span>{label}</span>
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-200 ${
                         isTransparent
@@ -1235,7 +1325,7 @@ export default function NullHeader({
                 className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F4F5FB] hover:bg-[#EBEFFA] text-xs font-semibold text-[#15095D] transition-colors"
               >
                 <Heart className="w-4 h-4 text-[#15095D]" />
-                <span>Yêu thích ({wishlistCount || 0})</span>
+                <span>{currentLang === "en" ? "Wishlist" : "Yêu thích"} ({wishlistCount || 0})</span>
               </Link>
               <button
                 type="button"
@@ -1245,14 +1335,15 @@ export default function NullHeader({
                 }}
                 className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F4F5FB] hover:bg-[#EBEFFA] text-xs font-semibold text-[#15095D] transition-colors cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4 text-[#15095D]" />
-                <span>Giỏ hàng ({cartCount || 0})</span>
+                <CartLineBagIcon className="w-4 h-4" stroke="#15095D" />
+                <span>{currentLang === "en" ? "Cart" : "Giỏ hàng"} ({cartCount || 0})</span>
               </button>
             </div>
 
             {/* Hierarchical Accordions for Mobile */}
             <div className="flex flex-col divide-y divide-[#EFF2F9]">
               {NAV_GROUPS.map((group) => {
+                const groupLabel = currentLang === "en" ? (group.labelEn || group.label) : group.label;
                 if (group.type === "link") {
                   return (
                     <Link
@@ -1262,10 +1353,7 @@ export default function NullHeader({
                       className="py-3 px-1 text-sm font-medium text-[#1A1838] hover:text-[#15095D] flex items-center justify-between"
                     >
                       <span className="flex items-center gap-2">
-                        {group.special === "personalize" && (
-                          <Sparkles className="w-4 h-4 text-[#443EB1]" />
-                        )}
-                        {group.label}
+                        {groupLabel}
                       </span>
                       <ChevronRight className="w-4 h-4 text-[#BBC2DD]" />
                     </Link>
@@ -1282,7 +1370,7 @@ export default function NullHeader({
                       }
                       className="w-full py-2 px-1 text-sm font-semibold text-[#15095D] flex items-center justify-between cursor-pointer"
                     >
-                      <span>{group.label}</span>
+                      <span>{groupLabel}</span>
                       <ChevronDown
                         className={`w-4 h-4 text-[#4E567A] transition-transform duration-200 ${
                           isOpen ? "rotate-180" : ""
@@ -1291,28 +1379,27 @@ export default function NullHeader({
                     </button>
                     {isOpen && (
                       <div className="pl-3 pr-1 py-1 space-y-1.5 border-l-2 border-[#15095D]/20 ml-2 animate-in fade-in">
-                        {group.children.map((child) => (
-                          <Link
-                            key={child.label}
-                            href={child.href}
-                            onClick={() => setMobileOpen(false)}
-                            className="block py-1.5 text-xs text-[#4E567A] hover:text-[#15095D] font-medium"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span>{child.label}</span>
-                              {child.badge && (
-                                <span className="px-1.5 py-0.5 rounded-full bg-[#EB6D48] text-white text-[9px] font-bold uppercase tracking-wider">
-                                  {child.badge}
-                                </span>
-                              )}
-                            </div>
-                            {child.desc && (
-                              <div className="text-[10px] text-[#8C93A8] line-clamp-1 mt-0.5">
-                                {child.desc}
+                        {group.children.map((child) => {
+                          const childLabel = currentLang === "en" ? (child.labelEn || child.label) : child.label;
+                          const childBadge = currentLang === "en" ? (child.badgeEn || child.badge) : child.badge;
+                          return (
+                            <Link
+                              key={child.label}
+                              href={child.href}
+                              onClick={() => setMobileOpen(false)}
+                              className="block py-1.5 text-xs text-[#4E567A] hover:text-[#15095D] font-medium"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{childLabel}</span>
+                                {childBadge && (
+                                  <span className="px-1.5 py-0.5 rounded-full bg-[#EB6D48] text-white text-[9px] font-bold uppercase tracking-wider">
+                                    {childBadge}
+                                  </span>
+                                )}
                               </div>
-                            )}
-                          </Link>
-                        ))}
+                            </Link>
+                          );
+                        })}
                       </div>
                     )}
                   </div>

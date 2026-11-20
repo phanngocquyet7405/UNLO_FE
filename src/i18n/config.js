@@ -5,7 +5,7 @@
  * next-intl khuyến nghị request.js chỉ nên export default getRequestConfig.
  */
 
-export const SUPPORTED_LOCALES = ["vi"];
+export const SUPPORTED_LOCALES = ["vi", "en"];
 export const DEFAULT_LOCALE = "vi";
 export const LOCALE_COOKIE = "NULL_LOCALE";
 

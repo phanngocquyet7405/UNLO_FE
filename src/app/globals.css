@@ -8,6 +8,7 @@
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-display: var(--font-display);
+  --font-climate: var(--font-climate);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -92,8 +93,8 @@
   --unlo-venus: #c2d9f0;
   --unlo-sky: #d4e4f7;
 
-  /* Semantic UI Tokens */
-  --background: #ffffff;
+  /* Semantic UI Tokens — Milky Way Ivory Canvas (#FCFDF1) */
+  --background: #fcfdf1;
   --foreground: #15095d;
   --card: #ffffff;
   --card-foreground: #15095d;
@@ -537,6 +538,64 @@
   :root {
     --header-h: 57px;
   }
+}
+
+/* =========================================================================
+ * DOC-05 UNLO Custom Studio Styles
+ * ========================================================================= */
+.font-classic {
+  font-family: var(--font-classic), 'Playfair Display', Georgia, serif;
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting), 'Dancing Script', cursive;
+}
+
+.font-modern {
+  font-family: var(--font-modern), 'Space Grotesk', sans-serif;
+}
+
+.embroidery-stitch {
+  text-shadow:
+    0.5px 0.8px 0.8px rgba(0, 0, 0, 0.28),
+    -0.3px -0.3px 0.5px rgba(255, 255, 255, 0.22);
+  letter-spacing: 0.03em;
+  user-select: none;
+}
+
+.fabric-texture {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 0);
+  background-size: 4px 4px;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.hotspot-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1.5px solid #16115B;
+  animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes marqueeSlow {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeSlow 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 

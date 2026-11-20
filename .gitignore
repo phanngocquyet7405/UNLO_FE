@@ -43,6 +43,7 @@ next-env.d.ts
 
 # Local verification artifacts
 .cache/
+/scratch/
 verification-*.log
 audit-*.json
 !.env.example

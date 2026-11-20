@@ -1,14 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, AlertTriangle, ShieldCheck, HelpCircle, PieChart, BarChart3, Table } from "lucide-react";
+import {
+  CheckCircle2,
+  AlertTriangle,
+  ShieldCheck,
+  HelpCircle,
+  PieChart,
+  BarChart3,
+  Table,
+} from "lucide-react";
 import PriceBreakdownDonutChart from "./PriceBreakdownDonutChart";
 
 export const COMPARISON_DATA = [
   {
     id: "ao-thun",
     name: "Áo thun cơ bản",
-    unloSpec: "Cotton Supima sợi dài 260 GSM, bo cổ rib đôi 2.2cm giặt không dão",
+    unloSpec:
+      "Cotton Supima sợi dài 260 GSM, bo cổ rib đôi 2.2cm giặt không dão",
     shopeePrice: "99.000 – 159.000₫",
     shopeeSource: "Shopee Blog",
     shopeeAvg: 129000,
@@ -23,7 +32,8 @@ export const COMPARISON_DATA = [
   {
     id: "polo",
     name: "Áo Polo Piqué",
-    unloSpec: "Sợi Tencel Piqué 230 GSM mát lạnh, kháng khuẩn, cổ dệt chống cong",
+    unloSpec:
+      "Sợi Tencel Piqué 230 GSM mát lạnh, kháng khuẩn, cổ dệt chống cong",
     shopeePrice: "78.000 – 130.000₫",
     shopeeSource: "Lazada",
     shopeeAvg: 104000,
@@ -38,7 +48,8 @@ export const COMPARISON_DATA = [
   {
     id: "ao-ni",
     name: "Áo nỉ dài tay (Sweater)",
-    unloSpec: "French Terry 380 GSM mặt vảy cá mịn, chống xù lông 50 chu kỳ giặt",
+    unloSpec:
+      "French Terry 380 GSM mặt vảy cá mịn, chống xù lông 50 chu kỳ giặt",
     shopeePrice: "65.000 – 175.000₫",
     shopeeSource: "Shopee Blog",
     shopeeAvg: 120000,
@@ -68,7 +79,8 @@ export const COMPARISON_DATA = [
   {
     id: "so-mi-linen",
     name: "Sơ mi European Linen",
-    unloSpec: "100% sợi lanh châu Âu 185 GSM, may cuốn sườn French Seam 14 mũi/inch",
+    unloSpec:
+      "100% sợi lanh châu Âu 185 GSM, may cuốn sườn French Seam 14 mũi/inch",
     shopeePrice: "— (Không rõ nguồn sợi)",
     shopeeSource: "Hàng gia công trôi nổi",
     shopeeAvg: 180000,
@@ -83,7 +95,8 @@ export const COMPARISON_DATA = [
   {
     id: "quan",
     name: "Quần Chino & Quần Âu",
-    unloSpec: "Cotton Twill co giãn cạp chun ẩn & Trousers xếp ly relaxed chống nhăn",
+    unloSpec:
+      "Cotton Twill co giãn cạp chun ẩn & Trousers xếp ly relaxed chống nhăn",
     shopeePrice: "— (Không rõ nguồn sợi)",
     shopeeSource: "Hàng chợ / Sàn rẻ",
     shopeeAvg: 160000,
@@ -98,7 +111,8 @@ export const COMPARISON_DATA = [
   {
     id: "tui-canvas",
     name: "Túi Canvas 16oz",
-    unloSpec: "Vải bố Canvas mộc dệt dày 16oz, quai da bò Ý nguyên tấm tán đinh đồng",
+    unloSpec:
+      "Vải bố Canvas mộc dệt dày 16oz, quai da bò Ý nguyên tấm tán đinh đồng",
     shopeePrice: "Chưa khảo sát",
     shopeeSource: "Hàng may công nghiệp",
     shopeeAvg: 90000,
@@ -116,7 +130,9 @@ export default function AboutPriceComparisonChart() {
   const [selectedId, setSelectedId] = useState("ao-thun");
   const [viewMode, setViewMode] = useState("chart"); // 'chart' | 'table'
 
-  const activeItem = COMPARISON_DATA.find((item) => item.id === selectedId) || COMPARISON_DATA[0];
+  const activeItem =
+    COMPARISON_DATA.find((item) => item.id === selectedId) ||
+    COMPARISON_DATA[0];
 
   // Max value scale for chart comparison (highest retail price ~ 800.000)
   const maxScale = 800000;
@@ -215,7 +231,10 @@ export default function AboutPriceComparisonChart() {
                 {activeItem.name}
               </h3>
               <p className="text-xs sm:text-sm text-[#5E607E] mt-1">
-                Tiêu chuẩn vật liệu UNLO: <strong className="text-[#15095D]">{activeItem.unloSpec}</strong>
+                Tiêu chuẩn vật liệu UNLO:{" "}
+                <strong className="text-[#15095D]">
+                  {activeItem.unloSpec}
+                </strong>
               </p>
             </div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#FCFDF1] border border-[#BBC2DD] text-xs font-bold text-[#15095D] shrink-0">
@@ -232,15 +251,21 @@ export default function AboutPriceComparisonChart() {
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#8C93A8]">
                   Cấp độ 1
                 </span>
-                <h4 className="text-sm font-bold text-[#4E567A]">Hàng Trôi Nổi Trên Sàn</h4>
-                <p className="text-xs text-[#8C93A8]">Nguồn: {activeItem.shopeeSource}</p>
+                <h4 className="text-sm font-bold text-[#4E567A]">
+                  Hàng Trôi Nổi Trên Sàn
+                </h4>
+                <p className="text-xs text-[#8C93A8]">
+                  Nguồn: {activeItem.shopeeSource}
+                </p>
               </div>
 
               <div className="space-y-2">
                 <div className="h-4 bg-[#E2E6EF] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#A8B2C7] rounded-full transition-all duration-500"
-                    style={{ width: `${Math.round((activeItem.shopeeAvg / maxScale) * 100)}%` }}
+                    style={{
+                      width: `${Math.round((activeItem.shopeeAvg / maxScale) * 100)}%`,
+                    }}
                   />
                 </div>
                 <p className="font-serif text-2xl font-bold text-[#4E567A]">
@@ -270,15 +295,21 @@ export default function AboutPriceComparisonChart() {
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#B8BEDB]">
                   Lựa chọn tối ưu
                 </span>
-                <h4 className="text-base font-bold text-white">UNLO — Giá Thực Tại Xưởng</h4>
-                <p className="text-xs text-[#A8B0D4]">{activeItem.unloSource}</p>
+                <h4 className="text-base font-bold text-white">
+                  UNLO — Giá Thực Tại Xưởng
+                </h4>
+                <p className="text-xs text-[#A8B0D4]">
+                  {activeItem.unloSource}
+                </p>
               </div>
 
               <div className="space-y-2">
                 <div className="h-4 bg-white/20 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#EB6D48] rounded-full transition-all duration-500"
-                    style={{ width: `${Math.round((activeItem.unloAvg / maxScale) * 100)}%` }}
+                    style={{
+                      width: `${Math.round((activeItem.unloAvg / maxScale) * 100)}%`,
+                    }}
                   />
                 </div>
                 <div className="flex items-baseline gap-2">
@@ -310,15 +341,21 @@ export default function AboutPriceComparisonChart() {
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#8C93A8]">
                   Cấp độ 3
                 </span>
-                <h4 className="text-sm font-bold text-[#4E567A]">Bán Lẻ Truyền Thống / Quốc Tế</h4>
-                <p className="text-xs text-[#8C93A8]">Nguồn: {activeItem.retailSource}</p>
+                <h4 className="text-sm font-bold text-[#4E567A]">
+                  Bán Lẻ Truyền Thống / Quốc Tế
+                </h4>
+                <p className="text-xs text-[#8C93A8]">
+                  Nguồn: {activeItem.retailSource}
+                </p>
               </div>
 
               <div className="space-y-2">
                 <div className="h-4 bg-[#E2E6EF] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#EB6D48] rounded-full transition-all duration-500"
-                    style={{ width: `${Math.round((activeItem.retailAvg / maxScale) * 100)}%` }}
+                    style={{
+                      width: `${Math.round((activeItem.retailAvg / maxScale) * 100)}%`,
+                    }}
                   />
                 </div>
                 <p className="font-serif text-2xl font-bold text-[#15095D]">
@@ -329,11 +366,15 @@ export default function AboutPriceComparisonChart() {
               <ul className="text-xs text-[#5E607E] space-y-1.5 border-t border-[#DCE0E7] pt-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#32259B] shrink-0" />
-                  <span>Chất lượng tốt nhưng chịu 60–70% chi phí trung gian</span>
+                  <span>
+                    Chất lượng tốt nhưng chịu 60–70% chi phí trung gian
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#32259B] shrink-0" />
-                  <span>Gánh phí mặt bằng showroom trung tâm, phí quảng cáo</span>
+                  <span>
+                    Gánh phí mặt bằng showroom trung tâm, phí quảng cáo
+                  </span>
                 </li>
               </ul>
             </div>
@@ -349,29 +390,52 @@ export default function AboutPriceComparisonChart() {
               <thead className="bg-[#15095D] text-white">
                 <tr>
                   <th className="py-4 px-5 font-semibold">Ngành Hàng</th>
-                  <th className="py-4 px-5 font-semibold">Hàng Trôi Nổi Trên Sàn</th>
-                  <th className="py-4 px-5 font-semibold">Bán Lẻ Trong Nước / Quốc Tế</th>
-                  <th className="py-4 px-5 font-semibold bg-[#21127C]">Giá Bán Mục Tiêu UNLO</th>
+                  <th className="py-4 px-5 font-semibold">
+                    Hàng Trôi Nổi Trên Sàn
+                  </th>
+                  <th className="py-4 px-5 font-semibold">
+                    Bán Lẻ Trong Nước / Quốc Tế
+                  </th>
+                  <th className="py-4 px-5 font-semibold bg-[#21127C]">
+                    Giá Bán Mục Tiêu UNLO
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#DCE0E7]">
                 {COMPARISON_DATA.map((row) => (
-                  <tr key={row.id} className="hover:bg-[#F9FAFD] transition-colors">
+                  <tr
+                    key={row.id}
+                    className="hover:bg-[#F9FAFD] transition-colors"
+                  >
                     <td className="py-3.5 px-5 font-medium text-[#15095D]">
                       <div>{row.name}</div>
-                      <div className="text-[11px] text-[#5E607E] mt-0.5 line-clamp-1">{row.unloSpec}</div>
+                      <div className="text-[11px] text-[#5E607E] mt-0.5 line-clamp-1">
+                        {row.unloSpec}
+                      </div>
                     </td>
                     <td className="py-3.5 px-5 text-[#5E607E]">
-                      <div className="font-semibold text-[#4E567A]">{row.shopeePrice}</div>
-                      <div className="text-[11px] text-[#8C93A8]">({row.shopeeSource})</div>
+                      <div className="font-semibold text-[#4E567A]">
+                        {row.shopeePrice}
+                      </div>
+                      <div className="text-[11px] text-[#8C93A8]">
+                        ({row.shopeeSource})
+                      </div>
                     </td>
                     <td className="py-3.5 px-5 text-[#5E607E]">
-                      <div className="font-semibold text-[#15095D]">{row.retailPrice}</div>
-                      <div className="text-[11px] text-[#8C93A8]">({row.retailSource})</div>
+                      <div className="font-semibold text-[#15095D]">
+                        {row.retailPrice}
+                      </div>
+                      <div className="text-[11px] text-[#8C93A8]">
+                        ({row.retailSource})
+                      </div>
                     </td>
                     <td className="py-3.5 px-5 bg-[#FCFDF1]">
-                      <div className="font-bold text-[#15095D] font-serif text-base">{row.unloPrice}</div>
-                      <div className="text-[11px] text-[#EB6D48] font-semibold">{row.savingPercent}</div>
+                      <div className="font-bold text-[#15095D] font-serif text-base">
+                        {row.unloPrice}
+                      </div>
+                      <div className="text-[11px] text-[#EB6D48] font-semibold">
+                        {row.savingPercent}
+                      </div>
                     </td>
                   </tr>
                 ))}

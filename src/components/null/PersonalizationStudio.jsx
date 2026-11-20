@@ -89,9 +89,9 @@ export function computePersonalizationFee(value, config = {}) {
   let total = 0;
   const isLogo = value?.customType === "logo" && Boolean(value?.logoUrl || value?.logoSvg);
   if (isLogo) {
-    total += config?.logoFee ?? 45000;
+    total += config?.logoFee ?? 35000; // DOC-05: Tự up thiết kế 35k
   } else if (value.monogramText?.trim()) {
-    total += config?.monogramFee ?? 35000;
+    total += config?.monogramFee ?? 15000; // DOC-05: Thêu chữ 15k
   }
   if (value.innerLabelText?.trim()) total += config?.innerLabelFee ?? 20000;
   const box = GIFT_BOXES.find((b) => b.id === value.giftBoxType);

@@ -2,7 +2,15 @@ import "@fontsource/plus-jakarta-sans/latin-400.css";
 import "@fontsource/plus-jakarta-sans/vietnamese-400.css";
 import "@fontsource/plus-jakarta-sans/latin-700.css";
 import "@fontsource/plus-jakarta-sans/vietnamese-700.css";
-import { Libre_Bodoni, Climate_Crisis, Great_Vibes } from "next/font/google";
+import {
+  Libre_Bodoni,
+  Climate_Crisis,
+  Great_Vibes,
+  Montserrat,
+  Playfair_Display,
+  Dancing_Script,
+  Space_Grotesk,
+} from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -28,10 +36,38 @@ const climateCrisis = Climate_Crisis({
   display: "swap",
 });
 
+const montserrat = Montserrat({
+  subsets: ["latin", "vietnamese"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
 const greatVibes = Great_Vibes({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-great-vibes",
+  display: "swap",
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin", "vietnamese"],
+  weight: ["600", "700"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin", "vietnamese"],
+  weight: ["600", "700"],
+  variable: "--font-dancing",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin", "vietnamese"],
+  weight: ["600", "700"],
+  variable: "--font-space-grotesk",
   display: "swap",
 });
 
@@ -103,10 +139,14 @@ export default async function RootLayout({ children }) {
   return (
     <html
       lang={locale}
-      className={`${libreBodoni.variable} ${climateCrisis.variable} ${greatVibes.variable}`}
+      className={`${libreBodoni.variable} ${climateCrisis.variable} ${montserrat.variable} ${greatVibes.variable} ${playfairDisplay.variable} ${dancingScript.variable} ${spaceGrotesk.variable}`}
       style={{
         "--font-serif": "var(--font-libre-bodoni), 'Libre Bodoni', Georgia, serif",
-        "--font-display": "var(--font-climate-crisis), 'Climate Crisis', sans-serif",
+        "--font-classic": "var(--font-playfair), 'Playfair Display', Georgia, serif",
+        "--font-handwriting": "var(--font-dancing), 'Dancing Script', cursive",
+        "--font-modern": "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
+        "--font-display": "var(--font-montserrat), var(--font-climate-crisis), 'Plus Jakarta Sans', sans-serif",
+        "--font-climate": "var(--font-climate-crisis), 'Climate Crisis', sans-serif",
         "--font-script": "var(--font-great-vibes), 'Great Vibes', cursive",
         "--font-sans": "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
