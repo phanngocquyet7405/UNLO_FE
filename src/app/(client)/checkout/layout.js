@@ -1,8 +1,7 @@
 "use client";
 
 import { Toaster } from "sonner";
-import AnnouncementBarBox from "@/components_box/announcement-bar";
-import { Navigation, HEADER_H } from "@/components_box/nav_box";
+import NullHeader from "@/components/null/NullHeader";
 import Footer from "../components/ui/footer";
 import { withAuth } from "@/app/middleware/authMiddleware";
 
@@ -10,15 +9,11 @@ import { withAuth } from "@/app/middleware/authMiddleware";
 function ProfileLayout({ children }) {
   return (
     <>
-      {/* ── Fixed header layer ── */}
-      <AnnouncementBarBox />
-      <Navigation />
+      {/* ── Header ── */}
+      <NullHeader />
 
       {/* ── Scrollable body ── */}
-      <div
-        className="page-canvas min-h-screen"
-        style={{ paddingTop: HEADER_H }}
-      >
+      <div className="page-canvas min-h-screen">
         {children}
       </div>
 

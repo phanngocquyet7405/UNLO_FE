@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingCart, Sparkles, Gift, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
-import AnnouncementBar from "./ui/AnnouncementBar";
 import NavMenu from "./ui/nav_menu";
 import { toast } from "sonner";
 import { getAllBoxesApi } from "@/app/services/api/boxService";
@@ -70,7 +69,6 @@ export default function CommerceCatalog({ kind, onlyAvailable = true }) {
 
   return (
     <>
-      <AnnouncementBar />
       <MainHeader />
       <NavMenu />
 

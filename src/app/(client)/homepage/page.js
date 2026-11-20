@@ -1,5 +1,5 @@
-import NullHomeClient from "@/components/null/NullHomeClient";
+import { redirect } from "next/navigation";
 
-export default function StorefrontHomePage() {
-  return <NullHomeClient />;
+export default function HomePageRedirect() {
+  redirect("/");
 }

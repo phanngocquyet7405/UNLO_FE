@@ -5,7 +5,6 @@ import logger from "@/app/util/Logger";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight, PackageSearch } from "lucide-react";
-import AnnouncementBar from "../components/ui/AnnouncementBar";
 import MainHeader from "../components/ui/main_header";
 import NavMenu from "../components/ui/nav_menu";
 import TotMartSupport from "../components/layout/totmart_suppport";
@@ -52,12 +51,9 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border shadow-xs z-50">
-        <AnnouncementBar />
-        <MainHeader onMenuClick={() => {}} cartItemCount={0} cartTotal={0} />
-        <div className="border-b border-border">
-          <NavMenu />
-        </div>
+      <MainHeader />
+      <div className="border-b border-border">
+        <NavMenu />
       </div>
 
       {/* Hero */}

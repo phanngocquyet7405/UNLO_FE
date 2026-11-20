@@ -19,8 +19,7 @@ import {
   Gift,
   Star,
 } from "lucide-react";
-import AnnouncementBar from "@/components_box/announcement-bar";
-import { Navigation } from "@/components_box/nav_box";
+import NullHeader from "@/components/null/NullHeader";
 import Footer from "@/app/(client)/components/ui/footer";
 import ChoosePlan from "@/components_box/ChoosePlan";
 
@@ -116,10 +115,9 @@ export default function SubscriptionExperience() {
 
   return (
     <div className="tm-commerce tm-commerce--atelier min-h-screen bg-background text-foreground">
-      <AnnouncementBar />
-      <Navigation />
+      <NullHeader />
 
-      <main className="pt-[100px]">
+      <main>
         {/* ─── 1. HERO SECTION (BOKKSU SUBSCRIPTION SIGNATURE) ─── */}
         <section className="relative overflow-hidden bg-gradient-to-b from-stone-100/70 via-background to-background dark:from-stone-900/40 dark:to-background border-b border-border/80 py-16 sm:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

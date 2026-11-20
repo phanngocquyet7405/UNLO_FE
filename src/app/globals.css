@@ -184,6 +184,7 @@
   }
   html {
     @apply font-sans scroll-smooth;
+    scroll-padding-top: 7rem;
   }
 }
 

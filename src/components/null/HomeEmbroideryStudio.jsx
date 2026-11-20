@@ -153,7 +153,7 @@ export default function HomeEmbroideryStudio() {
   return (
     <section
       id="studio-theu-ten"
-      className="w-full bg-white py-12 sm:py-16 scroll-mt-20"
+      className="w-full bg-white py-12 sm:py-16 scroll-mt-28"
       aria-label="Xưởng thêu tên cá nhân hóa theo mùa"
     >
       <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8">

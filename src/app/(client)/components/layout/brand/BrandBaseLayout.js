@@ -3,7 +3,6 @@ import logger from "@/app/util/Logger";
 // components/layout/brand/BrandBaseLayout.jsx
 
 import React, { useState, useEffect } from "react";
-import AnnouncementBar from "../../ui/AnnouncementBar";
 import MainHeader from "../../ui/main_header";
 import NavMenu from "../../ui/nav_menu";
 import TotMartSupport from "../totmart_suppport";
@@ -18,8 +17,6 @@ function parseList(res) {
 }
 
 export default function BrandBaseLayout({ children, slug, initialBrand = null }) {
-  // Logic đóng mở menu trên mobile giống ProductPage
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [brand, setBrand] = useState(initialBrand);
   const [loadingBrand, setLoadingBrand] = useState(!initialBrand);
 
@@ -54,16 +51,9 @@ export default function BrandBaseLayout({ children, slug, initialBrand = null })
   return (
     <div className="min-h-screen bg-background">
       {/* Hệ thống Header cố định */}
-      <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border shadow-xs z-50">
-        <AnnouncementBar />
-        <MainHeader
-          onMenuClick={() => setIsSidebarOpen(true)}
-          cartItemCount={0}
-          cartTotal={0}
-        />
-        <div className="border-b border-border">
-          <NavMenu />
-        </div>
+      <MainHeader />
+      <div className="border-b border-border">
+        <NavMenu />
       </div>
 
       {/* Hero Section cho Brand — hiện đúng tên/logo/địa chỉ/mô tả của

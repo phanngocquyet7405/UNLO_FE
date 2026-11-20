@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Heart, ShoppingCart, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
 
-import AnnouncementBar from "@/app/(client)/components/ui/AnnouncementBar";
 import MainHeader from "@/app/(client)/components/ui/main_header";
 import NavMenu from "@/app/(client)/components/ui/nav_menu";
 import Footer from "@/app/(client)/components/ui/footer";
@@ -127,7 +126,6 @@ export default function WishlistPage() {
 
   return (
     <>
-      <AnnouncementBar />
       <MainHeader />
       <NavMenu />
 

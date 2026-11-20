@@ -2,7 +2,6 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import NavMenu from "@/app/(client)/components/ui/nav_menu";
-import AnnouncementBar from "@/app/(client)/components/ui/AnnouncementBar";
 import MainHeader from "@/app/(client)/components/ui/main_header";
 import Footer from "@/app/(client)/components/ui/footer";
 import { getServerBoxDetail, getPublicSiteUrl } from "@/app/services/server/serverCatalog";
@@ -102,7 +101,6 @@ export default async function BoxDetailPage({ params: paramsPromise, searchParam
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <AnnouncementBar />
       <MainHeader />
       <NavMenu />
 
