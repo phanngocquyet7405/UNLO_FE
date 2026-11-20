@@ -228,6 +228,41 @@ const SEARCH_SUGGESTIONS = [
   "ví da",
 ];
 
+const PROMO_MESSAGES = [
+  {
+    id: "black-friday",
+    content: (
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
+        <Link
+          href="/#black-friday"
+          className="underline underline-offset-4 hover:text-white transition-colors"
+        >
+          Black Friday 27.11 · Giảm đến 50%
+        </Link>
+      </span>
+    ),
+  },
+  {
+    id: "free-shipping",
+    content: (
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
+        <span>Miễn phí giao hàng cho kiện từ 499.000đ</span>
+      </span>
+    ),
+  },
+  {
+    id: "volume-discount",
+    content: (
+      <span className="inline-flex items-center gap-1.5 sm:gap-2">
+        <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
+        <span>Giá xưởng giảm theo số lượng từ 10 sản phẩm</span>
+      </span>
+    ),
+  },
+];
+
 export default function NullHeader({ overlay = false }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -236,6 +271,7 @@ export default function NullHeader({ overlay = false }) {
   const { wishlistCount } = useWishlist() || {};
 
   const [scrolled, setScrolled] = useState(false);
+  const [promoIdx, setPromoIdx] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileAccordion, setMobileAccordion] = useState(null);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -283,6 +319,21 @@ export default function NullHeader({ overlay = false }) {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Promo message rotation for mobile/tablet (<1024px) every 4 seconds, respects prefers-reduced-motion
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) return;
+
+    const interval = setInterval(() => {
+      setPromoIdx((prev) => (prev + 1) % PROMO_MESSAGES.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Transparent overlay only under lg (<1024px) when scrollY <= 24px and drawer/search closed
@@ -484,7 +535,8 @@ export default function NullHeader({ overlay = false }) {
           1. TOP PROMO BAR (.promo)
           ================================================================ */}
       <div className="bg-[#15095D] text-[#E8E9FA] text-[11px] sm:text-xs tracking-[0.14em] uppercase font-medium border-b border-[#1F0C85]">
-        <div className="max-w-[1760px] mx-auto px-4 flex items-center justify-center gap-6 py-2.5 whitespace-nowrap overflow-hidden text-center">
+        {/* Desktop (lg:): Hiển thị đầy đủ 3 thông điệp */}
+        <div className="hidden lg:flex max-w-[1760px] mx-auto px-4 items-center justify-center gap-6 py-2.5 whitespace-nowrap overflow-hidden text-center">
           <span className="inline-flex items-center gap-2">
             <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
             <Link
@@ -500,10 +552,20 @@ export default function NullHeader({ overlay = false }) {
             <span>Miễn phí giao hàng cho kiện từ 499.000đ</span>
           </span>
 
-          <span className="hidden xl:inline-flex items-center gap-2">
+          <span className="inline-flex items-center gap-2">
             <span className="text-[#9EA1D2] font-serif not-italic">✦</span>
             <span>Giá xưởng giảm theo số lượng từ 10 sản phẩm</span>
           </span>
+        </div>
+
+        {/* Mobile & Tablet (<1024px): Luân phiên 1 thông điệp mỗi 4s, không cắt chữ */}
+        <div className="lg:hidden px-3 py-2 flex items-center justify-center min-h-[36px] text-center">
+          <div
+            key={promoIdx}
+            className="animate-in fade-in duration-300 px-2 line-clamp-2 leading-tight"
+          >
+            {PROMO_MESSAGES[promoIdx]?.content}
+          </div>
         </div>
       </div>
 
