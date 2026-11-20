@@ -80,6 +80,8 @@ export const SEASONS = [
   },
 ];
 
+const SEASON_DURATION_MS = 30000; // Chu kỳ tự động chuyển mùa: 30s theo yêu cầu DOCX
+
 export default function SeasonalHeroVideoCarousel({
   currentSeasonIdx: controlledIdx,
   onSeasonChange,
@@ -88,6 +90,7 @@ export default function SeasonalHeroVideoCarousel({
   const currentIdx = controlledIdx !== undefined ? controlledIdx : internalIdx;
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const videoRefs = useRef([]);
   const containerRef = useRef(null);
   const touchStartRef = useRef(null);
@@ -109,18 +112,20 @@ export default function SeasonalHeroVideoCarousel({
     onSeasonChangeRef.current?.(currentIdx, SEASONS[currentIdx]);
   }, [currentIdx]);
 
-  // Tự động chuyển mùa (Xuân -> Hạ -> Thu -> Đông) theo yêu cầu DOCX
+  // Tự động chuyển mùa sau 30 giây (Xuân -> Hạ -> Thu -> Đông) có cơ chế tạm dừng khi hover
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || isHovered) return;
+
     const timer = setInterval(() => {
       const nextIdx = (currentIdx + 1) % SEASONS.length;
       if (controlledIdx === undefined) {
         setInternalIdx(nextIdx);
       }
       onSeasonChangeRef.current?.(nextIdx, SEASONS[nextIdx]);
-    }, 7000);
+    }, SEASON_DURATION_MS);
+
     return () => clearInterval(timer);
-  }, [currentIdx, isPlaying, controlledIdx]);
+  }, [currentIdx, isPlaying, isHovered, controlledIdx]);
 
   // Play active video, pause others
   useEffect(() => {
@@ -166,6 +171,8 @@ export default function SeasonalHeroVideoCarousel({
   return (
     <section
       ref={containerRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,0px)] lg:mt-0"
       aria-roledescription="carousel"
       aria-label="Trang chủ theo mùa UNLO"
@@ -287,23 +294,35 @@ export default function SeasonalHeroVideoCarousel({
         })}
       </div>
 
-      {/* 4-Season Progress Timeline (Bottom Edge) */}
-      <div className="absolute z-20 bottom-0 left-0 right-0 h-1 bg-white/15 grid grid-cols-4">
-        {SEASONS.map((s, idx) => (
-          <button
-            key={s.key}
-            type="button"
-            onClick={() => handleSelectSeason(idx)}
-            aria-label={`Chuyển sang mùa ${s.name}`}
-            className="h-full w-full transition-all duration-500 cursor-pointer"
-            style={{
-              backgroundColor: idx === currentIdx ? s.accent : "transparent",
-            }}
-          />
-        ))}
+      {/* 4-Season Progress Timeline (Thanh tiến trình animation tự chuyển mùa sau 30s) */}
+      <div className="absolute z-20 bottom-0 left-0 right-0 h-1.5 bg-black/40 backdrop-blur-sm grid grid-cols-4 gap-1.5 px-3 sm:px-8">
+        {SEASONS.map((s, idx) => {
+          const isActive = idx === currentIdx;
+          return (
+            <button
+              key={s.key}
+              type="button"
+              onClick={() => handleSelectSeason(idx)}
+              aria-label={`Chuyển sang bộ sưu tập mùa ${s.name}`}
+              className="relative h-full w-full bg-white/20 hover:bg-white/35 transition-colors overflow-hidden rounded-full cursor-pointer group"
+            >
+              {isActive && (
+                <div
+                  key={`progress-${currentIdx}-${isPlaying && !isHovered}`}
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    backgroundColor: s.accent,
+                    animation: `unlo-season-fill ${SEASON_DURATION_MS}ms linear forwards`,
+                    animationPlayState: isPlaying && !isHovered ? "running" : "paused",
+                  }}
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Navigation Controls & Season Counter (Lifted to bottom-24 on mobile to prevent overlapping Chatbot) */}
+      {/* Navigation Controls & Season Counter */}
       <div className="absolute z-20 bottom-24 sm:bottom-12 right-5 sm:right-8 lg:right-12 flex items-center gap-2">
         <span className="font-serif text-sm sm:text-base font-bold text-white/90 mr-2 tracking-widest tabular-nums select-none">
           0{currentIdx + 1} / 0{SEASONS.length}
@@ -327,16 +346,39 @@ export default function SeasonalHeroVideoCarousel({
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* Video Audio Mute / Pause Toggle */}
+        {/* Nút bật/tắt tạm dừng tự động chuyển mùa 30s */}
+        <button
+          type="button"
+          onClick={() => setIsPlaying(!isPlaying)}
+          aria-label={isPlaying ? "Tạm dừng tự động chuyển mùa" : "Tiếp tục tự động chuyển mùa"}
+          title={isPlaying ? "Tạm dừng tự động chuyển mùa (30s)" : "Tiếp tục tự động chuyển mùa (30s)"}
+          className="w-9 h-9 rounded-full border border-white/30 bg-black/30 hover:bg-white/20 text-white/80 hover:text-white grid place-items-center ml-1 backdrop-blur-sm transition-all cursor-pointer"
+        >
+          {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+        </button>
+
+        {/* Video Audio Mute / Unmute Toggle */}
         <button
           type="button"
           onClick={() => setIsMuted(!isMuted)}
           aria-label={isMuted ? "Bật âm thanh" : "Tắt âm thanh"}
-          className="w-9 h-9 rounded-full border border-white/30 bg-black/30 hover:bg-white/20 text-white/80 hover:text-white grid place-items-center ml-2 backdrop-blur-sm transition-all cursor-pointer"
+          className="w-9 h-9 rounded-full border border-white/30 bg-black/30 hover:bg-white/20 text-white/80 hover:text-white grid place-items-center ml-1 backdrop-blur-sm transition-all cursor-pointer"
         >
           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
         </button>
       </div>
+
+      {/* Global CSS Animation for the 30-second progress bar fill */}
+      <style jsx>{`
+        @keyframes unlo-season-fill {
+          from {
+            width: 0%;
+          }
+          to {
+            width: 100%;
+          }
+        }
+      `}</style>
     </section>
   );
 }
