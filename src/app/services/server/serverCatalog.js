@@ -35,7 +35,9 @@ export function getPublicSiteUrl() {
     process.env.NULL_ENV === "staging";
 
   if (isStaging) {
-    const stagingUrl = process.env.STAGING_SITE_URL;
+    const stagingUrl =
+      process.env.STAGING_SITE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
     if (!stagingUrl || stagingUrl.trim() === "") {
       throw new Error(
         "Staging environment requires explicit STAGING_SITE_URL; staging.totmart.vn default is prohibited.",
