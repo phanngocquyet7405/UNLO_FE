@@ -35,10 +35,43 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "https://unlo.vn");
+
 export const metadata = {
+  metadataBase: new URL(siteUrl),
   title: "UNLO — Brandless M2C | Chuẩn Xuất Khẩu, Giá Thực Tại Xưởng",
   description:
     "Nền tảng Brandless M2C kết nối trực tiếp 4 nhà máy Tier-1 OEM Việt Nam — minh bạch bóc tách giá thành, Hộ chiếu nhà máy, Smart Fit Finder và đổi trả miễn phí 30 ngày.",
+  openGraph: {
+    title: "UNLO — Brandless M2C | Chuẩn Xuất Khẩu, Giá Thực Tại Xưởng",
+    description:
+      "Nền tảng Brandless M2C kết nối trực tiếp 4 nhà máy Tier-1 OEM Việt Nam — minh bạch bóc tách giá thành, Hộ chiếu nhà máy, Smart Fit Finder và đổi trả miễn phí 30 ngày.",
+    url: siteUrl,
+    siteName: "UNLO",
+    locale: "vi_VN",
+    type: "website",
+    images: [
+      {
+        url: "/assets/logo/unlo-icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "UNLO - Brandless M2C",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "UNLO — Brandless M2C | Chuẩn Xuất Khẩu, Giá Thực Tại Xưởng",
+    description:
+      "Nền tảng Brandless M2C kết nối trực tiếp 4 nhà máy Tier-1 OEM Việt Nam — minh bạch bóc tách giá thành, Hộ chiếu nhà máy, Smart Fit Finder và đổi trả miễn phí 30 ngày.",
+    images: ["/assets/logo/unlo-icon-512.png"],
+  },
   icons: {
     icon: [
       {
