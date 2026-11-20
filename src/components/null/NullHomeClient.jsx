@@ -30,7 +30,6 @@ export default function NullHomeClient() {
   const [activeTab, setActiveTab] = useState("all");
   // Tự động target mùa theo tháng hiện tại làm điểm xuất phát ban đầu, sau đó luân chuyển tiếp tục
   const [currentSeasonIdx, setCurrentSeasonIdx] = useState(() => getSeasonIndexByCurrentMonth());
-  const [isMuted, setIsMuted] = useState(true);
 
   const displayedProducts = useMemo(() => {
     const filtered =
@@ -49,8 +48,6 @@ export default function NullHomeClient() {
         showSeasonNav
         currentSeasonIdx={currentSeasonIdx}
         onSelectSeason={(idx) => setCurrentSeasonIdx(idx)}
-        isMuted={isMuted}
-        onToggleMute={() => setIsMuted((prev) => !prev)}
       />
 
       <main className="flex-1">
@@ -60,8 +57,6 @@ export default function NullHomeClient() {
         <SeasonalHeroVideoCarousel
           currentSeasonIdx={currentSeasonIdx}
           onSeasonChange={(idx) => setCurrentSeasonIdx(idx)}
-          isMuted={isMuted}
-          onToggleMute={() => setIsMuted((prev) => !prev)}
         />
 
         {/* ================================================================
