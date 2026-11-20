@@ -228,7 +228,7 @@ const SEARCH_SUGGESTIONS = [
   "ví da",
 ];
 
-export default function NullHeader() {
+export default function NullHeader({ overlay = false }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useContext(AppContext) || {};
@@ -245,12 +245,53 @@ export default function NullHeader() {
   const [prevPathname, setPrevPathname] = useState(pathname);
   const [openNavDropdown, setOpenNavDropdown] = useState(null);
 
+  const headerRef = useRef(null);
   const accountRef = useRef(null);
   const searchInputRef = useRef(null);
   const navLeaveTimeoutRef = useRef(null);
   const menuButtonRef = useRef(null);
   const drawerRef = useRef(null);
   const prevActiveElementRef = useRef(null);
+
+  // Measure single-row toolbar height and export --header-h to document.documentElement
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof window === "undefined") return;
+
+    const updateHeight = () => {
+      const h = el.offsetHeight;
+      if (h > 0) {
+        document.documentElement.style.setProperty("--header-h", `${h}px`);
+      }
+    };
+
+    updateHeight();
+    const ro = new ResizeObserver(() => updateHeight());
+    ro.observe(el);
+
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.removeProperty("--header-h");
+    };
+  }, []);
+
+  // Sync scroll state (>24px) with passive listener
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Transparent overlay only under lg (<1024px) when scrollY <= 24px and drawer/search closed
+  const isTransparent = Boolean(
+    overlay &&
+    !scrolled &&
+    !mobileOpen &&
+    !searchOpen
+  );
 
   // Manage mobile drawer: scroll lock, auto-close at >=1024px, Escape, and focus restoration
   useEffect(() => {
@@ -346,12 +387,6 @@ export default function NullHeader() {
     if (openNavDropdown) setOpenNavDropdown(null);
   }
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     if (!accountOpen) return;
@@ -476,14 +511,31 @@ export default function NullHeader() {
           2. DUAL-ROW HEADER (Quince 2-Row Layout + Hierarchical Subnav)
           ================================================================ */}
       <header
-        className={`sticky top-0 z-50 w-full bg-white/98 backdrop-blur-[10px] border-b transition-all duration-200 ${
-          scrolled
-            ? "border-[#BBC2DD] shadow-[0_4px_24px_rgba(21,9,93,0.06)]"
-            : "border-[#DDE0EC]"
+        ref={headerRef}
+        className={`sticky top-0 z-50 w-full transition-all duration-200 ${
+          isTransparent
+            ? "bg-transparent border-transparent shadow-none lg:bg-white lg:border-b lg:border-[#DDE0EC]"
+            : scrolled
+            ? "bg-white border-b border-[#BBC2DD] shadow-[0_4px_24px_rgba(21,9,93,0.06)]"
+            : "bg-white border-b border-[#DDE0EC]"
         }`}
       >
+        {/* Subtle dark gradient overlay over photo/video under lg when transparent */}
+        {isTransparent && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/65 via-black/30 to-transparent pointer-events-none lg:hidden -z-10"
+          />
+        )}
+
         {/* ROW 1: Main Brand Bar */}
-        <div className="relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 border-b border-[#F0F2F7]">
+        <div
+          className={`relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 transition-colors ${
+            isTransparent
+              ? "border-b border-white/15 lg:border-[#F0F2F7]"
+              : "border-b border-[#F0F2F7]"
+          }`}
+        >
           {/* Left: Mobile/Tablet Menu Trigger (dưới lg) */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Nút Menu cho Tablet & Mobile (<1024px) */}
@@ -494,9 +546,16 @@ export default function NullHeader() {
               aria-label="Mở menu"
               aria-expanded={mobileOpen}
               aria-controls="site-menu-drawer"
-              className="lg:hidden flex items-center gap-1.5 py-1.5 px-2 -ml-1.5 rounded-full text-[#15095D] hover:bg-[#F4F5FB] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] cursor-pointer"
+              className={`lg:hidden flex items-center gap-1.5 py-1.5 px-2 -ml-1.5 rounded-full transition-colors focus:outline-none focus-visible:ring-2 cursor-pointer ${
+                isTransparent
+                  ? "text-white hover:bg-white/15 focus-visible:ring-white"
+                  : "text-[#15095D] hover:bg-[#F4F5FB] focus-visible:ring-[#15095D]"
+              }`}
             >
-              <Menu className="w-5 h-5 text-[#15095D]" aria-hidden="true" />
+              <Menu
+                className={`w-5 h-5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
+                aria-hidden="true"
+              />
               <span className="hidden md:inline font-semibold text-xs tracking-wider uppercase">Menu</span>
             </button>
           </div>
@@ -509,7 +568,9 @@ export default function NullHeader() {
             <img
               src="/assets/logo/unlo-header.png"
               alt="UNLO — Brandless M2C"
-              className="h-7 sm:h-8 lg:h-9.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              className={`h-7 sm:h-8 lg:h-9.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105 ${
+                isTransparent ? "brightness-0 invert lg:filter-none" : ""
+              }`}
             />
           </Link>
 
@@ -520,9 +581,16 @@ export default function NullHeader() {
               type="button"
               onClick={() => setSearchOpen(true)}
               aria-label="Tìm kiếm"
-              className="lg:hidden w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
+              className={`lg:hidden w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
+                isTransparent
+                  ? "text-white hover:bg-white/15"
+                  : "text-[#15095D] hover:bg-[#F4F5FB]"
+              }`}
             >
-              <Search className="w-5 h-5" aria-hidden="true" />
+              <Search
+                className={`w-5 h-5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
+                aria-hidden="true"
+              />
             </button>
 
             {/* Đăng nhập / Account Dropdown (Hiện từ tablet md: trở lên) */}
@@ -532,9 +600,17 @@ export default function NullHeader() {
                 onClick={() => (user ? setAccountOpen((v) => !v) : router.push("/login"))}
                 aria-label="Tài khoản và đơn hàng"
                 aria-expanded={accountOpen}
-                className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-full text-xs font-medium text-[#15095D] hover:text-[#32259B] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
+                className={`flex items-center gap-1.5 py-1.5 px-2.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                  isTransparent
+                    ? "text-white hover:bg-white/15 lg:text-[#15095D] lg:hover:text-[#32259B] lg:hover:bg-[#F4F5FB]"
+                    : "text-[#15095D] hover:text-[#32259B] hover:bg-[#F4F5FB]"
+                }`}
               >
-                <User className="w-[18px] h-[18px] text-[#15095D]" />
+                <User
+                  className={`w-[18px] h-[18px] ${
+                    isTransparent ? "text-white lg:text-[#15095D]" : "text-[#15095D]"
+                  }`}
+                />
                 <span className="hidden sm:inline">
                   {user ? (user.name ? user.name.split(" ").slice(-1)[0] : "Tài khoản") : "Đăng nhập"}
                 </span>
@@ -609,9 +685,18 @@ export default function NullHeader() {
             <Link
               href="/wishlist"
               aria-label="Danh sách yêu thích"
-              className="relative hidden md:grid w-9 h-9 rounded-full place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+              className={`relative hidden md:grid w-9 h-9 rounded-full place-items-center transition-colors ${
+                isTransparent
+                  ? "text-white hover:bg-white/15 lg:text-[#15095D] lg:hover:bg-[#F4F5FB]"
+                  : "text-[#15095D] hover:bg-[#F4F5FB]"
+              }`}
             >
-              <Heart className="w-[19px] h-[19px] stroke-[1.6]" aria-hidden="true" />
+              <Heart
+                className={`w-[19px] h-[19px] stroke-[1.6] ${
+                  isTransparent ? "stroke-white lg:stroke-[#15095D]" : ""
+                }`}
+                aria-hidden="true"
+              />
               {wishlistCount > 0 && (
                 <span className="absolute top-0.5 right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#15095D] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums">
                   {wishlistCount}
@@ -624,9 +709,18 @@ export default function NullHeader() {
               type="button"
               onClick={() => setIsCartOpen?.(true)}
               aria-label={`Giỏ hàng (${cartCount || 0} sản phẩm)`}
-              className="relative w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
+              className={`relative w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
+                isTransparent
+                  ? "text-white hover:bg-white/15 lg:text-[#15095D] lg:hover:bg-[#F4F5FB]"
+                  : "text-[#15095D] hover:bg-[#F4F5FB]"
+              }`}
             >
-              <ShoppingBag className="w-[19px] h-[19px] stroke-[1.6]" aria-hidden="true" />
+              <ShoppingBag
+                className={`w-[19px] h-[19px] stroke-[1.6] ${
+                  isTransparent ? "stroke-white lg:stroke-[#15095D]" : ""
+                }`}
+                aria-hidden="true"
+              />
               {cartCount > 0 && (
                 <span className="absolute top-0.5 right-0.5 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EB6D48] text-white text-[10px] font-bold grid place-items-center leading-none tabular-nums shadow-xs">
                   {cartCount}

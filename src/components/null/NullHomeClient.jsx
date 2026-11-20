@@ -38,7 +38,7 @@ export default function NullHomeClient() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#15095D]">
-      <NullHeader />
+      <NullHeader overlay />
 
       <main className="flex-1">
         {/* ================================================================

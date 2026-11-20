@@ -144,7 +144,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
   return (
     <section
       ref={containerRef}
-      className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none"
+      className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,0px)] lg:mt-0"
       aria-roledescription="carousel"
       aria-label="Trang chủ theo mùa UNLO"
       onTouchStart={handleTouchStart}
@@ -160,7 +160,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
           return (
             <div
               key={s.key}
-              className="relative shrink-0 w-full min-h-[600px] sm:min-h-[660px] lg:min-h-[780px] flex items-end"
+              className="relative shrink-0 w-full min-h-[100svh] lg:min-h-[780px] flex items-end"
               aria-hidden={!isActive}
             >
               {/* Video with fallback poster image */}
@@ -185,7 +185,7 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
               />
 
               {/* Content Panel (Editorial Minimalist Layout) */}
-              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-20 space-y-4 sm:space-y-5">
+              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-[calc(var(--header-h,0px)+1.5rem)] lg:pt-20 space-y-4 sm:space-y-5">
                 {/* 4-Season Editorial Switcher (Clean, does not block model's face) */}
                 <div className="inline-flex items-center gap-1 p-1 rounded-full bg-[#15095D]/60 backdrop-blur-md border border-white/20 shadow-md">
                   {SEASONS.map((seasonItem, seasonIdx) => {
