@@ -14,7 +14,6 @@ import {
   Search,
   User,
   ShoppingBag,
-  Globe,
   Menu,
   X,
 } from "lucide-react";
@@ -165,10 +164,10 @@ export const NAV_GROUPS = [
     label: "Về UNLO",
     children: [
       {
-        label: "Câu chuyện thương hiệu (About Us)",
+        label: "Câu chuyện thương hiệu",
         href: "/pages/about-us",
         desc: "Triết lý 'Giá trị không cần gọi tên' & Hành trình M2C",
-        badge: "Story",
+        badge: "Câu chuyện",
       },
       {
         label: "Giá trị cốt lõi & Sứ mệnh",
@@ -176,7 +175,7 @@ export const NAV_GROUPS = [
         desc: "Chất lượng, Minh bạch & Kiến tạo giá trị từ sự tử tế",
       },
       {
-        label: "Minh bạch giá thành (Price Chart)",
+        label: "Minh bạch giá thành",
         href: "/pages/about-us#price-chart",
         desc: "Biểu đồ so sánh giá mục tiêu UNLO vs Hàng trôi nổi & Bán lẻ",
       },
@@ -197,7 +196,7 @@ export const NAV_GROUPS = [
         desc: "Cập nhật tiến độ chuyền may và kiến thức chọn vải cơ bản",
       },
       {
-        label: "Câu hỏi thường gặp (FAQ)",
+        label: "Câu hỏi thường gặp",
         href: "/pages/faq",
         desc: "Giải đáp về quy trình đặt hàng, kiểm định và tự đổi trả 30 ngày",
       },
@@ -405,64 +404,68 @@ export default function NullHeader() {
         }`}
       >
         {/* ROW 1: Main Brand Bar */}
-        <div className="max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4 border-b border-[#F0F2F7]">
-          {/* Left: Mobile Menu Trigger + Brand Logo */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <div className="relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 border-b border-[#F0F2F7]">
+          {/* Left: Mobile/Tablet Menu Trigger (dưới lg) + Brand Logo */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            {/* Nút Menu cho Tablet & Mobile (<1024px) */}
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              aria-label="Mở menu điều hướng"
+              aria-label="Mở menu"
               aria-expanded={mobileOpen}
-              className="md:hidden w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+              aria-controls="site-menu-drawer"
+              className="lg:hidden flex items-center gap-1.5 py-1.5 px-2 -ml-1.5 rounded-full text-[#15095D] hover:bg-[#F4F5FB] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] cursor-pointer"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-5 h-5 text-[#15095D]" aria-hidden="true" />
+              <span className="hidden md:inline font-semibold text-xs tracking-wider uppercase">Menu</span>
             </button>
 
+            {/* Logo UNLO: Căn giữa tuyệt đối ở <1024px, về luồng static phía trái ở >=1024px */}
             <Link
               href="/"
-              className="flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg"
+              className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg"
             >
               <img
                 src="/assets/logo/unlo-header.png"
                 alt="UNLO — Brandless M2C"
-                className="h-8 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-7 sm:h-8 lg:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
             </Link>
           </div>
 
-          {/* Right: Search Box + Sign In + Wishlist + Cart + Country/Region */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            {/* Desktop Search Input with Coral Search Button */}
-            <form onSubmit={handleSearchSubmit} className="relative hidden md:flex items-center">
+          {/* Right: Search Box + Đăng nhập + Wishlist + Cart */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {/* Desktop Search Input with Coral Search Button (>=1024px) */}
+            <form onSubmit={handleSearchSubmit} className="relative hidden lg:flex items-center">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search"
+                placeholder="Tìm kiếm"
                 aria-label="Tìm kiếm sản phẩm, chất liệu, xưởng"
-                className="w-48 lg:w-64 xl:w-80 h-9 pl-4 pr-11 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
+                className="lg:w-64 xl:w-80 h-9 pl-3.5 pr-10 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
               />
               <button
                 type="submit"
                 aria-label="Tìm kiếm"
                 className="absolute right-1 w-7 h-7 rounded-full bg-[#EB6D48] hover:bg-[#D95F3B] text-white grid place-items-center transition-colors cursor-pointer"
               >
-                <Search className="w-3.5 h-3.5" />
+                <Search className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </form>
 
-            {/* Mobile Search Button */}
+            {/* Tablet & Mobile Search Icon Button (<1024px - Mở Search Overlay) */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
               aria-label="Tìm kiếm"
-              className="md:hidden w-10 h-10 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+              className="lg:hidden w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-5 h-5" aria-hidden="true" />
             </button>
 
-            {/* Sign In / Account Dropdown */}
-            <div ref={accountRef} className="relative">
+            {/* Đăng nhập / Account Dropdown (Hiện từ tablet md: trở lên) */}
+            <div ref={accountRef} className="relative hidden md:block">
               <button
                 type="button"
                 onClick={() => (user ? setAccountOpen((v) => !v) : router.push("/login"))}
@@ -472,7 +475,7 @@ export default function NullHeader() {
               >
                 <User className="w-[18px] h-[18px] text-[#15095D]" />
                 <span className="hidden sm:inline">
-                  {user ? (user.name ? user.name.split(" ").slice(-1)[0] : "Tài khoản") : "Sign In"}
+                  {user ? (user.name ? user.name.split(" ").slice(-1)[0] : "Tài khoản") : "Đăng nhập"}
                 </span>
               </button>
 
@@ -541,11 +544,11 @@ export default function NullHeader() {
               )}
             </div>
 
-            {/* Wishlist Link */}
+            {/* Wishlist Link (Hiện từ tablet md: trở lên) */}
             <Link
               href="/wishlist"
               aria-label="Danh sách yêu thích"
-              className="relative w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+              className="relative hidden md:grid w-9 h-9 rounded-full place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
             >
               <Heart className="w-[19px] h-[19px] stroke-[1.6]" aria-hidden="true" />
               {wishlistCount > 0 && (
@@ -555,7 +558,7 @@ export default function NullHeader() {
               )}
             </Link>
 
-            {/* Cart Bag Button */}
+            {/* Cart Bag Button (Luôn hiện ở mọi kích thước) */}
             <button
               type="button"
               onClick={() => setIsCartOpen?.(true)}
@@ -569,18 +572,12 @@ export default function NullHeader() {
                 </span>
               )}
             </button>
-
-            {/* Country / Region */}
-            <div className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-[#15095D] pl-2 border-l border-[#E1E4EA]">
-              <Globe className="w-4 h-4 text-[#4E567A]" />
-              <span>VN</span>
-            </div>
           </div>
         </div>
 
-        {/* ROW 2: Hierarchical Category & Pages Subnavigation (Space-Saving) */}
+        {/* ROW 2: Hierarchical Category & Pages Subnavigation (Chỉ hiện trên desktop >=1024px) */}
         <div
-          className="hidden md:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible"
+          className="hidden lg:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible"
           onMouseLeave={handleNavMouseLeave}
         >
           <nav
@@ -784,19 +781,20 @@ export default function NullHeader() {
       )}
 
       {/* ================================================================
-          4. MOBILE DRAWER (.drawer) — Phân tầng theo nhóm danh mục & Pages
+          4. MENU ẨN (DRAWER CHO TABLET & MOBILE DƯỚI 1024PX)
           ================================================================ */}
       {mobileOpen && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Menu di động UNLO"
-          className="fixed inset-0 z-70 bg-[#15095D]/35 backdrop-blur-[3px] md:hidden"
+          aria-label="Menu chính"
+          className="fixed inset-0 z-70 bg-[#15095D]/35 backdrop-blur-[3px] lg:hidden"
           onClick={() => setMobileOpen(false)}
         >
           <nav
-            aria-label="Menu di động"
-            className="fixed top-0 bottom-0 left-0 w-[min(340px,86vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3 shadow-2xl animate-in slide-in-from-left duration-200"
+            id="site-menu-drawer"
+            aria-label="Menu chính"
+            className="fixed top-0 bottom-0 left-0 w-[min(380px,86vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3 shadow-2xl animate-in slide-in-from-left duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
