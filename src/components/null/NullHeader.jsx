@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   Menu,
   X,
+  PhoneCall,
 } from "lucide-react";
 import { AppContext } from "@/app/context/AppContext";
 import { useCart } from "@/app/context/CartContext";
@@ -263,7 +264,20 @@ const PROMO_MESSAGES = [
   },
 ];
 
-export default function NullHeader({ overlay = false }) {
+const SEASONS_NAV = [
+  { id: "xuan", label: "Xuân", idx: 0 },
+  { id: "ha", label: "Hạ", idx: 1 },
+  { id: "thu", label: "Thu", idx: 2 },
+  { id: "dong", label: "Đông", idx: 3 },
+];
+
+export default function NullHeader({
+  overlay = false,
+  opts2 = false,
+  showSeasonNav = false,
+  currentSeasonIdx = 3,
+  onSelectSeason,
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useContext(AppContext) || {};
@@ -280,6 +294,25 @@ export default function NullHeader({ overlay = false }) {
   const [searchString, setSearchString] = useState("");
   const [prevPathname, setPrevPathname] = useState(pathname);
   const [openNavDropdown, setOpenNavDropdown] = useState(null);
+  const [currentLang, setCurrentLang] = useState("vi");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const saved = localStorage.getItem("unlo_language");
+        if (saved && saved !== "vi") setCurrentLang(saved);
+      } catch {}
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleLanguage = () => {
+    const next = currentLang === "vi" ? "en" : "vi";
+    setCurrentLang(next);
+    try {
+      localStorage.setItem("unlo_language", next);
+    } catch {}
+  };
 
   const headerRef = useRef(null);
   const accountRef = useRef(null);
@@ -598,46 +631,92 @@ export default function NullHeader({ overlay = false }) {
               : "border-b border-[#F0F2F7]"
           }`}
         >
-          {/* Left: Mobile/Tablet Menu Trigger (dưới lg) */}
+          {/* Left: Menu Trigger (Opts 2: Hiện cả trên desktop và mobile; ở >=1024px KHÔNG có từ Menu) */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            {/* Nút Menu cho Tablet & Mobile (<1024px) */}
             <button
               ref={menuButtonRef}
               type="button"
               onClick={() => setMobileOpen(true)}
-              aria-label="Mở menu"
+              aria-label="Mở công cụ và danh mục"
               aria-expanded={mobileOpen}
               aria-controls="site-menu-drawer"
-              className={`lg:hidden flex items-center gap-1.5 py-1.5 px-2 -ml-1.5 rounded-full transition-colors focus:outline-none focus-visible:ring-2 cursor-pointer ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 -ml-1 rounded-full grid place-items-center transition-colors focus:outline-none focus-visible:ring-2 cursor-pointer ${
                 isTransparent
                   ? "text-white hover:bg-white/15 focus-visible:ring-white"
                   : "text-[#15095D] hover:bg-[#F4F5FB] focus-visible:ring-[#15095D]"
               }`}
             >
               <Menu
-                className={`w-5 h-5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
+                className={`w-5 h-5 sm:w-5.5 sm:h-5.5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
                 aria-hidden="true"
               />
-              <span className="hidden md:inline font-semibold text-xs tracking-wider uppercase">Menu</span>
             </button>
           </div>
 
-          {/* Center: Logo UNLO căn chính giữa tuyệt đối trên cả Desktop và Mobile/Tablet */}
-          <Link
-            href="/"
-            className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg"
-          >
-            <img
-              src="/assets/logo/unlo-header.png"
-              alt="UNLO — Brandless M2C"
-              className={`h-7 sm:h-8 lg:h-9.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105 ${
-                isTransparent ? "brightness-0 invert lg:filter-none" : ""
-              }`}
-            />
-          </Link>
+          {/* Center: Logo UNLO + PHẦN XUÂN HẠ THU ĐÔNG PHÍA DƯỚI LOGO (Theo Opts 2 trong DOCX) */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center shrink-0">
+            <Link
+              href="/"
+              className="flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg py-0.5"
+            >
+              <img
+                src="/assets/logo/unlo-header.png"
+                alt="UNLO — Brandless M2C"
+                className={`h-6 sm:h-7 lg:h-8.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105 ${
+                  isTransparent ? "brightness-0 invert" : ""
+                }`}
+              />
+            </Link>
 
-          {/* Right: Tablet/Mobile Search Icon + Đăng nhập + Wishlist + Cart */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {/* Dải 4 mùa: Xuân - Hạ - Thu - Đông phía dưới logo UNLO */}
+            {showSeasonNav && (
+              <nav
+                aria-label="Chọn bộ sưu tập 4 mùa"
+                className="flex items-center gap-2.5 sm:gap-4 lg:gap-6 pt-0.5 select-none"
+              >
+                {SEASONS_NAV.map((s) => {
+                  const isActive = currentSeasonIdx === s.idx;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => onSelectSeason?.(s.idx)}
+                      className={`relative py-0.5 text-[10px] sm:text-[11px] lg:text-[12px] font-bold uppercase tracking-[0.16em] transition-all cursor-pointer ${
+                        isActive
+                          ? isTransparent
+                            ? "text-white drop-shadow-md after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-white after:rounded-full font-extrabold"
+                            : "text-[#15095D] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D] after:rounded-full font-extrabold"
+                          : isTransparent
+                            ? "text-white/65 hover:text-white"
+                            : "text-[#625FBC] hover:text-[#15095D]"
+                      }`}
+                    >
+                      <span>{s.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            )}
+          </div>
+
+          {/* Right: Language switch + Search + Đăng nhập + Wishlist + Cart */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Chuyển đổi ngôn ngữ VN -> ENG (Opts 1) */}
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              aria-label={`Chuyển ngôn ngữ sang ${currentLang === "vi" ? "English" : "Tiếng Việt"}`}
+              title={currentLang === "vi" ? "Switch to English" : "Chuyển sang Tiếng Việt"}
+              className={`inline-flex items-center justify-center h-8 px-2.5 rounded-full text-[11px] font-bold tracking-wider uppercase transition-colors cursor-pointer border ${
+                isTransparent
+                  ? "border-white/30 text-white hover:bg-white/15"
+                  : "border-[#DDE0EC] text-[#15095D] hover:bg-[#F4F5FB]"
+              }`}
+            >
+              <span>{currentLang === "vi" ? "VN" : "ENG"}</span>
+            </button>
             {/* Tablet & Mobile Search Icon Button (<1024px - Mở Search Overlay) */}
             <button
               type="button"
@@ -792,11 +871,12 @@ export default function NullHeader({ overlay = false }) {
           </div>
         </div>
 
-        {/* ROW 2: Hierarchical Category & Search Bar (Phong cách Noam trên Desktop >=1024px) */}
-        <div
-          className="hidden lg:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible"
-          onMouseLeave={handleNavMouseLeave}
-        >
+        {/* ROW 2: Hierarchical Category & Search Bar (Opts 2: Ẩn trên cover để full-frame, hiện khi scroll xuống) */}
+        {(!opts2 || scrolled) && (
+          <div
+            className="hidden lg:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible animate-in fade-in duration-200"
+            onMouseLeave={handleNavMouseLeave}
+          >
           <div className="flex items-center justify-between gap-4">
             <nav
               aria-label="Danh mục chính UNLO"
@@ -921,6 +1001,7 @@ export default function NullHeader({ overlay = false }) {
           </form>
         </div>
       </div>
+      )}
       </header>
 
       {/* ================================================================
@@ -1019,14 +1100,14 @@ export default function NullHeader({ overlay = false }) {
       )}
 
       {/* ================================================================
-          4. MENU ẨN (DRAWER CHO TABLET & MOBILE DƯỚI 1024PX)
+          4. MENU ẨN / SIDEBAR TOOL (CHO CẢ DESKTOP & MOBILE THEO OPTS 2)
           ================================================================ */}
       {mobileOpen && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Menu chính"
-          className="fixed inset-0 z-70 bg-[#15095D]/35 backdrop-blur-[3px] lg:hidden"
+          aria-label="Menu chính và công cụ UNLO"
+          className="fixed inset-0 z-70 bg-[#15095D]/35 backdrop-blur-[3px]"
           onClick={() => setMobileOpen(false)}
         >
           <nav
@@ -1035,7 +1116,7 @@ export default function NullHeader({ overlay = false }) {
             aria-label="Menu chính"
             tabIndex={-1}
             onKeyDown={handleDrawerKeyDown}
-            className="fixed top-0 bottom-0 left-0 w-[min(360px,88vw)] md:w-[min(420px,88vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3 shadow-2xl animate-in slide-in-from-left duration-200 motion-reduce:transition-none motion-reduce:animate-none"
+            className="fixed top-0 bottom-0 left-0 w-[min(380px,88vw)] md:w-[min(440px,88vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3.5 shadow-2xl animate-in slide-in-from-left duration-200 motion-reduce:transition-none motion-reduce:animate-none"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
@@ -1063,7 +1144,7 @@ export default function NullHeader({ overlay = false }) {
                 handleSearchSubmit(e);
                 setMobileOpen(false);
               }}
-              className="relative flex items-center my-1"
+              className="relative flex items-center my-0.5"
             >
               <input
                 type="text"
@@ -1082,8 +1163,43 @@ export default function NullHeader({ overlay = false }) {
               </button>
             </form>
 
+            {/* Language Switcher in Drawer (Opts 1: VN -> ENG thống nhất) */}
+            <div className="flex items-center justify-between px-3 py-2 bg-[#F6F7FC] rounded-2xl border border-[#E9ECF5]">
+              <span className="text-xs font-semibold text-[#15095D]">Ngôn ngữ:</span>
+              <div className="flex items-center gap-1 bg-white p-0.5 rounded-xl border border-[#DDE0EC]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentLang("vi");
+                    try { localStorage.setItem("unlo_language", "vi"); } catch {}
+                  }}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                    currentLang === "vi"
+                      ? "bg-[#15095D] text-white shadow-xs"
+                      : "text-[#5E607E] hover:text-[#15095D]"
+                  }`}
+                >
+                  Tiếng Việt
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentLang("en");
+                    try { localStorage.setItem("unlo_language", "en"); } catch {}
+                  }}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                    currentLang === "en"
+                      ? "bg-[#15095D] text-white shadow-xs"
+                      : "text-[#5E607E] hover:text-[#15095D]"
+                  }`}
+                >
+                  English
+                </button>
+              </div>
+            </div>
+
             {/* Quick Utilities in Drawer: Wishlist & Cart */}
-            <div className="grid grid-cols-2 gap-2 py-1">
+            <div className="grid grid-cols-2 gap-2 py-0.5">
               <Link
                 href="/wishlist"
                 onClick={() => setMobileOpen(false)}
@@ -1173,6 +1289,82 @@ export default function NullHeader({ overlay = false }) {
                   </div>
                 );
               })}
+            </div>
+
+            {/* ================================================================
+                KHỐI LIÊN HỆ & HỖ TRỢ KHÁCH HÀNG (YÊU CẦU ĐẶC BIỆT TRONG TOOL/SIDEBAR)
+                ================================================================ */}
+            <div className="my-2 p-4 rounded-2xl bg-[#FCFDF1] border border-[#DDE0EC] space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#15095D]">
+                  <PhoneCall className="w-4 h-4 text-[#EB6D48]" />
+                  <span>Liên Hệ &amp; Hỗ Trợ UNLO</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-[#1D7A5F]/10 text-[#1D7A5F] text-[10px] font-bold">
+                  08:00 – 21:30
+                </span>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <div className="flex items-center justify-between py-1 border-b border-[#EFF2F9]">
+                  <span className="text-[#5E607E]">Hotline xưởng:</span>
+                  <a
+                    href="tel:19006868"
+                    className="font-bold text-[#15095D] hover:text-[#EB6D48] transition-colors"
+                  >
+                    1900 6868 (Miễn phí)
+                  </a>
+                </div>
+
+                <div className="flex items-center justify-between py-1 border-b border-[#EFF2F9]">
+                  <span className="text-[#5E607E]">Zalo CSKH:</span>
+                  <a
+                    href="https://zalo.me"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-[#32259B] hover:underline"
+                  >
+                    UNLO Official Account
+                  </a>
+                </div>
+
+                <div className="flex items-center justify-between py-1 border-b border-[#EFF2F9]">
+                  <span className="text-[#5E607E]">Email hỗ trợ:</span>
+                  <a
+                    href="mailto:hotro@unlo.vn"
+                    className="font-semibold text-[#15095D] hover:underline"
+                  >
+                    hotro@unlo.vn
+                  </a>
+                </div>
+
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-[#5E607E]">Đặt số lượng / B2B:</span>
+                  <a
+                    href="mailto:b2b@unlo.vn"
+                    className="font-semibold text-[#15095D] hover:underline"
+                  >
+                    b2b@unlo.vn
+                  </a>
+                </div>
+              </div>
+
+              <div className="pt-1 flex gap-2">
+                <Link
+                  href="/pages/about-us"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 py-2 text-center rounded-xl bg-white border border-[#DDE0EC] text-[11px] font-semibold text-[#15095D] hover:bg-[#F4F5FB] transition-colors"
+                >
+                  Về chúng tôi
+                </Link>
+                <Link
+                  href="/factories"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 py-2 text-center rounded-xl bg-[#15095D] text-[11px] font-semibold text-white hover:bg-[#1F0C85] transition-colors"
+                >
+                  Hồ sơ 4 xưởng
+                </Link>
+              </div>
             </div>
 
             {/* Bottom Actions */}

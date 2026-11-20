@@ -10,6 +10,7 @@ import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
 import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
 import BrandMarquee from "./BrandMarquee";
+import BlackFridayCountdown from "./BlackFridayCountdown";
 import SupportChatbotDrawer from "./SupportChatbotDrawer";
 import TrustBar from "./TrustBar";
 import HomeEmbroideryStudio from "./HomeEmbroideryStudio";
@@ -27,25 +28,35 @@ const BESTSELLER_TABS = [
 
 export default function NullHomeClient() {
   const [activeTab, setActiveTab] = useState("all");
-  const [, setActiveSeason] = useState(null);
+  const [currentSeasonIdx, setCurrentSeasonIdx] = useState(3); // Default to Đông (chiến dịch mùa đông)
 
   const displayedProducts = useMemo(() => {
     const filtered =
       activeTab === "all"
         ? UNLO_PRODUCTS
         : UNLO_PRODUCTS.filter((p) => p.categorySlug === activeTab);
-    return filtered.slice(0, 10);
+    return filtered.slice(0, 8); // 2 hàng x 4 sản phẩm = 8 sản phẩm chuẩn e-commerce theo DOCX
   }, [activeTab]);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#15095D]">
-      <NullHeader overlay />
+      {/* Header chuẩn Opts 2: Overlay trên cover, Logo UNLO ở giữa + Dải 4 mùa Xuân-Hạ-Thu-Đông ngay phía dưới logo */}
+      <NullHeader
+        overlay
+        opts2
+        showSeasonNav
+        currentSeasonIdx={currentSeasonIdx}
+        onSelectSeason={(idx) => setCurrentSeasonIdx(idx)}
+      />
 
       <main className="flex-1">
         {/* ================================================================
-            1. HERO CAROUSEL THEO MÙA (4 MÙA THỜI TRANG: XUÂN, HẠ, THU, ĐÔNG)
+            1. HERO CAROUSEL THEO MÙA (TỰ ĐỘNG CHUYỂN MÙA XUÂN-HẠ-THU-ĐÔNG THEO DOCX)
             ================================================================ */}
-        <SeasonalHeroVideoCarousel onSeasonChange={setActiveSeason} />
+        <SeasonalHeroVideoCarousel
+          currentSeasonIdx={currentSeasonIdx}
+          onSeasonChange={(idx) => setCurrentSeasonIdx(idx)}
+        />
 
         {/* ================================================================
             DẢI CHỮ CHẠY (MARQUEE) THƯƠNG HIỆU DƯỚI COVER
@@ -53,11 +64,69 @@ export default function NullHomeClient() {
         <BrandMarquee />
 
         {/* ================================================================
-            2. SHOP BY CATEGORY — DANH MỤC NHANH (NGAY DƯỚI HERO)
+            2. FLASH SALE BLACK FRIDAY (ĐẨY LÊN NGAY DƯỚI COVER/MARQUEE THEO DOCX)
+            ================================================================ */}
+        <BlackFridayCountdown />
+
+        {/* ================================================================
+            3. BEST SELLERS PRODUCT GRID (LƯỚI 4 CỘT CHUẨN THEO DOCX)
+            ================================================================ */}
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-14 space-y-7">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-1">
+              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC] uppercase font-bold">
+                FACTORY DIRECT BEST SELLERS
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#15095D]">
+                Sản Phẩm Tiêu Biểu Từ Các Xưởng
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              {BESTSELLER_TABS.map((tab) => {
+                const active = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`h-9 px-4 rounded-full text-xs font-semibold whitespace-nowrap transition-colors null-pressable cursor-pointer ${
+                      active
+                        ? "bg-[#15095D] text-[#FCFDF1]"
+                        : "bg-[#EFF2F9] text-[#4E567A] hover:bg-[#DCE0E7] hover:text-[#15095D]"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Lưới 4 cột chuẩn: 2 hàng x 4 sản phẩm theo yêu cầu DOCX */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {displayedProducts.map((product) => (
+              <NullProductCard key={product._id} product={product} />
+            ))}
+          </div>
+
+          <div className="text-center pt-4">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 h-11 px-8 rounded-full unlo-pill-outline text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#15095D] hover:text-white transition-colors"
+            >
+              <span>Xem Toàn Bộ {UNLO_PRODUCTS.length} Sản Phẩm M2C</span>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
+
+        {/* ================================================================
+            4. SHOP BY CATEGORY — DANH MỤC NHANH (ICON TRÒN CUỘN MƯỢT)
             ================================================================ */}
         <section
           aria-label="Danh mục ngành hàng xưởng"
-          className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-14 pb-6"
+          className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12"
         >
           <div className="flex items-end justify-between mb-6">
             <div>
@@ -99,58 +168,6 @@ export default function NullHomeClient() {
                 </span>
               </Link>
             ))}
-          </div>
-        </section>
-
-        {/* ================================================================
-            3. BEST SELLERS PRODUCT GRID (KHỐI CHUYỂN ĐỔI CHỦ LỰC)
-            ================================================================ */}
-        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-14 space-y-7">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-1">
-              <p className="unlo-display-en text-[11px] tracking-[0.14em] text-[#625FBC] uppercase font-bold">
-                FACTORY DIRECT BEST SELLERS
-              </p>
-              <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#15095D]">
-                Sản Phẩm Tiêu Biểu Từ Các Xưởng
-              </h2>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-              {BESTSELLER_TABS.map((tab) => {
-                const active = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`h-9 px-4 rounded-full text-xs font-semibold whitespace-nowrap transition-colors null-pressable cursor-pointer ${
-                      active
-                        ? "bg-[#15095D] text-[#FCFDF1]"
-                        : "bg-[#EFF2F9] text-[#4E567A] hover:bg-[#DCE0E7] hover:text-[#15095D]"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-8 sm:gap-x-5">
-            {displayedProducts.map((product) => (
-              <NullProductCard key={product._id} product={product} />
-            ))}
-          </div>
-
-          <div className="text-center pt-4">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 h-11 px-8 rounded-full unlo-pill-outline text-xs font-bold uppercase tracking-[0.12em] hover:bg-[#15095D] hover:text-white transition-colors"
-            >
-              <span>Xem Toàn Bộ {UNLO_PRODUCTS.length} Sản Phẩm M2C</span>
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </Link>
           </div>
         </section>
 

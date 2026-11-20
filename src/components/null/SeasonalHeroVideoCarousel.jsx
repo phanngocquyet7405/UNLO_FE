@@ -80,25 +80,47 @@ export const SEASONS = [
   },
 ];
 
-export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
-  const [currentIdx, setCurrentIdx] = useState(3); // Default to Đông (season of campaign)
+export default function SeasonalHeroVideoCarousel({
+  currentSeasonIdx: controlledIdx,
+  onSeasonChange,
+}) {
+  const [internalIdx, setInternalIdx] = useState(3); // Default to Đông
+  const currentIdx = controlledIdx !== undefined ? controlledIdx : internalIdx;
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRefs = useRef([]);
   const containerRef = useRef(null);
   const touchStartRef = useRef(null);
 
-  const activeSeason = SEASONS[currentIdx];
+  const onSeasonChangeRef = useRef(onSeasonChange);
+  useEffect(() => {
+    onSeasonChangeRef.current = onSeasonChange;
+  });
 
   const handleSelectSeason = (idx) => {
     const nextIdx = (idx + SEASONS.length) % SEASONS.length;
-    setCurrentIdx(nextIdx);
-    onSeasonChange?.(SEASONS[nextIdx]);
+    if (controlledIdx === undefined) {
+      setInternalIdx(nextIdx);
+    }
+    onSeasonChangeRef.current?.(nextIdx, SEASONS[nextIdx]);
   };
 
   useEffect(() => {
-    onSeasonChange?.(SEASONS[currentIdx]);
-  }, []);
+    onSeasonChangeRef.current?.(currentIdx, SEASONS[currentIdx]);
+  }, [currentIdx]);
+
+  // Tự động chuyển mùa (Xuân -> Hạ -> Thu -> Đông) theo yêu cầu DOCX
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = setInterval(() => {
+      const nextIdx = (currentIdx + 1) % SEASONS.length;
+      if (controlledIdx === undefined) {
+        setInternalIdx(nextIdx);
+      }
+      onSeasonChangeRef.current?.(nextIdx, SEASONS[nextIdx]);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [currentIdx, isPlaying, controlledIdx]);
 
   // Play active video, pause others
   useEffect(() => {
@@ -223,8 +245,8 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
                   <span>{s.badge}</span>
                 </div>
 
-                {/* Big Editorial Headline */}
-                <h1 className="font-unlo-title font-bold text-4xl sm:text-6xl lg:text-7xl leading-[1.08] max-w-2xl drop-shadow-sm">
+                {/* Big Editorial Headline (Đồng nhất font Climate Crisis theo yêu cầu DOCX) */}
+                <h1 className="font-display uppercase tracking-tight text-3xl sm:text-5xl lg:text-6xl leading-[1.12] max-w-3xl drop-shadow-md">
                   {s.headlinePart1}{" "}
                   <span style={{ color: s.accent }}>{s.headlinePart2}</span>
                 </h1>
@@ -234,21 +256,29 @@ export default function SeasonalHeroVideoCarousel({ onSeasonChange }) {
                   {s.lead}
                 </p>
 
-                {/* CTAs (Refined Visual Hierarchy) */}
+                {/* CTAs theo yêu cầu DOCX: Shop All / Shop Flashsale / Discover Now */}
                 <div className="flex flex-wrap items-center gap-3 pt-2">
                   <Link
-                    href={s.ctaLink || "#cua-hang"}
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#15095D] text-xs sm:text-sm font-bold tracking-wide shadow-md hover:bg-[#FCFDF1] transition-transform hover:scale-105 active:scale-95"
+                    href="/products"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-[#15095D] text-xs sm:text-sm font-bold tracking-wider uppercase shadow-md hover:bg-[#FCFDF1] transition-transform hover:scale-105 active:scale-95"
                   >
-                    <span>{s.ctaText || "Mua bộ sưu tập"}</span>
+                    <span>Shop All</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
                   <Link
-                    href="/b2b"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/40 bg-white/5 hover:bg-white/20 text-white/90 hover:text-white text-xs font-semibold tracking-wide backdrop-blur-sm transition-all active:scale-95"
+                    href="#black-friday"
+                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-[#EB6D48] text-white text-xs sm:text-sm font-bold tracking-wider uppercase shadow-md hover:bg-[#D95F3B] transition-transform hover:scale-105 active:scale-95"
                   >
-                    <span>Đặt số lượng cho CLB</span>
+                    <Sparkles className="w-4 h-4" />
+                    <span>Shop Flashsale</span>
+                  </Link>
+
+                  <Link
+                    href="/pages/about-us"
+                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full border border-white/50 bg-black/25 hover:bg-white hover:text-[#15095D] text-white text-xs sm:text-sm font-bold tracking-wider uppercase backdrop-blur-sm transition-all active:scale-95"
+                  >
+                    <span>Discover Now</span>
                   </Link>
                 </div>
               </div>
