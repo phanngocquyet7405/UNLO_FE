@@ -405,7 +405,7 @@ export default function NullHeader() {
       >
         {/* ROW 1: Main Brand Bar */}
         <div className="relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 border-b border-[#F0F2F7]">
-          {/* Left: Mobile/Tablet Menu Trigger (dưới lg) + Tagline M2C (trên lg) */}
+          {/* Left: Mobile/Tablet Menu Trigger (dưới lg) */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Nút Menu cho Tablet & Mobile (<1024px) */}
             <button
@@ -419,12 +419,6 @@ export default function NullHeader() {
               <Menu className="w-5 h-5 text-[#15095D]" aria-hidden="true" />
               <span className="hidden md:inline font-semibold text-xs tracking-wider uppercase">Menu</span>
             </button>
-
-            {/* Định vị M2C thanh lịch cho Desktop (>=1024px) theo phong cách Noam */}
-            <div className="hidden lg:flex items-center gap-2 text-[11px] font-semibold tracking-wider text-[#68708C] uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#EB6D48]" />
-              <span>M2C DIRECT · GIÁ THỰC TẠI XƯỞNG</span>
-            </div>
           </div>
 
           {/* Center: Logo UNLO căn chính giữa tuyệt đối trên cả Desktop và Mobile/Tablet */}
