@@ -171,6 +171,7 @@ export default function SeasonalHeroVideoCarousel({
   return (
     <section
       ref={containerRef}
+      suppressHydrationWarning
       className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,0px)]"
       aria-roledescription="carousel"
       aria-label="Trang chủ theo mùa UNLO"
@@ -179,6 +180,7 @@ export default function SeasonalHeroVideoCarousel({
     >
       {/* Slide Track */}
       <div
+        suppressHydrationWarning
         className="flex transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
         style={{ transform: `translateX(-${currentIdx * 100}%)` }}
       >
@@ -187,6 +189,7 @@ export default function SeasonalHeroVideoCarousel({
           return (
             <div
               key={s.key}
+              suppressHydrationWarning
               className="relative shrink-0 w-full min-h-[100svh] lg:min-h-[820px] flex items-end"
               aria-hidden={!isActive}
             >
@@ -199,6 +202,7 @@ export default function SeasonalHeroVideoCarousel({
                 loop
                 playsInline
                 preload={isActive ? "auto" : "none"}
+                suppressHydrationWarning
                 className="absolute inset-0 w-full h-full object-cover object-center"
               />
 
@@ -315,18 +319,6 @@ export default function SeasonalHeroVideoCarousel({
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-
-      {/* Global CSS Animation for the 30-second progress bar fill */}
-      <style jsx>{`
-        @keyframes unlo-season-fill {
-          from {
-            width: 0%;
-          }
-          to {
-            width: 100%;
-          }
-        }
-      `}</style>
     </section>
   );
 }

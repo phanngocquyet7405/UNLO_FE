@@ -40,7 +40,10 @@ export default function NullHomeClient() {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#15095D]">
+    <div
+      suppressHydrationWarning
+      className="min-h-screen flex flex-col bg-white text-[#15095D]"
+    >
       {/* Header chuẩn Opts 2: Overlay trên cover, Logo UNLO ở giữa + Dải 4 mùa Xuân-Hạ-Thu-Đông ngay phía dưới logo */}
       <NullHeader
         overlay
