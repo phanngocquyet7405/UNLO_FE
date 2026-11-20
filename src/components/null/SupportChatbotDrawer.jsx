@@ -127,23 +127,23 @@ export default function SupportChatbotDrawer() {
 
   return (
     <>
-      {/* Floating Trigger Button in bottom-right */}
-      <div className="fixed bottom-6 right-6 z-40 select-none">
+      {/* Floating Trigger Button in bottom-right (Nâng lên trên thanh Bottom Tab Bar ở mobile để không che icon Tài khoản) */}
+      <div className="fixed bottom-[calc(70px+env(safe-area-inset-bottom,0px))] right-4 lg:bottom-6 lg:right-6 z-40 select-none">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Đóng hộp trò chuyện" : "Mở trợ lý hỗ trợ khách hàng"}
-          className="relative w-14 h-14 rounded-full bg-[#15095D] hover:bg-[#32259B] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 cursor-pointer group"
+          className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#15095D] hover:bg-[#32259B] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 cursor-pointer group"
         >
           {isOpen ? (
-            <X className="w-6 h-6 text-white" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           ) : (
             <>
-              <MessageSquare className="w-6 h-6 text-white" />
+              <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               {/* Green Pulse Online Dot */}
-              <span className="absolute top-1 right-1 flex h-3.5 w-3.5">
+              <span className="absolute top-1 right-1 flex h-3 sm:h-3.5 w-3 sm:w-3.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1D7A5F] opacity-75" />
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#1D7A5F] border-2 border-white" />
+                <span className="relative inline-flex rounded-full h-full w-full bg-[#1D7A5F] border-2 border-white" />
               </span>
             </>
           )}
@@ -152,7 +152,7 @@ export default function SupportChatbotDrawer() {
 
       {/* Slide-over Chatbot Drawer */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 z-50 w-[92vw] sm:w-[380px] max-h-[580px] h-[78vh] bg-white rounded-3xl shadow-2xl border border-[#DCE0E7] flex flex-col overflow-hidden animate-slide-in-up">
+        <div className="fixed bottom-[calc(130px+env(safe-area-inset-bottom,0px))] right-3 sm:right-6 lg:bottom-24 z-50 w-[92vw] sm:w-[380px] max-h-[580px] h-[75vh] bg-white rounded-3xl shadow-2xl border border-[#DCE0E7] flex flex-col overflow-hidden animate-slide-in-up">
           {/* Header */}
           <div className="bg-[#15095D] text-white p-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">

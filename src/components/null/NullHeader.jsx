@@ -627,7 +627,7 @@ export default function NullHeader({
 
         {/* ROW 1: Main Brand Bar */}
         <div
-          className={`relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 transition-colors ${
+          className={`relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 min-h-[58px] sm:min-h-[64px] lg:min-h-[70px] py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 transition-colors ${
             isTransparent
               ? "border-b border-white/15"
               : "border-b border-[#F0F2F7]"
@@ -656,7 +656,7 @@ export default function NullHeader({
           </div>
 
           {/* Center: Logo UNLO + PHẦN XUÂN HẠ THU ĐÔNG PHÍA DƯỚI LOGO (Theo Opts 2 trong DOCX) */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center shrink-0">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center shrink-0">
             <Link
               href="/"
               className="flex items-center gap-2 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15095D] rounded-lg py-0.5"
@@ -771,12 +771,20 @@ export default function NullHeader({
                         <p className="text-[11px] text-[#5E607E] truncate">{user.email}</p>
                       </div>
                       <Link
+                        href="/profile"
+                        onClick={() => setAccountOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-[#15095D] hover:bg-[#F4F5FB]"
+                      >
+                        <User className="w-4 h-4 text-[#443EB1]" />
+                        Hồ sơ cá nhân
+                      </Link>
+                      <Link
                         href="/profile/orders"
                         onClick={() => setAccountOpen(false)}
                         className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-[#15095D] hover:bg-[#F4F5FB]"
                       >
                         <RotateCcw className="w-4 h-4 text-[#443EB1]" />
-                        Đơn hàng &amp; Tra cứu bảo hành
+                        Thông tin đơn hàng &amp; Tra cứu
                       </Link>
                       {isStaff && (
                         <Link

@@ -10,7 +10,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { ArrowRight, ShoppingBag } from "lucide-react";
+import { ArrowRight, ShoppingBag, Package, Sparkles, Gift, UserCircle } from "lucide-react";
 
 import { AddressManager } from "../components/profile/AddressManager";
 import { CartManager } from "../components/profile/CartManager";
@@ -293,6 +293,66 @@ export default function ProfilePage() {
           <ArrowRight size={13} className="text-muted-foreground" />
         </Link>
       </div>
+
+      {/* Quick Account Hub Navigation Banner */}
+      {user && !loading && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#15095D]/[0.03] border border-[#15095D]/10 rounded-2xl p-3 sm:p-4">
+          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-border/60 shadow-2xs">
+            <div className="w-10 h-10 rounded-xl bg-[#15095D]/10 text-[#15095D] grid place-items-center shrink-0">
+              <UserCircle className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Tài khoản</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground truncate">{user.name || user.email}</p>
+            </div>
+          </div>
+
+          <Link
+            href="/profile/orders"
+            className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-border/60 shadow-2xs hover:border-primary/50 transition-colors group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#EB6D48]/10 text-[#EB6D48] grid place-items-center shrink-0 group-hover:scale-105 transition-transform">
+              <Package className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Đơn hàng</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                Thông tin đơn hàng
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/profile/my-subscriptions"
+            className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-border/60 shadow-2xs hover:border-primary/50 transition-colors group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#32259B]/10 text-[#32259B] grid place-items-center shrink-0 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Hội viên</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                Gói định kỳ M2C
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href="/profile/referral"
+            className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-border/60 shadow-2xs hover:border-primary/50 transition-colors group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#1D7A5F]/10 text-[#1D7A5F] grid place-items-center shrink-0 group-hover:scale-105 transition-transform">
+              <Gift className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Ưu đãi</p>
+              <p className="text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                Giới thiệu bạn bè
+              </p>
+            </div>
+          </Link>
+        </div>
+      )}
 
       {/* Content */}
       {loading || !user ? (

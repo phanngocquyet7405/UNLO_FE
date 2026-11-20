@@ -61,7 +61,7 @@ export default function NullMobileBottomNav({ onOpenMenu, onOpenCart }) {
     {
       id: "account",
       label: user ? (user.name ? user.name.split(" ").slice(-1)[0] : "Tài khoản") : "Tài khoản",
-      href: user ? "/profile/orders" : "/login",
+      href: "/profile",
       icon: User,
       isActive: pathname?.startsWith("/profile") || pathname === "/login",
     },

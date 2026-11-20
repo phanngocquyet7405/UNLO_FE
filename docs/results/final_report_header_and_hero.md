@@ -198,3 +198,34 @@ Qua phân tích chi tiết log lỗi Hydration:
 4. **Loại bỏ hoàn toàn nút Pause:**
    - Hero video chạy mượt mà tuần hoàn theo thời gian, không có nút dừng video, tự nhận diện tháng hiện tại làm điểm xuất phát.
 
+---
+
+## 8. CĂN CHỈNH LOGO KHI CUỘN, NÂNG CHATBOT & ĐIỀU HƯỚNG HỒ SƠ CÁ NHÂN
+
+### 8.1. Khắc phục logo bị cấn mép trên khi cuộn trang (Sticky Header)
+- **Vấn đề:** Khi cuộn trang xuống một đoạn, Header chuyển sang chế độ ghim (`sticky top-0`). Cụm logo UNLO do định vị `absolute` thiếu căn giữa trục dọc khiến khoảng cách đến mép trên chỉ còn 1.5px – 3.5px, làm cho đầu các chữ cái `U-N-L-O` bị cấn hoặc cắt bớt vài pixel.
+- **Giải pháp:**
+  - Bổ sung `top-1/2 -translate-y-1/2` vào cụm `div.absolute` ở giữa để căn giữa hoàn hảo cả trục ngang và dọc.
+  - Thiết lập chiều cao tối thiểu an toàn cho Row 1: `min-h-[58px] sm:min-h-[64px] lg:min-h-[70px]`.
+  - **Kết quả:** Khoảng cách thở trên đỉnh logo đạt **6.0px** (`logoTopClearance: 6px`, `isLogoClippedAtTop: false`), không bao giờ bị cắt chữ.
+
+### 8.2. Di chuyển nút Chatbot không che icon Tài khoản trên Mobile
+- **Vấn đề:** Nút tròn Chatbot CSKH cố định ở `bottom-6 right-6` nằm đè trực tiếp lên icon "Tài khoản" của thanh Bottom Tab Bar ở góc dưới bên phải màn hình di động.
+- **Giải pháp:**
+  - Trên mobile (`< 1024px`), nâng vị trí nút Chatbot lên `bottom-[calc(70px+env(safe-area-inset-bottom,0px))] right-4`.
+  - Khung hội thoại Drawer nâng lên `bottom-[calc(130px+env(safe-area-inset-bottom,0px))]`.
+  - Trên Desktop ($\ge 1024px$), giữ nguyên vị trí góc phải chuẩn `bottom-6 right-6`.
+  - **Kết quả:** Nút Chatbot nổi cao hơn thanh Bottom Tab Bar **9px**, tạo lối đi thông thoáng và không còn bất kỳ va chạm nào với các tab.
+
+### 8.3. Bấm icon Tài khoản dẫn đến Hồ sơ cá nhân & Trang Hub tích hợp
+- **Cập nhật Bottom Tab Bar:** Bấm icon "Tài khoản" điều hướng trực tiếp đến `/profile` (thay vì nhảy vào trang đơn hàng như trước).
+- **Trang Hub Hồ sơ cá nhân (`/profile`):**
+  - Bổ sung thanh điều hướng nhanh (Quick Hub Navigation Banner) 4 khối thẻ trực quan:
+    1. 👤 **Hồ sơ cá nhân:** Thông tin tài khoản, email, số điện thoại, ngày sinh.
+    2. 📦 **Thông tin đơn hàng:** Truy cập trực tiếp danh sách đơn hàng & tra cứu (`/profile/orders`).
+    3. 💎 **Hội viên:** Gói định kỳ M2C (`/profile/my-subscriptions`).
+    4. 🎁 **Ưu đãi:** Giới thiệu bạn bè (`/profile/referral`).
+  - Tích hợp thêm tab **"Thông tin đơn hàng"** vào thanh tab chính `ProfileTabs.jsx`.
+- **Cập nhật Desktop Account Dropdown:** Bổ sung liên kết trực tiếp đến **Hồ sơ cá nhân** (`/profile`) ngay trên mục **Thông tin đơn hàng & Tra cứu** (`/profile/orders`).
+
+
