@@ -9,6 +9,7 @@ import NullProductCard from "./NullProductCard";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
 import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
+import BrandMarquee from "./BrandMarquee";
 import SupportChatbotDrawer from "./SupportChatbotDrawer";
 import TrustBar from "./TrustBar";
 import HomeEmbroideryStudio from "./HomeEmbroideryStudio";
@@ -45,6 +46,11 @@ export default function NullHomeClient() {
             1. HERO CAROUSEL THEO MÙA (4 MÙA THỜI TRANG: XUÂN, HẠ, THU, ĐÔNG)
             ================================================================ */}
         <SeasonalHeroVideoCarousel onSeasonChange={setActiveSeason} />
+
+        {/* ================================================================
+            DẢI CHỮ CHẠY (MARQUEE) THƯƠNG HIỆU DƯỚI COVER
+            ================================================================ */}
+        <BrandMarquee />
 
         {/* ================================================================
             2. SHOP BY CATEGORY — DANH MỤC NHANH (NGAY DƯỚI HERO)
