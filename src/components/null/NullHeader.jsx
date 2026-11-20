@@ -17,6 +17,8 @@ import {
   Menu,
   X,
   PhoneCall,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { AppContext } from "@/app/context/AppContext";
 import { useCart } from "@/app/context/CartContext";
@@ -279,12 +281,24 @@ export default function NullHeader({
   showSeasonNav = false,
   currentSeasonIdx = 3,
   onSelectSeason,
+  isMuted,
+  onToggleMute,
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useContext(AppContext) || {};
   const { cartCount, isCartOpen, setIsCartOpen } = useCart() || {};
   const { wishlistCount } = useWishlist() || {};
+
+  const [internalMuted, setInternalMuted] = useState(true);
+  const muted = isMuted !== undefined ? isMuted : internalMuted;
+  const handleToggleMute = () => {
+    if (onToggleMute) {
+      onToggleMute();
+    } else {
+      setInternalMuted((v) => !v);
+    }
+  };
 
   const [scrolled, setScrolled] = useState(false);
   const [promoIdx, setPromoIdx] = useState(0);
@@ -633,27 +647,8 @@ export default function NullHeader({
               : "border-b border-[#F0F2F7]"
           }`}
         >
-          {/* Left: Menu Trigger (Mobile <1024px mở drawer; trên Desktop >=1024px đã có thanh nav_bar nên ẩn theo yêu cầu) */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0 lg:hidden">
-            <button
-              ref={menuButtonRef}
-              type="button"
-              onClick={() => setMobileOpen(true)}
-              aria-label="Mở công cụ và danh mục"
-              aria-expanded={mobileOpen}
-              aria-controls="site-menu-drawer"
-              className={`w-9 h-9 sm:w-10 sm:h-10 -ml-1 rounded-full grid place-items-center transition-colors focus:outline-none focus-visible:ring-2 cursor-pointer ${
-                isTransparent
-                  ? "text-white hover:bg-white/15 focus-visible:ring-white"
-                  : "text-[#15095D] hover:bg-[#F4F5FB] focus-visible:ring-[#15095D]"
-              }`}
-            >
-              <Menu
-                className={`w-5 h-5 sm:w-5.5 sm:h-5.5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
-                aria-hidden="true"
-              />
-            </button>
-          </div>
+          {/* Left: Bên trái để trống hoàn toàn theo yêu cầu của bạn ("bên trái cứ để chống cho tôi") */}
+          <div className="shrink-0 w-8 lg:w-12 pointer-events-none" aria-hidden="true" />
 
           {/* Center: Logo UNLO + PHẦN XUÂN HẠ THU ĐÔNG PHÍA DƯỚI LOGO (Theo Opts 2 trong DOCX) */}
           <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center shrink-0">
@@ -703,9 +698,32 @@ export default function NullHeader({
             )}
           </div>
 
-          {/* Right: Language switch + Search + Đăng nhập + Wishlist + Cart */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-            {/* Chuyển đổi ngôn ngữ VN -> ENG (Opts 1) */}
+          {/* Right: Loa + Language switch (ENG/VN) + Tìm kiếm + Tài khoản + Wishlist + Giỏ hàng + Menu (mobile) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 shrink-0 ml-auto">
+            {/* 1. Nút Loa: Bật / Tắt âm thanh cover video */}
+            <button
+              type="button"
+              onClick={handleToggleMute}
+              aria-label={muted ? "Bật âm thanh" : "Tắt âm thanh"}
+              title={muted ? "Bật âm thanh" : "Tắt âm thanh"}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors cursor-pointer border ${
+                isTransparent
+                  ? muted
+                    ? "border-white/30 text-white hover:bg-white/15"
+                    : "border-white text-white bg-white/20 shadow-xs"
+                  : muted
+                    ? "border-[#DDE0EC] text-[#15095D] hover:bg-[#F4F5FB]"
+                    : "border-[#15095D] text-[#15095D] bg-[#15095D]/10 shadow-xs"
+              }`}
+            >
+              {muted ? (
+                <VolumeX className="w-4 h-4" aria-hidden="true" />
+              ) : (
+                <Volume2 className="w-4 h-4" aria-hidden="true" />
+              )}
+            </button>
+
+            {/* 2. Chuyển đổi ngôn ngữ VN -> ENG (Opts 1) */}
             <button
               type="button"
               onClick={toggleLanguage}
@@ -719,31 +737,32 @@ export default function NullHeader({
             >
               <span>{currentLang === "vi" ? "VN" : "ENG"}</span>
             </button>
-            {/* Tablet & Mobile Search Icon Button (<1024px - Mở Search Overlay) */}
+
+            {/* 3. Search Icon Button */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
               aria-label="Tìm kiếm"
-              className={`lg:hidden w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
               }`}
             >
               <Search
-                className={`w-5 h-5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
+                className={`w-4 h-4 sm:w-5 sm:h-5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
                 aria-hidden="true"
               />
             </button>
 
-            {/* Đăng nhập / Account Dropdown (Hiện từ tablet md: trở lên) */}
-            <div ref={accountRef} className="relative hidden md:block">
+            {/* 4. Đăng nhập / Account Dropdown */}
+            <div ref={accountRef} className="relative">
               <button
                 type="button"
                 onClick={() => (user ? setAccountOpen((v) => !v) : router.push("/login"))}
                 aria-label="Tài khoản và đơn hàng"
                 aria-expanded={accountOpen}
-                className={`flex items-center gap-1.5 py-1.5 px-2.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                className={`flex items-center gap-1.5 py-1.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
                   isTransparent
                     ? "text-white hover:bg-white/15"
                     : "text-[#15095D] hover:text-[#32259B] hover:bg-[#F4F5FB]"
@@ -824,11 +843,11 @@ export default function NullHeader({
               )}
             </div>
 
-            {/* Wishlist Link (Hiện từ tablet md: trở lên) */}
+            {/* 5. Wish-list (Hiện ở mọi kích thước) */}
             <Link
               href="/wishlist"
               aria-label="Danh sách yêu thích"
-              className={`relative hidden md:grid w-9 h-9 rounded-full place-items-center transition-colors ${
+              className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
@@ -847,12 +866,12 @@ export default function NullHeader({
               )}
             </Link>
 
-            {/* Cart Bag Button (Luôn hiện ở mọi kích thước) */}
+            {/* 6. Rỏ hàng / Giỏ hàng (Luôn hiện ở mọi kích thước) */}
             <button
               type="button"
               onClick={() => setIsCartOpen?.(true)}
               aria-label={`Giỏ hàng (${cartCount || 0} sản phẩm)`}
-              className={`relative w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
+              className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
@@ -869,6 +888,26 @@ export default function NullHeader({
                   {cartCount}
                 </span>
               )}
+            </button>
+
+            {/* 7. Menu Drawer Button (Dành cho Mobile <1024px mở menu danh mục) */}
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Mở công cụ và danh mục"
+              aria-expanded={mobileOpen}
+              aria-controls="site-menu-drawer"
+              className={`lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors focus:outline-none focus-visible:ring-2 cursor-pointer ${
+                isTransparent
+                  ? "text-white hover:bg-white/15 focus-visible:ring-white"
+                  : "text-[#15095D] hover:bg-[#F4F5FB] focus-visible:ring-[#15095D]"
+              }`}
+            >
+              <Menu
+                className={`w-5 h-5 ${isTransparent ? "text-white" : "text-[#15095D]"}`}
+                aria-hidden="true"
+              />
             </button>
           </div>
         </div>

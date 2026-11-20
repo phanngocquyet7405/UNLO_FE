@@ -116,6 +116,23 @@ export function getSeasonIndexByCurrentMonth(month = new Date().getMonth() + 1) 
    - Đối với domain chính thức `https://unlo.vn`: Zalo và Messenger đã nhận diện logo UNLO chuẩn xuất khẩu.
    - Đối với link Preview: Nếu muốn gửi test trên Zalo hiển thị ngay lập tức, chỉ cần thêm tham số đổi đuôi: ví dụ `?v=2` hoặc `?share=zalo` để buộc Zalo xóa cache và tải lại thẻ hình ảnh.
 
+### 5.4. Thêm Nút Loa & Gom Toàn Bộ Công Cụ Sang Bên Phải (Bên Trái Để Trống)
+- **Bên trái để trống hoàn toàn:** Thay thế toàn bộ cụm bên trái bằng khoảng trống (`pointer-events-none`) trên cả Desktop và Mobile theo đúng chỉ đạo ("bên trái cứ để chống cho tôi").
+- **Thêm nút Loa (Speaker audio toggle):**
+  - Icon âm thanh `Volume2` (khi bật tiếng) và `VolumeX` (khi tắt tiếng).
+  - Kết nối trực tiếp hai chiều với cover video trong `SeasonalHeroVideoCarousel`: click vào nút Loa sẽ lập tức mở tiếng (`muted = false`, `volume = 1`) hoặc tắt tiếng video.
+  - Đồng bộ cả nút Loa trên Header và nút Loa ở góc dưới video carousel.
+- **Gom toàn bộ tiện ích sang bên phải:**
+  - Thứ tự sắp xếp trực quan từ trái sang phải:
+    1. **Nút Loa** (`Volume2` / `VolumeX`)
+    2. **Chuyển đổi ngôn ngữ** (`VN / ENG`)
+    3. **Tìm kiếm nhanh** (`Search`)
+    4. **Tài khoản** (`User` / Đăng nhập)
+    5. **Wish-list** (`Heart` + Badge số lượng)
+    6. **Giỏ hàng** (`ShoppingBag` + Badge số lượng)
+    7. **Menu Drawer** (`Menu` icon cho mobile $< 1024px$)
+- Giữ trung tâm tuyệt đối cho Logo UNLO + dải 4 mùa `XUÂN · HẠ · THU · ĐÔNG`.
+
 ---
 
 ## 6. TRẠNG THÁI KIỂM THỬ MÃ NGUỒN
@@ -123,7 +140,9 @@ export function getSeasonIndexByCurrentMonth(month = new Date().getMonth() + 1) 
 - **Unit Tests:** `npm test` $\rightarrow$ **213/213 test pass** (100%).
 - **ESLint:** `npx eslint` $\rightarrow$ **0 errors**.
 - **Playwright Verification:**
-  - `menuBtnHiddenOnDesktop: true` (Nút menu tầng 1 đã ẩn trên desktop).
+  - `leftHtml`: `<div class="shrink-0 w-8 lg:w-12 pointer-events-none" aria-hidden="true"></div>` (Bên trái để trống 100%).
+  - `rightButtons`: Loa ("Bật âm thanh"), Chuyển đổi ("VN/ENG"), Tìm kiếm, Tài khoản, Wishlist, Giỏ hàng, Menu.
+  - `Sound toggle test`: Click nút Loa $\rightarrow$ nhãn chuyển sang "Tắt âm thanh", `video.muted = false` (phát âm thanh ngay lập tức).
+  - `menuBtnHiddenOnDesktop: true`.
   - `navLinks`: Đầy đủ 8 mục bao gồm `Liên hệ` là mục cha.
   - `contactHref`: `/pages/contact-us`.
-  - `Mobile menu button exists: true` & Drawer chứa `Liên hệ`.

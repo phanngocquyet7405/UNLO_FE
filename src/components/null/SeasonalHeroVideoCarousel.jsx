@@ -97,14 +97,37 @@ const SEASON_DURATION_MS = 30000; // Chu kỳ tự động chuyển tiếp: 30s 
 export default function SeasonalHeroVideoCarousel({
   currentSeasonIdx: controlledIdx,
   onSeasonChange,
+  isMuted: controlledMuted,
+  onToggleMute,
 }) {
   // Tự động target mùa theo tháng hiện tại, sau đó luân chuyển tiếp tục
   const [internalIdx, setInternalIdx] = useState(() => getSeasonIndexByCurrentMonth());
   const currentIdx = controlledIdx !== undefined ? controlledIdx : internalIdx;
-  const [isMuted, setIsMuted] = useState(true);
+  const [internalMuted, setInternalMuted] = useState(true);
+  const isMuted = controlledMuted !== undefined ? controlledMuted : internalMuted;
   const videoRefs = useRef([]);
   const containerRef = useRef(null);
   const touchStartRef = useRef(null);
+
+  const toggleMute = () => {
+    if (onToggleMute) {
+      onToggleMute();
+    } else {
+      setInternalMuted((prev) => !prev);
+    }
+  };
+
+  // Đồng bộ trạng thái âm thanh (muted) vào tất cả video elements
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      if (!video) return;
+      video.muted = isMuted;
+      if (!isMuted) {
+        video.volume = 1;
+        video.play().catch(() => {});
+      }
+    });
+  }, [isMuted]);
 
   const onSeasonChangeRef = useRef(onSeasonChange);
   useEffect(() => {
@@ -321,7 +344,7 @@ export default function SeasonalHeroVideoCarousel({
         {/* Video Audio Mute / Unmute Toggle */}
         <button
           type="button"
-          onClick={() => setIsMuted(!isMuted)}
+          onClick={toggleMute}
           aria-label={isMuted ? "Bật âm thanh" : "Tắt âm thanh"}
           className="w-9 h-9 rounded-full border border-white/30 bg-black/30 hover:bg-white/20 text-white/80 hover:text-white grid place-items-center ml-1 backdrop-blur-sm transition-all cursor-pointer"
         >
