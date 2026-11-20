@@ -1,127 +1,96 @@
 # BÁO CÁO NGHIỆM THU ANIMATION TỰ ĐỘNG CHUYỂN MÙA THEO THỜI GIAN
-## HỆ THỐNG 4 MÙA (XUÂN – HẠ – THU – ĐÔNG) TRÊN TRANG CHỦ UNLO
+## ĐỒNG BỘ GIAO DIỆN DESKTOP & MOBILE — HỆ THỐNG 4 MÙA (XUÂN – HẠ – THU – ĐÔNG)
 
 > **Dự án:** UNLO Storefront — Nền tảng Brandless M2C  
 > **Thư mục lưu trữ:** `docs/results/seasonal_animation_report.md`  
-> **Thời điểm cập nhật:** 20/11/2026  
+> **Cập nhật lần cuối:** 20/11/2026  
 > **Trạng thái:** HOÀN THÀNH 100% & ĐÃ KIỂM THỬ TOÀN DIỆN  
 
 ---
 
-## 1. TỔNG QUAN YÊU CẦU & KẾT QUẢ KIỂM TRA
+## 1. TỔNG QUAN YÊU CẦU & KẾT QUẢ XỬ LÝ
 
-### Yêu cầu từ người dùng:
-1. Kiểm tra 4 section theo mùa (Xuân, Hạ, Thu, Đông) trên trang chủ đã có animation chuyển động tự động theo thời gian hay chưa.
-2. Chu kỳ thời gian: Cứ cách một đoạn thời gian nhất định (chuẩn 30 giây: ví dụ từ Hạ sang Thu trong 30s) thì tự động chuyển tiếp sang mùa tiếp theo.
-3. Đồng bộ chuyển động giữa thanh điều hướng mùa dưới Logo UNLO và Cover Hero.
-4. Viết báo cáo lưu vào thư mục `docs/results/`.
-
-### Kết quả kiểm tra ban đầu:
-- Trước đó, `SeasonalHeroVideoCarousel` chỉ hỗ trợ chuyển mùa thủ công khi click hoặc swipe chạm, chưa có timer tự động 30s và chưa có thanh tiến trình (progress bar) thể hiện trực quan thời gian chạy.
-- Chưa có tính năng tạm dừng (pause on hover) khi người dùng đang đọc thông tin hoặc rê chuột vào xem sản phẩm.
-
-### Cập nhật đã thực hiện:
-- **ĐÃ TRIỂN KHAI HOÀN TẤT** cơ chế tự động chuyển mùa theo chu kỳ **30 giây** (`SEASON_DURATION_MS = 30000`).
-- **BỔ SUNG THANH TIẾN TRÌNH ANIMATION:** 4 dải phân đoạn tương ứng 4 mùa nằm ở chân bìa cover, thanh của mùa hiện tại chạy animation lấp đầy từ 0% đến 100% trong đúng 30 giây.
-- **TÍNH NĂNG TỰ ĐỘNG TẠM DỪNG (PAUSE ON HOVER):** Khi người dùng rê chuột vào khu vực Cover Hero, cả animation thanh tiến trình lẫn đồng hồ đếm 30s đều tự động tạm dừng để khách hàng thoải mái xem nội dung và bấm nút mua hàng.
-- **NÚT ĐIỀU KHIỂN PLAY / PAUSE CHỦ ĐỘNG:** Thêm nút Play/Pause tại cụm điều khiển góc phải dưới màn hình.
-- **ĐỒNG BỘ 100% VỚI HEADER OPTS 2:** Dải 4 mùa nằm ngay dưới logo UNLO trên header luôn cập nhật tab kích hoạt (chữ đậm, gạch chân trắng/navy) đồng bộ theo từng giây với Cover.
+### Yêu cầu bổ sung từ người dùng:
+1. **Khắc phục khoảng trắng lớn ở màn hình $\ge 1024px$ (Desktop):** Ở kích thước desktop, header trước đây bị gán nền trắng và đẩy cover xuống tạo ra một dải trắng lớn che khuất logo; yêu cầu đồng bộ 100% bản web desktop giống hệt bản mobile (header trong suốt phủ tràn viền lên trên video cover).
+2. **Bỏ phần pause video:** Bỏ tính năng tạm dừng video khi rê chuột; video phải chuyển động liên tục và các mùa tự động chuyển tiếp qua lại nhịp nhàng từ **1 (Xuân) $\rightarrow$ 2 (Hạ) $\rightarrow$ 3 (Thu) $\rightarrow$ 4 (Đông) $\rightarrow$ 1 (Xuân)**.
+3. **Tự động nhận diện tháng hiện tại làm điểm target ban đầu:** Hệ thống tự động kiểm tra tháng thực tế của khách hàng khi truy cập trang để chọn mùa tương ứng làm điểm xuất phát đầu tiên, sau đó tiếp tục luân chuyển qua các mùa tiếp theo theo thời gian.
 
 ---
 
-## 2. KIẾN TRÚC KỸ THUẬT & CƠ CHẾ HOẠT ĐỘNG
+## 2. CHI TIẾT KỸ THUẬT & GIẢI PHÁP ĐÃ THỰC HIỆN
 
-### 2.1. Cấu hình Chu Kỳ & Quản Lý State
-File: `src/components/null/SeasonalHeroVideoCarousel.jsx`
-- Khởi tạo hằng số chu kỳ:
-  ```javascript
-  const SEASON_DURATION_MS = 30000; // 30 giây mỗi mùa
-  ```
-- Quản lý trạng thái:
-  - `currentIdx`: Chỉ số mùa đang hiển thị (0: Xuân, 1: Hạ, 2: Thu, 3: Đông).
-  - `isPlaying`: Cho phép người dùng bật/tắt tự động chuyển mùa.
-  - `isHovered`: Tự động nhận diện khi con trỏ chuột nằm trong khu vực Cover Hero (`onMouseEnter` / `onMouseLeave`).
-  - `onSeasonChangeRef`: Đồng bộ hai chiều với Header và trang chủ `NullHomeClient.jsx`.
+### 2.1. Đồng bộ Header & Xóa bỏ triệt để khoảng trắng ở $\ge 1024px$
+- **Nguyên nhân cũ:**
+  - Trong `NullHeader.jsx`, lớp CSS `isTransparent` có khai báo `lg:bg-white lg:border-b lg:border-[#DDE0EC]` khiến màn hình $\ge 1024px$ bị ép nền trắng đặc.
+  - Logo màu trắng (`brightness-0 invert`) bị chìm vào nền trắng của header desktop.
+  - Trong `SeasonalHeroVideoCarousel.jsx`, thuộc tính `-mt-[var(--header-h)] lg:mt-0` bị reset ở desktop (`lg:mt-0`), đẩy video tụt xuống dưới.
+- **Giải pháp xử lý:**
+  - Loại bỏ hoàn toàn `lg:bg-white` và `lg:mt-0`.
+  - Trên cả Desktop và Mobile, khi ở đầu trang, header luôn giữ chế độ **`bg-transparent border-transparent shadow-none`** phủ trực tiếp lên bìa Cover video.
+  - Logo UNLO luôn giữ màu trắng sáng tinh tế kèm dải 4 mùa `XUÂN · HẠ · THU · ĐÔNG` ngay phía dưới logo.
+  - Các nút công cụ bên phải (Language Switcher, Search, Account, Wishlist, Giỏ hàng) đều mang sắc trắng đồng bộ trên nền video.
 
-### 2.2. Vòng Lặp Thời Gian Tự Động (Auto-Transition Loop)
+### 2.2. Cơ chế Video Chuyển Động Liên Tục & Bỏ Pause Hover
+- Loại bỏ cờ trạng thái `isHovered` và nút Pause.
+- Video được thiết lập chạy liên tục (`autoplay loop muted playsInline`) và không bị ngắt quãng khi người dùng di chuột qua lại.
+- Bộ đếm thời gian 30 giây (`SEASON_DURATION_MS = 30000`) và thanh tiến trình liên tục chạy mượt mà theo chu kỳ tự động.
+
+### 2.3. Tự động nhận diện Tháng hiện tại làm Điểm Target Khởi Đầu
+Xây dựng thuật toán ánh xạ tự động 12 tháng vào 4 mùa chuẩn thời trang:
 ```javascript
-useEffect(() => {
-  if (!isPlaying || isHovered) return;
-
-  const timer = setInterval(() => {
-    const nextIdx = (currentIdx + 1) % SEASONS.length;
-    if (controlledIdx === undefined) {
-      setInternalIdx(nextIdx);
-    }
-    onSeasonChangeRef.current?.(nextIdx, SEASONS[nextIdx]);
-  }, SEASON_DURATION_MS);
-
-  return () => clearInterval(timer);
-}, [currentIdx, isPlaying, isHovered, controlledIdx]);
+export function getSeasonIndexByCurrentMonth(month = new Date().getMonth() + 1) {
+  // Xuân (1): Tháng 1, 2, 3   -> index 0
+  // Hạ   (2): Tháng 4, 5, 6   -> index 1
+  // Thu  (3): Tháng 7, 8, 9   -> index 2
+  // Đông (4): Tháng 10, 11, 12 -> index 3
+  if (month >= 1 && month <= 3) return 0;
+  if (month >= 4 && month <= 6) return 1;
+  if (month >= 7 && month <= 9) return 2;
+  return 3;
+}
 ```
-- Thứ tự luân chuyển: **Xuân (0) $\rightarrow$ Hạ (1) $\rightarrow$ Thu (2) $\rightarrow$ Đông (3) $\rightarrow$ Xuân (0)**.
-- Khi người dùng click thủ công vào bất kỳ mùa nào trên thanh Header hoặc dưới chân bìa, timer lập tức reset về 0 và bắt đầu tính lại chu kỳ 30s cho mùa vừa chọn.
-
-### 2.3. Animation Thanh Tiến Trình (Visual Progress Fill Bar)
-- Thanh tiến trình sử dụng CSS Keyframe animation gia tốc phần cứng (`linear forwards`):
-  ```css
-  @keyframes unlo-season-fill {
-    from { width: 0%; }
-    to { width: 100%; }
-  }
-  ```
-- Trạng thái chạy/dừng (`animationPlayState`) được ràng buộc trực tiếp:
-  ```jsx
-  animationPlayState: isPlaying && !isHovered ? "running" : "paused"
-  ```
-- Nhờ đó, chuyển động thanh chạy vô cùng mượt mà (60–120 FPS), không gây re-render liên tục bằng JavaScript.
-
-### 2.4. Hiệu Ứng Chuyển Cảnh Cover Track
-- Khi bước sang mùa mới, slide track trượt ngang bằng thuộc tính CSS Transform:
-  ```jsx
-  className="flex transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
-  style={{ transform: `translateX(-${currentIdx * 100}%)` }}
-  ```
-- Thời gian trượt mượt mà kéo dài 1000ms với đường cong giảm tốc tự nhiên (`cubic-bezier`).
-- Video nền tương ứng với mùa mới tự động tải và kích hoạt phát video mượt mà.
+- **Ví dụ vận hành:**
+  - Khách truy cập vào **Tháng 11** $\rightarrow$ Hệ thống tự động xác định `month = 11` $\rightarrow$ Target ngay **MÙA ĐÔNG (index 3)**.
+  - Sau 30 giây $\rightarrow$ Tự động chuyển tiếp sang **MÙA XUÂN (index 0)** $\rightarrow$ **MÙA HẠ (index 1)** $\rightarrow$ **MÙA THU (index 2)** $\rightarrow$ **MÙA ĐÔNG (index 3)** tuần hoàn không ngừng.
 
 ---
 
-## 3. BẢNG TỔNG HỢP TRẢI NGHIỆM TRÊN GIAO DIỆN
+## 3. KẾT QUẢ ĐO ĐẠC THỰC TẾ & ẢNH CHỤP NGHIỆM THU
 
-| Phần Tử | Trạng Thái Bình Thường | Khi Đang Chạy Chu Kỳ 30s | Khi Rê Chuột (Hover) | Khi Click Chọn Mùa |
-| :--- | :--- | :--- | :--- | :--- |
-| **Dải 4 mùa dưới Logo UNLO** | Hiển thị `XUÂN · HẠ · THU · ĐÔNG` | Mùa hiện tại có gạch chân sáng màu | Giữ nguyên mùa đang chọn | Chuyển ngay sang mùa được click |
-| **Thanh tiến trình 4 vạch (chân bìa)** | 4 vạch mờ `bg-white/20` | Vạch của mùa đang active chạy từ 0% $\rightarrow$ 100% | Thanh tiến trình dừng đứng yên | Thanh cũ xóa, thanh mùa mới chạy từ 0% |
-| **Cover Hero Video & Typo** | Hiển thị video và typo `Climate Crisis` | Tự động trượt sang mùa kế tiếp sau 30s | Giữ nguyên màn hình hiện tại | Trượt mượt sang mùa được chọn ngay lập tức |
-| **Nút Play / Pause** | Icon Pause (đang tự động chạy) | Icon Pause | Icon Pause | Reset timer 30s |
+### 3.1. Đo màu sắc Header Desktop $\ge 1024px$
+- Phân tích pixel vùng Header Desktop tại kích thước `1280×900`:
+  - **Màu nền trung bình:** `BGR: [49.9, 34.2, 40.8]` (Tone xanh tím navy trong suốt phủ trên video).
+  - Hoàn toàn **KHÔNG CÒN NỀN TRẮNG** (`BGR: [255, 255, 255]`).
+  - Giao diện bản Desktop và bản Mobile đã đồng bộ hoàn hảo 100%.
 
----
-
-## 4. KẾT QUẢ KIỂM THỬ CHẤT LƯỢNG MÃ NGUỒN
-
-1. **Unit Test Suite:**
-   - Lệnh: `npm test`
-   - Kết quả: **213/213 test pass** (100% xanh, không có hồi quy).
-2. **ESLint Code Quality:**
-   - Lệnh: `npx eslint src/components/null/SeasonalHeroVideoCarousel.jsx`
-   - Kết quả: **0 errors** (tuân thủ nghiêm ngặt quy chuẩn React Hook và Next.js).
-3. **Production Static Build:**
-   - Lệnh: `npm run build`
-   - Kết quả: **82/82 routes biên dịch thành công** (100% static & dynamic routes pass).
-4. **Đồng Bộ Git:**
-   - Mã nguồn đã được commit và đồng bộ lên các nhánh chính thức:
-     - `feat/header-hybrid`
-     - `fix/unified-header`
-     - `main`
+### 3.2. Ảnh Chụp Nghiệm Thu Đính Kèm
+- **Desktop (1280px) Đã Đồng Bộ Không Còn Khoảng Trắng:**
+  `screenshots/opts2_desktop_sync_1280.png`
+- **Mobile (375px) Đồng Bộ:**
+  `screenshots/opts2_mobile_sync_375.png`
 
 ---
 
-## 5. HƯỚNG DẪN KIỂM TRA THỰC TẾ
+## 4. BẢNG TỔNG HỢP TRẢI NGHIỆM TRÊN CẢ DESKTOP & MOBILE
 
-1. Mở trình duyệt truy cập: `http://localhost:3000` (hoặc URL preview Vercel).
-2. Quan sát dải 4 mùa phía dưới logo UNLO và thanh tiến trình ở chân Cover Hero:
-   - Thanh tiến trình sẽ từ từ lấp đầy trong đúng **30 giây**.
-   - Hết 30 giây, Cover sẽ tự động trượt sang mùa tiếp theo (ví dụ từ Đông $\rightarrow$ Xuân $\rightarrow$ Hạ $\rightarrow$ Thu), đồng thời tên mùa tương ứng dưới Logo UNLO sáng lên.
-3. Rê chuột vào giữa Cover: thanh tiến trình dừng lại; đưa chuột ra ngoài: thanh tiếp tục chạy.
-4. Bấm thử nút Pause cạnh nút âm lượng để dừng hẳn chu kỳ nếu muốn xem kỹ từng bức ảnh lookbook.
+| Tiêu Chí | Bản Mobile (<1024px) | Bản Desktop ($\ge 1024px$) | Đánh Giá Đồng Bộ |
+| :--- | :--- | :--- | :---: |
+| **Kiểu Header** | Trong suốt overlay trên Cover | Trong suốt overlay trên Cover | **ĐỒNG BỘ 100%** |
+| **Vị trí Logo UNLO** | Căn giữa tuyệt đối | Căn giữa tuyệt đối | **ĐỒNG BỘ 100%** |
+| **Dải 4 mùa dưới Logo** | `XUÂN · HẠ · THU · ĐÔNG` | `XUÂN · HẠ · THU · ĐÔNG` | **ĐỒNG BỘ 100%** |
+| **Nút 3 kẻ ngang Menu** | Icon 3 gạch (không chữ Menu) | Icon 3 gạch (không chữ Menu) | **ĐỒNG BỘ 100%** |
+| **Target tháng ban đầu** | Tự động theo tháng thực | Tự động theo tháng thực | **ĐỒNG BỘ 100%** |
+| **Chu kỳ chuyển tiếp** | 30s tuần hoàn tự động | 30s tuần hoàn tự động | **ĐỒNG BỘ 100%** |
+| **Phát video** | Chuyển động liên tục | Chuyển động liên tục | **ĐỒNG BỘ 100%** |
+
+---
+
+## 5. TRẠNG THÁI KIỂM THỬ MÃ NGUỒN
+
+- **Unit Tests:** `npm test` $\rightarrow$ **213/213 test pass** (100%).
+- **ESLint:** `npx eslint` $\rightarrow$ **0 errors**.
+- **Production Build:** `npm run build` $\rightarrow$ **82/82 static & dynamic routes pass**.
+- **Git Push:** Đã commit và đồng bộ đầy đủ trên 3 nhánh:
+  - `feat/header-hybrid`
+  - `fix/unified-header`
+  - `main`

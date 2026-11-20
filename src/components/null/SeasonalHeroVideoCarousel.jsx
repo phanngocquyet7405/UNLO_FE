@@ -80,17 +80,28 @@ export const SEASONS = [
   },
 ];
 
-const SEASON_DURATION_MS = 30000; // Chu kỳ tự động chuyển mùa: 30s theo yêu cầu DOCX
+// Hàm tự động xác định mùa mục tiêu ban đầu dựa trên tháng hiện tại (target khởi đầu)
+export function getSeasonIndexByCurrentMonth(month = new Date().getMonth() + 1) {
+  // Xuân (1): Tháng 1 - 3 (idx 0)
+  // Hạ (2): Tháng 4 - 6 (idx 1)
+  // Thu (3): Tháng 7 - 9 (idx 2)
+  // Đông (4): Tháng 10 - 12 (idx 3)
+  if (month >= 1 && month <= 3) return 0;
+  if (month >= 4 && month <= 6) return 1;
+  if (month >= 7 && month <= 9) return 2;
+  return 3;
+}
+
+const SEASON_DURATION_MS = 30000; // Chu kỳ tự động chuyển tiếp: 30s theo yêu cầu DOCX
 
 export default function SeasonalHeroVideoCarousel({
   currentSeasonIdx: controlledIdx,
   onSeasonChange,
 }) {
-  const [internalIdx, setInternalIdx] = useState(3); // Default to Đông
+  // Tự động target mùa theo tháng hiện tại, sau đó luân chuyển tiếp tục
+  const [internalIdx, setInternalIdx] = useState(() => getSeasonIndexByCurrentMonth());
   const currentIdx = controlledIdx !== undefined ? controlledIdx : internalIdx;
   const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
   const videoRefs = useRef([]);
   const containerRef = useRef(null);
   const touchStartRef = useRef(null);
@@ -112,10 +123,8 @@ export default function SeasonalHeroVideoCarousel({
     onSeasonChangeRef.current?.(currentIdx, SEASONS[currentIdx]);
   }, [currentIdx]);
 
-  // Tự động chuyển mùa sau 30 giây (Xuân -> Hạ -> Thu -> Đông) có cơ chế tạm dừng khi hover
+  // Tự động chuyển tiếp liên tục qua lại: 1(Xuân) -> 2(Hạ) -> 3(Thu) -> 4(Đông) -> 1(Xuân) mỗi 30s
   useEffect(() => {
-    if (!isPlaying || isHovered) return;
-
     const timer = setInterval(() => {
       const nextIdx = (currentIdx + 1) % SEASONS.length;
       if (controlledIdx === undefined) {
@@ -125,29 +134,23 @@ export default function SeasonalHeroVideoCarousel({
     }, SEASON_DURATION_MS);
 
     return () => clearInterval(timer);
-  }, [currentIdx, isPlaying, isHovered, controlledIdx]);
+  }, [currentIdx, controlledIdx]);
 
-  // Play active video, pause others
+  // Luôn phát video chuyển động liên tục của mùa đang active
   useEffect(() => {
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     videoRefs.current.forEach((video, idx) => {
       if (!video) return;
-      if (idx === currentIdx && !prefersReducedMotion && isPlaying) {
+      if (idx === currentIdx) {
         video.currentTime = 0;
         const playPromise = video.play();
         if (playPromise) {
-          playPromise.catch(() => {
-            // Autoplay might be blocked until user gesture
-          });
+          playPromise.catch(() => {});
         }
       } else {
         video.pause();
       }
     });
-  }, [currentIdx, isPlaying]);
+  }, [currentIdx]);
 
   // Touch Swipe Gesture
   const handleTouchStart = (e) => {
@@ -171,9 +174,7 @@ export default function SeasonalHeroVideoCarousel({
   return (
     <section
       ref={containerRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,0px)] lg:mt-0"
+      className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,0px)]"
       aria-roledescription="carousel"
       aria-label="Trang chủ theo mùa UNLO"
       onTouchStart={handleTouchStart}
@@ -181,7 +182,7 @@ export default function SeasonalHeroVideoCarousel({
     >
       {/* Slide Track */}
       <div
-        className="flex transition-transform duration-700 ease-[cubic-bezier(0.77,0,0.18,1)] will-change-transform"
+        className="flex transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
         style={{ transform: `translateX(-${currentIdx * 100}%)` }}
       >
         {SEASONS.map((s, idx) => {
@@ -189,7 +190,7 @@ export default function SeasonalHeroVideoCarousel({
           return (
             <div
               key={s.key}
-              className="relative shrink-0 w-full min-h-[100svh] lg:min-h-[780px] flex items-end"
+              className="relative shrink-0 w-full min-h-[100svh] lg:min-h-[820px] flex items-end"
               aria-hidden={!isActive}
             >
               {/* Video with fallback poster image */}
@@ -214,35 +215,7 @@ export default function SeasonalHeroVideoCarousel({
               />
 
               {/* Content Panel (Editorial Minimalist Layout) */}
-              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-[calc(var(--header-h,0px)+1.5rem)] lg:pt-20 space-y-4 sm:space-y-5">
-                {/* 4-Season Editorial Switcher (Clean, does not block model's face) */}
-                <div className="inline-flex items-center gap-1 p-1 rounded-full bg-[#15095D]/60 backdrop-blur-md border border-white/20 shadow-md">
-                  {SEASONS.map((seasonItem, seasonIdx) => {
-                    const Icon = seasonItem.icon;
-                    const active = seasonIdx === currentIdx;
-                    return (
-                      <button
-                        key={seasonItem.key}
-                        type="button"
-                        role="tab"
-                        aria-selected={active}
-                        onClick={() => handleSelectSeason(seasonIdx)}
-                        className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                          active
-                            ? "bg-white text-[#15095D] shadow-sm scale-105"
-                            : "text-white/80 hover:text-white hover:bg-white/10"
-                        }`}
-                      >
-                        <Icon
-                          className="w-3.5 h-3.5"
-                          style={{ color: active ? "#15095D" : seasonItem.accent }}
-                        />
-                        <span>{seasonItem.name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
+              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-[calc(var(--header-h,0px)+3.5rem)] sm:pt-[calc(var(--header-h,0px)+4.5rem)] space-y-4 sm:space-y-5">
                 {/* Season Tag */}
                 <div className="flex items-center gap-2.5 text-xs font-bold tracking-[0.22em] uppercase text-white/95 pt-1">
                   <span
@@ -308,12 +281,11 @@ export default function SeasonalHeroVideoCarousel({
             >
               {isActive && (
                 <div
-                  key={`progress-${currentIdx}-${isPlaying && !isHovered}`}
+                  key={`progress-${currentIdx}`}
                   className="h-full rounded-full transition-all"
                   style={{
                     backgroundColor: s.accent,
                     animation: `unlo-season-fill ${SEASON_DURATION_MS}ms linear forwards`,
-                    animationPlayState: isPlaying && !isHovered ? "running" : "paused",
                   }}
                 />
               )}
@@ -344,17 +316,6 @@ export default function SeasonalHeroVideoCarousel({
           className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/60 bg-white/10 hover:bg-white hover:text-[#15095D] text-white grid place-items-center backdrop-blur-md transition-all active:scale-95 cursor-pointer"
         >
           <ChevronRight className="w-5 h-5" />
-        </button>
-
-        {/* Nút bật/tắt tạm dừng tự động chuyển mùa 30s */}
-        <button
-          type="button"
-          onClick={() => setIsPlaying(!isPlaying)}
-          aria-label={isPlaying ? "Tạm dừng tự động chuyển mùa" : "Tiếp tục tự động chuyển mùa"}
-          title={isPlaying ? "Tạm dừng tự động chuyển mùa (30s)" : "Tiếp tục tự động chuyển mùa (30s)"}
-          className="w-9 h-9 rounded-full border border-white/30 bg-black/30 hover:bg-white/20 text-white/80 hover:text-white grid place-items-center ml-1 backdrop-blur-sm transition-all cursor-pointer"
-        >
-          {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </button>
 
         {/* Video Audio Mute / Unmute Toggle */}

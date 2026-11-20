@@ -609,17 +609,17 @@ export default function NullHeader({
         ref={headerRef}
         className={`sticky top-0 z-50 w-full transition-all duration-200 ${
           isTransparent
-            ? "bg-transparent border-transparent shadow-none lg:bg-white lg:border-b lg:border-[#DDE0EC]"
+            ? "bg-transparent border-transparent shadow-none"
             : scrolled
             ? "bg-white border-b border-[#BBC2DD] shadow-[0_4px_24px_rgba(21,9,93,0.06)]"
             : "bg-white border-b border-[#DDE0EC]"
         }`}
       >
-        {/* Subtle dark gradient overlay over photo/video under lg when transparent */}
+        {/* Subtle dark gradient overlay over photo/video across all screen sizes when transparent */}
         {isTransparent && (
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/65 via-black/30 to-transparent pointer-events-none lg:hidden -z-10"
+            className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/75 via-black/35 to-transparent pointer-events-none -z-10"
           />
         )}
 
@@ -627,7 +627,7 @@ export default function NullHeader({
         <div
           className={`relative max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 transition-colors ${
             isTransparent
-              ? "border-b border-white/15 lg:border-[#F0F2F7]"
+              ? "border-b border-white/15"
               : "border-b border-[#F0F2F7]"
           }`}
         >
@@ -743,13 +743,13 @@ export default function NullHeader({
                 aria-expanded={accountOpen}
                 className={`flex items-center gap-1.5 py-1.5 px-2.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
                   isTransparent
-                    ? "text-white hover:bg-white/15 lg:text-[#15095D] lg:hover:text-[#32259B] lg:hover:bg-[#F4F5FB]"
+                    ? "text-white hover:bg-white/15"
                     : "text-[#15095D] hover:text-[#32259B] hover:bg-[#F4F5FB]"
                 }`}
               >
                 <User
                   className={`w-[18px] h-[18px] ${
-                    isTransparent ? "text-white lg:text-[#15095D]" : "text-[#15095D]"
+                    isTransparent ? "text-white" : "text-[#15095D]"
                   }`}
                 />
                 <span className="hidden sm:inline">
@@ -828,13 +828,13 @@ export default function NullHeader({
               aria-label="Danh sách yêu thích"
               className={`relative hidden md:grid w-9 h-9 rounded-full place-items-center transition-colors ${
                 isTransparent
-                  ? "text-white hover:bg-white/15 lg:text-[#15095D] lg:hover:bg-[#F4F5FB]"
+                  ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
               }`}
             >
               <Heart
                 className={`w-[19px] h-[19px] stroke-[1.6] ${
-                  isTransparent ? "stroke-white lg:stroke-[#15095D]" : ""
+                  isTransparent ? "stroke-white" : ""
                 }`}
                 aria-hidden="true"
               />
@@ -852,13 +852,13 @@ export default function NullHeader({
               aria-label={`Giỏ hàng (${cartCount || 0} sản phẩm)`}
               className={`relative w-9 h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
                 isTransparent
-                  ? "text-white hover:bg-white/15 lg:text-[#15095D] lg:hover:bg-[#F4F5FB]"
+                  ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
               }`}
             >
               <ShoppingBag
                 className={`w-[19px] h-[19px] stroke-[1.6] ${
-                  isTransparent ? "stroke-white lg:stroke-[#15095D]" : ""
+                  isTransparent ? "stroke-white" : ""
                 }`}
                 aria-hidden="true"
               />

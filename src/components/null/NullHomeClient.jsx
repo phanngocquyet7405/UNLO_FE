@@ -8,7 +8,7 @@ import NullFooter from "./NullFooter";
 import NullProductCard from "./NullProductCard";
 import { UNLO_CATEGORIES, UNLO_PRODUCTS } from "@/lib/unloCatalog";
 import { UNLO_FACTORIES } from "@/lib/unloFactories";
-import SeasonalHeroVideoCarousel from "./SeasonalHeroVideoCarousel";
+import SeasonalHeroVideoCarousel, { getSeasonIndexByCurrentMonth } from "./SeasonalHeroVideoCarousel";
 import BrandMarquee from "./BrandMarquee";
 import BlackFridayCountdown from "./BlackFridayCountdown";
 import SupportChatbotDrawer from "./SupportChatbotDrawer";
@@ -28,7 +28,8 @@ const BESTSELLER_TABS = [
 
 export default function NullHomeClient() {
   const [activeTab, setActiveTab] = useState("all");
-  const [currentSeasonIdx, setCurrentSeasonIdx] = useState(3); // Default to Đông (chiến dịch mùa đông)
+  // Tự động target mùa theo tháng hiện tại làm điểm xuất phát ban đầu, sau đó luân chuyển tiếp tục
+  const [currentSeasonIdx, setCurrentSeasonIdx] = useState(() => getSeasonIndexByCurrentMonth());
 
   const displayedProducts = useMemo(() => {
     const filtered =
