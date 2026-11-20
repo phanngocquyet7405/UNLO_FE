@@ -78,19 +78,52 @@ export function getSeasonIndexByCurrentMonth(month = new Date().getMonth() + 1) 
 | **Kiểu Header** | Trong suốt overlay trên Cover | Trong suốt overlay trên Cover | **ĐỒNG BỘ 100%** |
 | **Vị trí Logo UNLO** | Căn giữa tuyệt đối | Căn giữa tuyệt đối | **ĐỒNG BỘ 100%** |
 | **Dải 4 mùa dưới Logo** | `XUÂN · HẠ · THU · ĐÔNG` | `XUÂN · HẠ · THU · ĐÔNG` | **ĐỒNG BỘ 100%** |
-| **Nút 3 kẻ ngang Menu** | Icon 3 gạch (không chữ Menu) | Icon 3 gạch (không chữ Menu) | **ĐỒNG BỘ 100%** |
+| **Nút 3/4 kẻ ngang Menu** | Icon gạch mở Drawer | Đã ẩn hoàn toàn (`lg:hidden`) theo đề xuất | **TỐI ƯU DESKTOP** |
+| **Thanh nav_bar chính** | Rút gọn trong Drawer | Đầy đủ 8 mục cha (kèm "Liên hệ") | **HIỆN ĐẠI & TRỰC QUAN** |
+| **Mục "Liên hệ"** | Mục cha độc lập + Thẻ CSKH | Mục cha độc lập trên nav_bar | **DỄ TIẾP CẬN 100%** |
 | **Target tháng ban đầu** | Tự động theo tháng thực | Tự động theo tháng thực | **ĐỒNG BỘ 100%** |
 | **Chu kỳ chuyển tiếp** | 30s tuần hoàn tự động | 30s tuần hoàn tự động | **ĐỒNG BỘ 100%** |
 | **Phát video** | Chuyển động liên tục | Chuyển động liên tục | **ĐỒNG BỘ 100%** |
 
 ---
 
-## 5. TRẠNG THÁI KIỂM THỬ MÃ NGUỒN
+## 5. BỔ SUNG TINH CHỈNH THEO ĐỀ XUẤT MỚI NHẤT
+
+### 5.1. Bỏ thanh Menu 4 hàng ngang bên trái tầng 1 trên Desktop
+- Trên màn hình Desktop ($\ge 1024px$), người dùng đã có thanh `nav_bar` chính để chuyển trang nhanh chóng, nên nút Menu 4 hàng ngang (hamburger) bên trái tầng 1 được ẩn hoàn toàn (`lg:hidden`).
+- Logo UNLO và dải 4 mùa `XUÂN · HẠ · THU · ĐÔNG` ở giữa tiếp tục giữ vị trí trung tâm tuyệt đối, tạo bố cục cân đối và thoáng mắt.
+- Trên Mobile & Tablet ($< 1024px$), nút Menu vẫn hiển thị để mở Drawer điều hướng kèm Thẻ Liên Hệ & Hỗ Trợ Xưởng trực tiếp.
+
+### 5.2. Đưa "Liên hệ" từ "Về UNLO" lên làm Cha trực tiếp trên thanh `nav_bar`
+- Tách `Liên hệ` ra khỏi danh sách con của dropdown `Về UNLO`.
+- Đưa `Liên hệ` (`/pages/contact-us`) thành mục cha cấp 1 (Parent link) trực tiếp trên thanh `nav_bar`:
+  1. `Tất cả sản phẩm`
+  2. `Bộ sưu tập`
+  3. `Trang phục`
+  4. `Phụ kiện & Đời sống`
+  5. `Cá nhân hóa`
+  6. `Doanh nghiệp`
+  7. `Về UNLO`
+  8. **`Liên hệ`** (Mục cha mới)
+- Trên Mobile Drawer: `Liên hệ` cũng hiển thị trực tiếp là mục menu cấp 1 ở danh sách liên kết.
+
+### 5.3. Đánh giá & Hướng xử lý hiện tượng mất Logo khi gửi link qua Zalo / Messenger
+1. **Nguyên nhân:**
+   - **Vercel Preview Protection (SSO/Password):** Với các link preview branch dạng `unlo-fe-git-feat-header-hybrid-*.vercel.app`, mặc định Vercel có thể bật chế độ bảo vệ (Deployment Protection). Crawler bot của Zalo hoặc Facebook khi truy cập link này sẽ nhận mã `401 Unauthorized` hoặc chuyển hướng đăng nhập Vercel, khiến bot không cào được thẻ `<meta property="og:image">`.
+   - **Cơ chế Cache của Zalo:** Zalo lưu bộ đệm preview cực kỳ lâu. Nếu lần đầu chia sẻ link mà website chưa build xong hoặc bot chưa cào kịp, Zalo sẽ ghi nhớ trạng thái rỗng (như hình chụp ngày 19/11 khi gửi lần đầu không có logo, nhưng gửi lại bên dưới thì đã có logo vuông tím UNLO chuẩn xác).
+2. **Hướng xử lý & Kiểm tra:**
+   - Đã cấu hình đầy đủ `metadataBase`, thẻ chuẩn `openGraph.images` và `twitter.images` kèm file hình ảnh vuông nhận diện `unlo-icon-512.png` và `opengraph-image.png`.
+   - Đối với domain chính thức `https://unlo.vn`: Zalo và Messenger đã nhận diện logo UNLO chuẩn xuất khẩu.
+   - Đối với link Preview: Nếu muốn gửi test trên Zalo hiển thị ngay lập tức, chỉ cần thêm tham số đổi đuôi: ví dụ `?v=2` hoặc `?share=zalo` để buộc Zalo xóa cache và tải lại thẻ hình ảnh.
+
+---
+
+## 6. TRẠNG THÁI KIỂM THỬ MÃ NGUỒN
 
 - **Unit Tests:** `npm test` $\rightarrow$ **213/213 test pass** (100%).
 - **ESLint:** `npx eslint` $\rightarrow$ **0 errors**.
-- **Production Build:** `npm run build` $\rightarrow$ **82/82 static & dynamic routes pass**.
-- **Git Push:** Đã commit và đồng bộ đầy đủ trên 3 nhánh:
-  - `feat/header-hybrid`
-  - `fix/unified-header`
-  - `main`
+- **Playwright Verification:**
+  - `menuBtnHiddenOnDesktop: true` (Nút menu tầng 1 đã ẩn trên desktop).
+  - `navLinks`: Đầy đủ 8 mục bao gồm `Liên hệ` là mục cha.
+  - `contactHref`: `/pages/contact-us`.
+  - `Mobile menu button exists: true` & Drawer chứa `Liên hệ`.

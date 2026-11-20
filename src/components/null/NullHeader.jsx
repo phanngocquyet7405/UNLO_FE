@@ -211,12 +211,14 @@ export const NAV_GROUPS = [
         href: "/returns",
         desc: "Chính sách bảo hành và đổi trả miễn phí tận nơi",
       },
-      {
-        label: "Liên hệ & Hỗ trợ xưởng",
-        href: "/pages/contact-us",
-        desc: "Hotline 1900 6826, email hỗ trợ và gửi tin nhắn trực tiếp",
-      },
     ],
+  },
+  {
+    type: "link",
+    id: "contact",
+    label: "Liên hệ",
+    href: "/pages/contact-us",
+    routePrefix: "/pages/contact-us",
   },
 ];
 
@@ -631,8 +633,8 @@ export default function NullHeader({
               : "border-b border-[#F0F2F7]"
           }`}
         >
-          {/* Left: Menu Trigger (Opts 2: Hiện cả trên desktop và mobile; ở >=1024px KHÔNG có từ Menu) */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          {/* Left: Menu Trigger (Mobile <1024px mở drawer; trên Desktop >=1024px đã có thanh nav_bar nên ẩn theo yêu cầu) */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0 lg:hidden">
             <button
               ref={menuButtonRef}
               type="button"
@@ -871,12 +873,15 @@ export default function NullHeader({
           </div>
         </div>
 
-        {/* ROW 2: Hierarchical Category & Search Bar (Opts 2: Ẩn trên cover để full-frame, hiện khi scroll xuống) */}
-        {(!opts2 || scrolled) && (
-          <div
-            className="hidden lg:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible animate-in fade-in duration-200"
-            onMouseLeave={handleNavMouseLeave}
-          >
+        {/* ROW 2: Hierarchical Category & Search Bar (Thanh nav_bar chính trên Desktop) */}
+        <div
+          className={`hidden lg:block max-w-[1760px] mx-auto px-4 sm:px-6 lg:px-8 py-2 overflow-visible transition-colors ${
+            isTransparent
+              ? "border-t border-white/10"
+              : "border-t border-[#F0F2F7]"
+          }`}
+          onMouseLeave={handleNavMouseLeave}
+        >
           <div className="flex items-center justify-between gap-4">
             <nav
               aria-label="Danh mục chính UNLO"
@@ -891,12 +896,16 @@ export default function NullHeader({
                     href={group.href}
                     className={`relative py-1 transition-colors flex items-center gap-1.5 whitespace-nowrap ${
                       active
-                        ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                        ? isTransparent
+                          ? "text-white font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-white"
+                          : "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                        : isTransparent
+                        ? "text-white/90 hover:text-white"
                         : "text-[#2B2D38] hover:text-[#15095D]"
                     }`}
                   >
                     {group.special === "personalize" && (
-                      <Sparkles className="w-3.5 h-3.5 text-[#443EB1]" />
+                      <Sparkles className={`w-3.5 h-3.5 ${isTransparent ? "text-white" : "text-[#443EB1]"}`} />
                     )}
                     <span>{group.label}</span>
                   </Link>
@@ -920,15 +929,23 @@ export default function NullHeader({
                     }
                     className={`relative py-1 flex items-center gap-1 transition-colors cursor-pointer whitespace-nowrap ${
                       groupActive || isGroupOpen
-                        ? "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                        ? isTransparent
+                          ? "text-white font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-white"
+                          : "text-[#15095D] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#15095D]"
+                        : isTransparent
+                        ? "text-white/90 hover:text-white"
                         : "text-[#2B2D38] hover:text-[#15095D]"
                     }`}
                   >
                     <span>{group.label}</span>
                     <ChevronDown
-                      className={`w-3.5 h-3.5 text-[#6B7280] transition-transform duration-200 ${
-                        isGroupOpen ? "rotate-180 text-[#15095D]" : ""
-                      }`}
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                        isTransparent
+                          ? "text-white/70"
+                          : isGroupOpen
+                          ? "rotate-180 text-[#15095D]"
+                          : "text-[#6B7280]"
+                      } ${isGroupOpen ? "rotate-180" : ""}`}
                     />
                   </button>
 
@@ -989,7 +1006,11 @@ export default function NullHeader({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Tìm sản phẩm, xưởng..."
               aria-label="Tìm kiếm sản phẩm, chất liệu, xưởng"
-              className="w-40 lg:w-48 xl:w-72 h-[34px] pl-3.5 pr-9 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
+              className={`w-40 lg:w-48 xl:w-72 h-[34px] pl-3.5 pr-9 text-xs rounded-full outline-none transition-all ${
+                isTransparent
+                  ? "bg-white/15 border border-white/25 text-white placeholder:text-white/70 focus:border-white focus:bg-white/25"
+                  : "bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] focus:border-[#15095D] focus:bg-white"
+              }`}
             />
             <button
               type="submit"
@@ -1001,7 +1022,6 @@ export default function NullHeader({
           </form>
         </div>
       </div>
-      )}
       </header>
 
       {/* ================================================================
