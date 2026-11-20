@@ -248,6 +248,85 @@ export default function NullHeader() {
   const accountRef = useRef(null);
   const searchInputRef = useRef(null);
   const navLeaveTimeoutRef = useRef(null);
+  const menuButtonRef = useRef(null);
+  const drawerRef = useRef(null);
+  const prevActiveElementRef = useRef(null);
+
+  // Manage mobile drawer: scroll lock, auto-close at >=1024px, Escape, and focus restoration
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    prevActiveElementRef.current = document.activeElement;
+    const menuBtn = menuButtonRef.current;
+
+    const focusTimer = setTimeout(() => {
+      if (drawerRef.current) {
+        const focusables = drawerRef.current.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length > 0) {
+          focusables[0].focus();
+        } else {
+          drawerRef.current.focus();
+        }
+      }
+    }, 40);
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMobileOpen(false);
+      }
+    };
+
+    const onResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      clearTimeout(focusTimer);
+      document.body.style.overflow = prevOverflow || "";
+      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onResize);
+
+      if (menuBtn?.focus) {
+        menuBtn.focus();
+      } else if (prevActiveElementRef.current?.focus) {
+        prevActiveElementRef.current.focus();
+      }
+    };
+  }, [mobileOpen]);
+
+  const handleDrawerKeyDown = (e) => {
+    if (e.key === "Tab") {
+      if (!drawerRef.current) return;
+      const focusables = drawerRef.current.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+  };
 
   // Sync client query string for active nav tabs without triggering Next.js deopt
   useEffect(() => {
@@ -409,6 +488,7 @@ export default function NullHeader() {
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Nút Menu cho Tablet & Mobile (<1024px) */}
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label="Mở menu"
@@ -794,25 +874,78 @@ export default function NullHeader() {
           onClick={() => setMobileOpen(false)}
         >
           <nav
+            ref={drawerRef}
             id="site-menu-drawer"
             aria-label="Menu chính"
-            className="fixed top-0 bottom-0 left-0 w-[min(380px,86vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3 shadow-2xl animate-in slide-in-from-left duration-200"
+            tabIndex={-1}
+            onKeyDown={handleDrawerKeyDown}
+            className="fixed top-0 bottom-0 left-0 w-[min(360px,88vw)] md:w-[min(420px,88vw)] z-71 bg-white p-5 sm:p-6 overflow-y-auto flex flex-col gap-3 shadow-2xl animate-in slide-in-from-left duration-200 motion-reduce:transition-none motion-reduce:animate-none"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header */}
             <div className="flex items-center justify-between pb-3 border-b border-[#DDE0EC]">
-              <img
-                src="/assets/logo/unlo-header.png"
-                alt="UNLO"
-                className="h-[28px] w-auto object-contain"
-              />
+              <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
+                <img
+                  src="/assets/logo/unlo-header.png"
+                  alt="UNLO"
+                  className="h-[28px] w-auto object-contain"
+                />
+              </Link>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
                 aria-label="Đóng menu"
-                className="w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB]"
+                className="w-9 h-9 rounded-full grid place-items-center text-[#15095D] hover:bg-[#F4F5FB] transition-colors cursor-pointer"
               >
-                ✕
+                <X className="w-5 h-5 text-[#15095D]" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Quick Search inside Drawer */}
+            <form
+              onSubmit={(e) => {
+                handleSearchSubmit(e);
+                setMobileOpen(false);
+              }}
+              className="relative flex items-center my-1"
+            >
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Tìm kiếm sản phẩm, xưởng..."
+                aria-label="Tìm kiếm trong menu"
+                className="w-full h-10 pl-3.5 pr-10 text-xs rounded-full bg-[#F4F5F7] border border-[#E1E4EA] text-[#15095D] placeholder:text-[#8C93A8] outline-none focus:border-[#15095D] focus:bg-white transition-all"
+              />
+              <button
+                type="submit"
+                aria-label="Tìm kiếm"
+                className="absolute right-1 w-8 h-8 rounded-full bg-[#EB6D48] hover:bg-[#D95F3B] text-white grid place-items-center transition-colors cursor-pointer"
+              >
+                <Search className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+            </form>
+
+            {/* Quick Utilities in Drawer: Wishlist & Cart */}
+            <div className="grid grid-cols-2 gap-2 py-1">
+              <Link
+                href="/wishlist"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F4F5FB] hover:bg-[#EBEFFA] text-xs font-semibold text-[#15095D] transition-colors"
+              >
+                <Heart className="w-4 h-4 text-[#15095D]" />
+                <span>Yêu thích ({wishlistCount || 0})</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  setIsCartOpen?.(true);
+                }}
+                className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F4F5FB] hover:bg-[#EBEFFA] text-xs font-semibold text-[#15095D] transition-colors cursor-pointer"
+              >
+                <ShoppingBag className="w-4 h-4 text-[#15095D]" />
+                <span>Giỏ hàng ({cartCount || 0})</span>
               </button>
             </div>
 
@@ -867,7 +1000,7 @@ export default function NullHeader() {
                             <div className="flex items-center justify-between">
                               <span>{child.label}</span>
                               {child.badge && (
-                                <span className="px-1.5 py-0.2 rounded-full bg-[#EB6D48] text-white text-[9px] font-bold">
+                                <span className="px-1.5 py-0.5 rounded-full bg-[#EB6D48] text-white text-[9px] font-bold uppercase tracking-wider">
                                   {child.badge}
                                 </span>
                               )}
@@ -896,16 +1029,28 @@ export default function NullHeader() {
                 Cổng Tự Đổi Trả 30 Ngày
               </Link>
               {user ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    logout?.();
-                  }}
-                  className="w-full text-center py-2 text-xs font-semibold text-[#A52735]"
-                >
-                  Đăng xuất ({user.name || user.email})
-                </button>
+                <div className="space-y-1">
+                  <div className="px-2 py-1 text-xs text-[#68708C] truncate text-center">
+                    Xin chào, <strong className="text-[#15095D]">{user.name || user.email}</strong>
+                  </div>
+                  <Link
+                    href="/profile/orders"
+                    onClick={() => setMobileOpen(false)}
+                    className="block w-full text-center py-2 text-xs font-semibold text-[#15095D] hover:bg-[#F4F5FB] rounded-lg"
+                  >
+                    Đơn hàng &amp; Tra cứu bảo hành
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      logout?.();
+                    }}
+                    className="w-full text-center py-2 text-xs font-semibold text-[#A52735] hover:bg-[#FDF2F3] rounded-lg cursor-pointer"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
               ) : (
                 <Link
                   href="/login"
