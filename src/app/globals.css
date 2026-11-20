@@ -516,4 +516,29 @@
   }
 }
 
+/* =========================================================================
+ * Mobile Safe Area Bottom Padding for Bottom Tab Bar (<1024px)
+ * ========================================================================= */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* =========================================================================
+ * Header Overlay Height Variables (Desktop 112px, Mobile/Tablet 57px)
+ * Prevents initial layout shifts or white bars during SSR / hydration
+ * ========================================================================= */
+:root {
+  --header-h: 112px;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --header-h: 57px;
+  }
+}
+
+
+
 

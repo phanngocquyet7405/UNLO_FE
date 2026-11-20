@@ -42,7 +42,7 @@ export default function NullHomeClient() {
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen flex flex-col bg-white text-[#15095D]"
+      className="min-h-screen flex flex-col bg-[#15095D] text-[#15095D]"
     >
       {/* Header chuẩn Opts 2: Overlay trên cover, Logo UNLO ở giữa + Dải 4 mùa Xuân-Hạ-Thu-Đông ngay phía dưới logo */}
       <NullHeader
@@ -53,7 +53,7 @@ export default function NullHomeClient() {
         onSelectSeason={(idx) => setCurrentSeasonIdx(idx)}
       />
 
-      <main className="flex-1">
+      <main className="flex-1 bg-white">
         {/* ================================================================
             1. HERO CAROUSEL THEO MÙA (TỰ ĐỘNG CHUYỂN MÙA XUÂN-HẠ-THU-ĐÔNG THEO DOCX)
             ================================================================ */}

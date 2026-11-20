@@ -114,3 +114,87 @@ Qua phân tích chi tiết log lỗi Hydration:
      - Nhánh tính năng: `feat/header-hybrid`
      - Nhánh sửa lỗi: `fix/unified-header`
      - Nhánh chính: `main`
+
+---
+
+## 6. GIẢI PHÁP TỐI ƯU MÀN HÌNH 380px – 414px (ANDROID & IOS) & BOTTOM TAB BAR
+
+### 6.1. Thách thức không gian trên dải màn hình 380px – 414px
+- Dải kích thước **380px – 414px** bao gồm đại đa số smartphone phổ biến nhất hiện nay:
+  - **iOS:** iPhone 12 / 13 / 14 / 15 / 16 (390px), iPhone Plus / Pro Max (414px / 430px).
+  - **Android:** Samsung Galaxy S21/S22/S23/S24, Google Pixel, Xiaomi, Oppo (384px – 412px).
+- **Vấn đề va chạm trước đây:**
+  - Nếu Header tầng 1 chứa: Nút Menu trái (~44px) + Logo UNLO & Dải 4 mùa giữa (~145px) + Cụm 5 tiện ích phải (VN/ENG, Search, User, Wishlist, Cart ~198px) $\rightarrow$ Tổng chiều rộng yêu cầu: $44 + 145 + 198 = 387px$.
+  - Khi cộng thêm padding 2 bên (32px), tổng chiều rộng cần tối thiểu **419px**, dẫn đến trên màn hình 380px – 412px, cụm tiện ích bên phải bị đè lấn hoặc tràn ngang.
+
+### 6.2. Hướng giải quyết phân tách chức năng thông minh (Desktop vs Mobile)
+1. **Tinh giản Header phía trên trên màn hình di động (`< 768px`):**
+   - Giữ lại trên thanh Header:
+     - **Bên trái:** Nút Menu Drawer (`w-8 h-8`).
+     - **Ở giữa:** Logo UNLO + Dải 4 mùa `XUÂN · HẠ · THU · ĐÔNG` căn giữa tuyệt đối.
+     - **Bên phải:** Chỉ giữ 2 công cụ thao tác nhanh: Nút chuyển đổi `VN/ENG` + Nút `Tìm kiếm` (Search).
+   - Chuyển `Tài khoản`, `Wishlist`, và `Giỏ hàng` xuống thanh điều hướng cố định phía dưới màn hình (Bottom Tab Bar).
+   - **Kết quả đo đạc Playwright thực tế:**
+     - Màn hình 390px (iPhone 13/14): Khoảng cách trái còn **78.5px**, khoảng cách phải còn **29.6px**, **0% chồng chéo (hasOverlap: false)**.
+     - Màn hình 412px (Samsung Galaxy/Pixel): Khoảng cách trái **89.5px**, khoảng cách phải **40.6px**.
+
+2. **Thiết kế Thanh Điều Hướng Đáy (`NullMobileBottomNav`):**
+   - Thành phần độc lập tại `src/components/null/NullMobileBottomNav.jsx`.
+   - Bố cục 5 Tab chuẩn ứng dụng bản địa (Native App Experience):
+     1. **Trang chủ:** Icon Home $\rightarrow$ Chuyển về `/`.
+     2. **Danh mục:** Icon Grid $\rightarrow$ Kích hoạt mở ngay Mobile Drawer với đầy đủ phân cấp danh mục xưởng và mục "Liên hệ".
+     3. **Yêu thích:** Icon Heart $\rightarrow$ Mở trang `/wishlist`, tích hợp hiển thị Badge số lượng yêu thích thực tế.
+     4. **Giỏ hàng:** Icon ShoppingBag $\rightarrow$ Mở trực tiếp `CartDrawer`, tích hợp Badge số lượng sản phẩm giỏ hàng theo thời gian thực.
+     5. **Tài khoản:** Icon User $\rightarrow$ Mở `/profile/orders` (nếu đã đăng nhập) hoặc `/login`.
+   - **Tối ưu Safe Area cho iOS & Android:**
+     - Thiết lập `paddingBottom: max(6px, env(safe-area-inset-bottom, 0px))`.
+     - Thêm đệm cuộn trang trong `globals.css`: `@media (max-width: 1023px) { body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); } }` giúp người dùng cuộn đến hết footer mà không bị thanh tab che khuất.
+   - Ẩn hoàn toàn trên màn hình lớn Desktop (`lg:hidden`).
+
+---
+
+## 7. GIẢI THÍCH & KHẮC PHỤC TRIỆT ĐỂ 2 HÌNH ẢNH SCREENSHOT
+
+### 7.1. Hiện tượng trong 2 ảnh do người dùng cung cấp
+- **Ảnh 1 (Desktop toàn màn hình):**
+  - Xuất hiện một **dải trắng lớn** ở vị trí Header bên dưới thanh Promo bar.
+  - Logo UNLO và dải 4 mùa dường như "bị biến mất".
+  - Thanh menu `nav_bar` tầng 2 không nhìn thấy.
+- **Ảnh 2 (Khi mở F12 DevTools - Co hẹp màn hình về cỡ Tablet/Mobile):**
+  - Header chuyển sang nền tím đậm trong suốt phủ lên video.
+  - Logo UNLO và dải 4 mùa hiển thị rõ nét màu trắng.
+
+### 7.2. Nguyên nhân kỹ thuật gốc rễ (Root Cause)
+1. Trước đây, việc kéo Cover video phủ lên dưới Header sử dụng thuộc tính CSS động: `-mt-[var(--header-h, 0px)]`.
+2. Biến `--header-h` được tính toán thông qua JavaScript `useEffect` + `ResizeObserver`.
+3. Khi người dùng tải trang lần đầu trên Desktop:
+   - Trước khi JavaScript kịp tính toán xong (hoặc khi gặp cảnh báo Hydration cũ khiến React unmount tạm thời): Biến `--header-h` chưa được gán trên `:root` (hoặc bị hàm cleanup `removeProperty` xóa đi).
+   - Do đó, `-mt-[0px]` khiến Cover video **không được kéo lên**, mà nằm tụt xuống dưới Header!
+   - Vì Header có lớp nền trong suốt (`bg-transparent`), nên cái hiển thị ra qua Header chính là màu nền `bg-white` của thẻ `<div>` bao bọc trang chủ (`NullHomeClient.jsx`)!
+   - Tạo ra ảo giác Header là một **khoảng trắng lớn**.
+   - Khi nền là trắng, logo UNLO (vốn được đổi sang màu trắng qua `brightness-0 invert` khi transparent) và chữ dải 4 mùa màu trắng sẽ **trở thành màu trắng trên nền trắng $\rightarrow$ Hoàn toàn vô hình!**
+4. Khi người dùng mở F12 DevTools (Ảnh 2):
+   - Kích thước cửa sổ trình duyệt thay đổi $\rightarrow$ Kích hoạt sự kiện `resize` $\rightarrow$ `ResizeObserver` chạy lại và gán `--header-h` $\rightarrow$ Cover video ngay lập tức được kéo lên $\rightarrow$ Header hiện màu tím chuẩn của video.
+
+### 7.3. Giải pháp khắc phục vĩnh viễn đã áp dụng
+1. **Thiết lập giá trị mặc định tĩnh trong CSS (`src/app/globals.css`):**
+   ```css
+   :root {
+     --header-h: 112px; /* Chuẩn Desktop 2 tầng */
+   }
+   @media (max-width: 1023px) {
+     :root {
+       --header-h: 57px;  /* Chuẩn Mobile 1 tầng */
+     }
+   }
+   ```
+   $\rightarrow$ Ngay từ frame render đầu tiên của Server (SSR) khi chưa có JavaScript, Cover video đã lập tức nằm bên dưới Header, không bao giờ bị trễ hay tạo ra khoảng trắng.
+2. **Đồng bộ màu nền Brand Color cho container trang chủ (`NullHomeClient.jsx`):**
+   - Đổi thẻ bao bọc từ `bg-white` sang `bg-[#15095D]`.
+   - Bổ sung `bg-white` cho thẻ `<main>` bên dưới phần Hero.
+   - Ngay cả khi video đang nạp hoặc mạng chậm, nền phía sau Header luôn là màu tím thương hiệu `#15095D`, bảo đảm logo và chữ trắng luôn hiển thị tương phản 100%.
+3. **Loại bỏ `removeProperty` trong cleanup của Header:**
+   - Bảo đảm khi React re-render hay StrictMode chạy lại, giá trị `--header-h` không bao giờ bị xóa trắng về 0.
+4. **Loại bỏ hoàn toàn nút Pause:**
+   - Hero video chạy mượt mà tuần hoàn theo thời gian, không có nút dừng video, tự nhận diện tháng hiện tại làm điểm xuất phát.
+

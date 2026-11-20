@@ -11,8 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
-  Play,
-  Pause,
 } from "lucide-react";
 
 export const SEASONS = [
@@ -172,7 +170,7 @@ export default function SeasonalHeroVideoCarousel({
     <section
       ref={containerRef}
       suppressHydrationWarning
-      className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,0px)]"
+      className="relative overflow-hidden bg-[#15095D] text-white touch-pan-y select-none -mt-[var(--header-h,112px)] max-lg:-mt-[var(--header-h,57px)]"
       aria-roledescription="carousel"
       aria-label="Trang chủ theo mùa UNLO"
       onTouchStart={handleTouchStart}
@@ -216,7 +214,7 @@ export default function SeasonalHeroVideoCarousel({
               />
 
               {/* Content Panel (Editorial Minimalist Layout) */}
-              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-[calc(var(--header-h,0px)+3.5rem)] sm:pt-[calc(var(--header-h,0px)+4.5rem)] space-y-4 sm:space-y-5">
+              <div className="relative z-10 max-w-[1380px] w-full mx-auto px-5 sm:px-8 lg:px-12 pb-16 sm:pb-20 lg:pb-24 pt-[calc(var(--header-h,112px)+3rem)] max-lg:pt-[calc(var(--header-h,57px)+2rem)] space-y-4 sm:space-y-5">
                 {/* Season Tag */}
                 <div className="flex items-center gap-2.5 text-xs font-bold tracking-[0.22em] uppercase text-white/95 pt-1">
                   <span

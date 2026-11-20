@@ -22,6 +22,7 @@ import { AppContext } from "@/app/context/AppContext";
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
 import CartDrawer from "@/app/(client)/components/Cart_component/cart_drawer";
+import NullMobileBottomNav from "./NullMobileBottomNav";
 import { formatVnd } from "@/app/services/api/nullCommerceService";
 import { UNLO_PRODUCTS, filterUnloProducts } from "@/lib/unloCatalog";
 
@@ -342,7 +343,6 @@ export default function NullHeader({
 
     return () => {
       ro.disconnect();
-      document.documentElement.style.removeProperty("--header-h");
     };
   }, []);
 
@@ -371,7 +371,7 @@ export default function NullHeader({
     return () => clearInterval(interval);
   }, []);
 
-  // Transparent overlay only under lg (<1024px) when scrollY <= 24px and drawer/search closed
+  // Transparent overlay across all viewports when overlay prop is enabled, scrollY <= 24px and drawer/search closed
   const isTransparent = Boolean(
     overlay &&
     !scrolled &&
@@ -737,8 +737,8 @@ export default function NullHeader({
               />
             </button>
 
-            {/* 3. Đăng nhập / Account Dropdown */}
-            <div ref={accountRef} className="relative">
+            {/* 3. Đăng nhập / Account Dropdown (Hiện từ tablet md: trở lên, trên mobile đã có thanh Tab đáy) */}
+            <div ref={accountRef} className="relative hidden md:block">
               <button
                 type="button"
                 onClick={() => (user ? setAccountOpen((v) => !v) : router.push("/login"))}
@@ -825,11 +825,11 @@ export default function NullHeader({
               )}
             </div>
 
-            {/* 5. Wish-list (Hiện ở mọi kích thước) */}
+            {/* 4. Wish-list (Hiện từ tablet md: trở lên, trên mobile đã có thanh Tab đáy) */}
             <Link
               href="/wishlist"
               aria-label="Danh sách yêu thích"
-              className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors ${
+              className={`relative hidden md:grid w-8 h-8 sm:w-9 sm:h-9 rounded-full place-items-center transition-colors ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
@@ -848,12 +848,12 @@ export default function NullHeader({
               )}
             </Link>
 
-            {/* 5. Rỏ hàng / Giỏ hàng (Luôn hiện ở mọi kích thước) */}
+            {/* 5. Rỏ hàng / Giỏ hàng (Hiện từ tablet md: trở lên, trên mobile đã có thanh Tab đáy) */}
             <button
               type="button"
               onClick={() => setIsCartOpen?.(true)}
               aria-label={`Giỏ hàng (${cartCount || 0} sản phẩm)`}
-              className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-full grid place-items-center transition-colors cursor-pointer ${
+              className={`relative hidden md:grid w-8 h-8 sm:w-9 sm:h-9 rounded-full place-items-center transition-colors cursor-pointer ${
                 isTransparent
                   ? "text-white hover:bg-white/15"
                   : "text-[#15095D] hover:bg-[#F4F5FB]"
@@ -1435,7 +1435,21 @@ export default function NullHeader({
       )}
 
       {/* Cart Drawer */}
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen?.(false)} />
+      <CartDrawer
+        open={isCartOpen}
+        setOpen={setIsCartOpen}
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen?.(false)}
+      />
+
+      {/* ================================================================
+          BOTTOM TAB BAR DÀNH CHO THIẾT BỊ DI ĐỘNG (<1024px)
+          Giải phóng không gian Header, giải quyết triệt để va chạm 380px - 414px
+          ================================================================ */}
+      <NullMobileBottomNav
+        onOpenMenu={() => setMobileOpen(true)}
+        onOpenCart={() => setIsCartOpen?.(true)}
+      />
     </>
   );
 }
